@@ -32,8 +32,8 @@ class CalculatorsTest {
     @Test
     fun testSummarizePlanned_basic() {
         val items = listOf(
-            PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400"), null),
-            PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"), null)
+            PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400")),
+            PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"))
         )
 
         val s = Calculators.summarizePlanned(items)
@@ -100,8 +100,8 @@ class CalculatorsTest {
         // Planned
         val planned = Calculators.summarizePlanned(
             listOf(
-                PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400"), null),
-                PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"), null)
+                PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400")),
+                PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"))
             )
         )
         // Emergency
@@ -136,7 +136,7 @@ class CalculatorsTest {
     @Test
     fun testSummarizePlanned_zeroEstimated() {
         val items = listOf(
-            PlannedExpense("Zero", BigDecimal.ZERO, null, null, BigDecimal("10"), null)
+            PlannedExpense("Zero", BigDecimal.ZERO, null, null, BigDecimal("10"))
         )
         val s = Calculators.summarizePlanned(items)
         assertEquals(bd2("0.00"), s.totalEstimated)
