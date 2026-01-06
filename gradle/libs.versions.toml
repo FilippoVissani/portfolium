@@ -1,14 +1,17 @@
 [versions]
 kotlin = "2.2.21"
 kotlinCsv = "1.9.3"
+kotest = "5.9.1"
 
 [libraries]
 # CSV utilities
 kotlinCsv = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlinCsv" }
 # Kotlin test library (JUnit platform)
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+# Kotest
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 
 [plugins]
 # Kotlin JVM plugin
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-
