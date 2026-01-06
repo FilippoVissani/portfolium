@@ -22,8 +22,7 @@ object Controller {
         val plannedSummary = Calculators.summarizePlanned(planned)
         val emergencySummary = Calculators.summarizeEmergency(emergency, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestmentsFromTransactions(investments, currentPrices)
-        val dashboard =
-            Calculators.buildPortfolio(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
-        printDashboard(dashboard)
+        val portfolio = Calculators.buildPortfolio(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
+        printDashboard(portfolio)
     }
 }
