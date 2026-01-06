@@ -1,5 +1,7 @@
 # Portfolium
 
+[![CI](https://github.com/filippovissani/portfolium/actions/workflows/ci.yml/badge.svg)](https://github.com/filippovissani/portfolium/actions/workflows/ci.yml)
+
 A tiny Kotlin CLI that turns personal finance CSVs into a concise, human‑readable dashboard: liquidity, planned expenses, emergency fund, and investments. It reads your data from simple CSV files and prints a formatted summary in the terminal.
 
 ## Features
@@ -164,3 +166,30 @@ Run unit tests and view the reports:
 ./gradlew test
 # HTML report: build/reports/tests/test/index.html
 ```
+
+## Release automation (semantic-release)
+
+This repo uses semantic-release to automate versioning, changelog, and GitHub Releases based on Conventional Commits.
+
+- Commit format: `type(scope?): subject` with body/footer for BREAKING CHANGES
+  - Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
+  - BREAKING change: include `BREAKING CHANGE:` in the commit body or use `!` after type/scope (e.g., `feat!: ...`)
+- Branches: releases run on `main` or `master`
+- What happens on release:
+  - Determine next version from commit history
+  - Update `CHANGELOG.md`
+  - Build artifacts are uploaded to the GitHub Release (the CLI JAR)
+  - Create GitHub Release with notes
+
+To cut a release, push Conventional Commits to the default branch. The Release workflow will run automatically.
+
+## FAQ
+
+**Q**: Can I use this for business expenses?  
+**A**: Yes, just customize the CSVs to match your data sources.
+
+**Q**: Does it really work?  
+**A**: Absolutely, check the tests and example data for verification.
+
+**Q**: How can I contribute?  
+**A**: See the `CONTRIBUTING.md` for guidelines on reporting issues and submitting pull requests.
