@@ -1,8 +1,10 @@
- package org.example
+package org.example.io.github.filippovissani.portfolium
 
 import org.example.csv.Loaders
 import org.example.logic.Calculators
+import org.example.model.Dashboard
 import java.io.File
+import java.math.BigDecimal
 import java.math.RoundingMode
 
 fun main(args: Array<String>) {
@@ -32,7 +34,7 @@ fun main(args: Array<String>) {
     }
 }
 
-private fun printDashboard(d: org.example.model.Dashboard) {
+private fun printDashboard(d: Dashboard) {
     println("=== Personal Finance Dashboard ===")
     println()
     println("-- Liquidity (Transactions) --")
@@ -45,7 +47,7 @@ private fun printDashboard(d: org.example.model.Dashboard) {
     println("-- Planned & Predictable Expenses --")
     println("Total estimated: ${d.planned.totalEstimated}")
     println("Total accrued: ${d.planned.totalAccrued}")
-    println("Coverage: ${(d.planned.coverageRatio * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
+    println("Coverage: ${(d.planned.coverageRatio * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
     println()
 
     println("-- Emergency Fund --")
@@ -61,7 +63,7 @@ private fun printDashboard(d: org.example.model.Dashboard) {
     if (d.investments.itemsWithWeights.isNotEmpty()) {
         println("Breakdown:")
         d.investments.itemsWithWeights.forEach { (inv, w) ->
-            val pct = (w * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
+            val pct = (w * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
             println("  - ${inv.etf} (${inv.ticker}): current=${inv.currentValue}, pnl=${inv.pnl}, weight=${pct}%")
         }
     }
@@ -69,8 +71,8 @@ private fun printDashboard(d: org.example.model.Dashboard) {
 
     println("-- Summary --")
     println("Total net worth: ${d.totalNetWorth}")
-    println("% Invested: ${(d.percentInvested * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
-    println("% Liquid: ${(d.percentLiquid * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
+    println("% Invested: ${(d.percentInvested * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
+    println("% Liquid: ${(d.percentLiquid * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
     println()
 
     println("Tip: You can pass CSV paths as arguments in this order:")

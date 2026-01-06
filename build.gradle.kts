@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "org.example"
+group = "io.github.filippovissani"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -20,7 +20,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("org.example.MainKt")
+    mainClass.set("io.github.filippovissani.portfolium.MainKt")
 }
 
 tasks.test {
