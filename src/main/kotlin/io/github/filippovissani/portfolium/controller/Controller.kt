@@ -3,6 +3,7 @@ package io.github.filippovissani.portfolium.controller
 import io.github.filippovissani.portfolium.controller.csv.Loaders
 import io.github.filippovissani.portfolium.model.Calculators
 import io.github.filippovissani.portfolium.view.Console.printDashboard
+import io.github.filippovissani.portfolium.view.WebView
 import java.io.File
 
 object Controller {
@@ -24,5 +25,6 @@ object Controller {
         val investmentSummary = Calculators.summarizeInvestmentsFromTransactions(investments, currentPrices)
         val portfolio = Calculators.buildPortfolio(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
         printDashboard(portfolio)
+        WebView.startServer(portfolio, 8080)
     }
 }

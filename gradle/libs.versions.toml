@@ -2,6 +2,8 @@
 kotlin = "2.2.21"
 kotlinCsv = "1.9.3"
 kotest = "5.9.1"
+ktor = "3.0.3"
+logback = "1.5.16"
 
 [libraries]
 # CSV utilities
@@ -11,6 +13,13 @@ kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotli
 # Kotest
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+# Ktor for web server
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-html = { module = "io.ktor:ktor-server-html-builder", version.ref = "ktor" }
+ktor-serialization-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 [plugins]
 # Kotlin JVM plugin
