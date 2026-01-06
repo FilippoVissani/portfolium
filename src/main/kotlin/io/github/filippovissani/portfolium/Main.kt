@@ -1,8 +1,8 @@
-package org.example.io.github.filippovissani.portfolium
+package io.github.filippovissani.portfolium
 
-import org.example.csv.Loaders
-import org.example.logic.Calculators
-import org.example.model.Dashboard
+import io.github.filippovissani.portfolium.logic.Calculators
+import io.github.filippovissani.portfolium.csv.Loaders
+import io.github.filippovissani.portfolium.model.Dashboard
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -25,7 +25,8 @@ fun main(args: Array<String>) {
         val plannedSummary = Calculators.summarizePlanned(planned)
         val emergencySummary = Calculators.summarizeEmergency(emergency, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestments(investments)
-        val dashboard = Calculators.buildDashboard(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
+        val dashboard =
+            Calculators.buildDashboard(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
 
         printDashboard(dashboard)
     } catch (e: Exception) {

@@ -1,4 +1,4 @@
-package org.example.csv
+package io.github.filippovissani.portfolium.csv
 
 import java.io.File
 import java.math.BigDecimal
@@ -19,7 +19,10 @@ object CsvUtils {
     fun parseDate(value: String?): LocalDate? {
         val v = value?.trim()?.ifEmpty { return null } ?: return null
         for (fmt in dateFormatters) {
-            try { return LocalDate.parse(v, fmt) } catch (_: DateTimeParseException) {}
+            try {
+                return LocalDate.parse(v, fmt)
+            } catch (_: DateTimeParseException) {
+            }
         }
         throw IllegalArgumentException("Cannot parse date: '$v'")
     }

@@ -1,4 +1,4 @@
-package org.example.util
+package io.github.filippovissani.portfolium.util
 
 import java.math.BigDecimal
 import java.math.RoundingMode

@@ -1,11 +1,15 @@
-package org.example.csv
+package io.github.filippovissani.portfolium.csv
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import org.example.csv.CsvUtils.ensureExists
-import org.example.csv.CsvUtils.parseBigDecimal
-import org.example.csv.CsvUtils.parseDate
-import org.example.model.*
+import io.github.filippovissani.portfolium.csv.CsvUtils.ensureExists
+import io.github.filippovissani.portfolium.csv.CsvUtils.parseBigDecimal
+import io.github.filippovissani.portfolium.csv.CsvUtils.parseDate
+import io.github.filippovissani.portfolium.model.EmergencyFundConfig
+import io.github.filippovissani.portfolium.model.Investment
+import io.github.filippovissani.portfolium.model.PlannedExpense
+import io.github.filippovissani.portfolium.model.Transaction
+import io.github.filippovissani.portfolium.model.TransactionType
 import java.io.File
 import java.time.LocalDate
 

@@ -1,8 +1,9 @@
-package org.example.model
+package io.github.filippovissani.portfolium.model
 
+import io.github.filippovissani.portfolium.util.minus
+import io.github.filippovissani.portfolium.util.times
 import java.math.BigDecimal
 import java.time.LocalDate
-import org.example.util.*
 
 data class Transaction(
     val date: LocalDate,
