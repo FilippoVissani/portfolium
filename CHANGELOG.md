@@ -1,3 +1,13 @@
+## [1.0.1](https://github.com/FilippoVissani/portfolium/compare/1.0.0...1.0.1) (2026-01-06)
+
+### Documentation
+
+* remove FAQ section from README ([04dd4cd](https://github.com/FilippoVissani/portfolium/commit/04dd4cd356d4722b093b99b85ee48004bf9eb858))
+
+### Build and continuous integration
+
+* migrate dependencies to version catalog ([94356f1](https://github.com/FilippoVissani/portfolium/commit/94356f1ce8d6b7005a75c9d69134f30431815999))
+
 ## 1.0.0 (2026-01-06)
 
 ### Features
