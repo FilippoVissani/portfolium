@@ -5,6 +5,7 @@ import io.github.filippovissani.portfolium.model.Dashboard
 import io.github.filippovissani.portfolium.model.EmergencyFundConfig
 import io.github.filippovissani.portfolium.model.EmergencyFundSummary
 import io.github.filippovissani.portfolium.model.Investment
+import io.github.filippovissani.portfolium.model.InvestmentTransaction
 import io.github.filippovissani.portfolium.model.InvestmentsSummary
 import io.github.filippovissani.portfolium.model.LiquiditySummary
 import io.github.filippovissani.portfolium.model.PlannedExpense
@@ -83,6 +84,37 @@ object Calculators {
             totalCurrent = totalCurrent.toMoney(),
             itemsWithWeights = weights
         )
+    }
+
+    // New: summarize investments from individual transactions and a map of current prices per ticker
+    fun summarizeInvestmentsFromTransactions(
+        txs: List<InvestmentTransaction>,
+        currentPricesByTicker: Map<String, BigDecimal>
+    ): InvestmentsSummary {
+        // Aggregate by (ticker) while preserving etf and area from latest or first occurrence
+        data class Agg(var etf: String, var area: String?, var qty: BigDecimal, var cost: BigDecimal)
+        val byTicker = mutableMapOf<String, Agg>()
+        txs.forEach { t ->
+            val fees = t.fees ?: BigDecimal.ZERO
+            val cost = t.price.multiply(t.quantity).plus(fees) // cost increases with buys; if quantity negative, reduces
+            val agg = byTicker.getOrPut(t.ticker) { Agg(t.etf, t.area, BigDecimal.ZERO, BigDecimal.ZERO) }
+            agg.qty += t.quantity
+            agg.cost += cost
+            // prefer last seen metadata
+            agg.etf = t.etf
+            agg.area = t.area
+        }
+        val items = byTicker.mapNotNull { (ticker, a) ->
+            if (a.qty.signum() == 0) {
+                // fully sold position; skip
+                null
+            } else {
+                val avgPrice = if (a.qty.signum() == 0) BigDecimal.ZERO else a.cost.divide(a.qty, 6, RoundingMode.HALF_UP)
+                val currentPrice = currentPricesByTicker[ticker] ?: BigDecimal.ZERO
+                Investment(etf = a.etf, ticker = ticker, area = a.area, quantity = a.qty, averagePrice = avgPrice, currentPrice = currentPrice)
+            }
+        }
+        return summarizeInvestments(items)
     }
 
     fun buildDashboard(

@@ -12,6 +12,7 @@ fun main(args: Array<String>) {
     val plannedCsv = args.getOrNull(1) ?: "data/planned_expenses.csv"
     val emergencyCsv = args.getOrNull(2) ?: "data/emergency_fund.csv"
     val investmentsCsv = args.getOrNull(3) ?: "data/investments.csv"
+    val pricesCsv = args.getOrNull(4) ?: "data/current_prices.csv"
 
     val loaders = Loaders()
 
@@ -19,12 +20,13 @@ fun main(args: Array<String>) {
         val transactions = loaders.loadTransactions(File(transactionsCsv))
         val planned = loaders.loadPlannedExpenses(File(plannedCsv))
         val emergency = loaders.loadEmergencyFund(File(emergencyCsv))
-        val investments = loaders.loadInvestments(File(investmentsCsv))
+        val investments = loaders.loadInvestmentTransactions(File(investmentsCsv))
+        val currentPrices = loaders.loadCurrentPrices(File(pricesCsv))
 
         val liquiditySummary = Calculators.summarizeLiquidity(transactions)
         val plannedSummary = Calculators.summarizePlanned(planned)
         val emergencySummary = Calculators.summarizeEmergency(emergency, liquiditySummary.avgMonthlyExpense12m)
-        val investmentSummary = Calculators.summarizeInvestments(investments)
+        val investmentSummary = Calculators.summarizeInvestmentsFromTransactions(investments, currentPrices)
         val dashboard =
             Calculators.buildDashboard(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
 

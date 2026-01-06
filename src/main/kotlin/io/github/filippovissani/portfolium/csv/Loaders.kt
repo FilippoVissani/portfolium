@@ -7,10 +7,12 @@ import io.github.filippovissani.portfolium.csv.CsvUtils.parseBigDecimal
 import io.github.filippovissani.portfolium.csv.CsvUtils.parseDate
 import io.github.filippovissani.portfolium.model.EmergencyFundConfig
 import io.github.filippovissani.portfolium.model.Investment
+import io.github.filippovissani.portfolium.model.InvestmentTransaction
 import io.github.filippovissani.portfolium.model.PlannedExpense
 import io.github.filippovissani.portfolium.model.Transaction
 import io.github.filippovissani.portfolium.model.TransactionType
 import java.io.File
+import java.math.BigDecimal
 import java.time.LocalDate
 
 class Loaders(
@@ -66,19 +68,34 @@ class Loaders(
         )
     }
 
-    // Investments CSV header: etf,ticker,area,quantity,avg_price,current_price
-    fun loadInvestments(file: File): List<Investment> {
+    // Investment transactions CSV header: date,etf,ticker,area,quantity,price,fees
+    fun loadInvestmentTransactions(file: File): List<InvestmentTransaction> {
         file.ensureExists()
         val rows = reader.readAllWithHeader(file)
         return rows.map { r ->
-            Investment(
+            InvestmentTransaction(
+                date = parseDate(r["date"]) ?: LocalDate.MIN,
                 etf = r["etf"].orEmpty(),
                 ticker = r["ticker"].orEmpty(),
                 area = r["area"],
                 quantity = parseBigDecimal(r["quantity"]),
-                averagePrice = parseBigDecimal(r["avg_price"]),
-                currentPrice = parseBigDecimal(r["current_price"])
+                price = parseBigDecimal(r["price"]),
+                fees = r["fees"]?.let { parseBigDecimal(it) }
             )
         }
+    }
+
+    fun loadCurrentPrices(file: File): Map<String, BigDecimal> {
+        file.ensureExists()
+        val rows = reader.readAllWithHeader(file)
+        return rows.mapNotNull { r ->
+            val ticker = r["ticker"]?.trim()
+            val price = r["price"]?.trim()?.let { parseBigDecimal(it) }
+            if (ticker != null && price != null) {
+                ticker to price
+            } else {
+                null
+            }
+        }.toMap()
     }
 }

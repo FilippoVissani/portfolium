@@ -177,4 +177,33 @@ class CalculatorsTest {
         assertEquals(BigDecimal.ZERO, d.percentInvested)
         assertEquals(BigDecimal.ONE, d.percentLiquid)
     }
+
+    @Test
+    fun testSummarizeInvestmentsFromTransactions_basic() {
+        val txs = listOf(
+            InvestmentTransaction(LocalDate.of(2025,1,10), "ETF A", "A", null, BigDecimal("10"), BigDecimal("100"), BigDecimal("2.50")),
+            InvestmentTransaction(LocalDate.of(2025,2,10), "ETF A", "A", null, BigDecimal("5"), BigDecimal("120"), null),
+            // partial sell: negative quantity; include fee which reduces total cost
+            InvestmentTransaction(LocalDate.of(2025,3,15), "ETF A", "A", null, BigDecimal("-3"), BigDecimal("130"), BigDecimal("1.00")),
+            // another instrument fully sold -> should be omitted in summary
+            InvestmentTransaction(LocalDate.of(2025,1,5), "ETF B", "B", null, BigDecimal("2"), BigDecimal("50"), null),
+            InvestmentTransaction(LocalDate.of(2025,2,5), "ETF B", "B", null, BigDecimal("-2"), BigDecimal("55"), BigDecimal("0.50")),
+        )
+        val prices = mapOf(
+            "A" to BigDecimal("110"),
+            "B" to BigDecimal("60")
+        )
+        val summary = Calculators.summarizeInvestmentsFromTransactions(txs, prices)
+        // Only A remains with qty 12 (10 + 5 - 3)
+        assertEquals(bd2("1320.00"), summary.totalCurrent)
+        // invested value uses computed average price
+        // cost: A -> (10*100 + 2.50) + (5*120) + (-3*130 + 1.00) = 1000 + 2.50 + 600 - 390 + 1.00 = 1213.50
+        // qty: 12 -> avg price = 1213.50 / 12 = 101.125 -> round to 6 decimals in model
+        val item = summary.itemsWithWeights.first().first
+        assertEquals(bd6("101.125000"), item.averagePrice.setScale(6))
+        // compare numerically to avoid scale sensitivity
+        assertEquals(0, item.investedValue.compareTo(bd2("1213.50")))
+        // weight should be 1 since only one item
+        assertEquals(BigDecimal.ONE.setScale(6), summary.itemsWithWeights.first().second.setScale(6))
+    }
 }

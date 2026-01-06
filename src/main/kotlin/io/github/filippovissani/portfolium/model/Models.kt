@@ -35,6 +35,20 @@ data class EmergencyFundConfig(
 )
 
 
+// individual investment transaction (e.g., buy/sell)
+// quantity can be negative for sells; price is per unit; fees are optional per transaction cost
+// instrument identifiers: etf/ticker plus optional area
+data class InvestmentTransaction(
+    val date: LocalDate,
+    val etf: String,
+    val ticker: String,
+    val area: String?,
+    val quantity: BigDecimal,
+    val price: BigDecimal,
+    val fees: BigDecimal?
+)
+
+
 data class Investment(
     val etf: String,
     val ticker: String,
