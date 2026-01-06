@@ -78,7 +78,7 @@ object WebView {
                                         }
                                         
                                         .header-wrapper {
-                                            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+                                            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
                                             padding: 3rem 1.5rem 8rem;
                                             margin-bottom: -5rem;
                                             box-shadow: var(--shadow-lg);
