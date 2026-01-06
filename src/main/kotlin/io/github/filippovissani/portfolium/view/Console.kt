@@ -46,7 +46,6 @@ object Console {
         println("% Liquid: ${(d.percentLiquid * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
         println()
 
-        println("Tip: You can pass CSV paths as arguments in this order:")
-        println("  transactions.csv planned_expenses.csv emergency_fund.csv investments.csv current_prices.csv")
+        println("Tip: You can pass CSV path as argument")
     }
 }
