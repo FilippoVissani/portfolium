@@ -112,7 +112,7 @@ class CalculatorsTest : StringSpec({
             )
         )
 
-        val d = Calculators.buildDashboard(liquidity, planned, emergency, inv)
+        val d = Calculators.buildPortfolio(liquidity, planned, emergency, inv)
 
         d.totalNetWorth shouldBe bd2("9200.00")
         d.percentInvested shouldBe bd4("0.2500")
@@ -157,7 +157,7 @@ class CalculatorsTest : StringSpec({
     }
 
     "buildDashboard zeroes" {
-        val d = Calculators.buildDashboard(
+        val d = Calculators.buildPortfolio(
             LiquiditySummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), bd2("0.00")),
             PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000")),
             EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK"),

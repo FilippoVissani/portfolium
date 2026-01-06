@@ -1,7 +1,7 @@
 package io.github.filippovissani.portfolium.model
 
-import io.github.filippovissani.portfolium.util.minus
-import io.github.filippovissani.portfolium.util.times
+import io.github.filippovissani.portfolium.model.util.minus
+import io.github.filippovissani.portfolium.model.util.times
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -94,7 +94,7 @@ data class InvestmentsSummary(
 )
 
 
-data class Dashboard(
+data class Portfolio(
     val liquidity: LiquiditySummary,
     val planned: PlannedExpensesSummary,
     val emergency: EmergencyFundSummary,
