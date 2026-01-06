@@ -79,5 +79,5 @@ private fun printDashboard(d: Dashboard) {
     println()
 
     println("Tip: You can pass CSV paths as arguments in this order:")
-    println("  transactions.csv planned_expenses.csv emergency_fund.csv investments.csv")
+    println("  transactions.csv planned_expenses.csv emergency_fund.csv investments.csv current_prices.csv")
 }
