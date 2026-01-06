@@ -1,3 +1,9 @@
+## [2.1.0](https://github.com/FilippoVissani/portfolium/compare/2.0.0...2.1.0) (2026-01-06)
+
+### Features
+
+* add Ktor web server and view for portfolio dashboard ([a88db37](https://github.com/FilippoVissani/portfolium/commit/a88db370ec649fdd9e96e05634b8a93a4c7ddb1c))
+
 ## [2.0.0](https://github.com/FilippoVissani/portfolium/compare/1.0.1...2.0.0) (2026-01-06)
 
 ### ⚠ BREAKING CHANGES
