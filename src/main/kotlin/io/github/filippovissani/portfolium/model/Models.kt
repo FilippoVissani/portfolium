@@ -24,7 +24,6 @@ data class PlannedExpense(
     val horizon: String?,
     val dueDate: LocalDate?,
     val accrued: BigDecimal,
-    val instrument: String?
 ) {
     val delta: BigDecimal get() = estimatedAmount - accrued
 }
@@ -32,8 +31,7 @@ data class PlannedExpense(
 
 data class EmergencyFundConfig(
     val targetMonths: Int,
-    val currentCapital: BigDecimal,
-    val instrument: String?
+    val currentCapital: BigDecimal
 )
 
 
