@@ -1,4 +1,4 @@
-package io.github.filippovissani.portfolium.csv
+package io.github.filippovissani.portfolium.controller.csv
 
 import java.io.File
 import java.math.BigDecimal

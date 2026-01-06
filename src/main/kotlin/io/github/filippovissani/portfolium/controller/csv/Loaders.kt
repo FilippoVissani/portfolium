@@ -1,12 +1,11 @@
-package io.github.filippovissani.portfolium.csv
+package io.github.filippovissani.portfolium.controller.csv
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import io.github.filippovissani.portfolium.csv.CsvUtils.ensureExists
-import io.github.filippovissani.portfolium.csv.CsvUtils.parseBigDecimal
-import io.github.filippovissani.portfolium.csv.CsvUtils.parseDate
+import io.github.filippovissani.portfolium.controller.csv.CsvUtils.ensureExists
+import io.github.filippovissani.portfolium.controller.csv.CsvUtils.parseBigDecimal
+import io.github.filippovissani.portfolium.controller.csv.CsvUtils.parseDate
 import io.github.filippovissani.portfolium.model.EmergencyFundConfig
-import io.github.filippovissani.portfolium.model.Investment
 import io.github.filippovissani.portfolium.model.InvestmentTransaction
 import io.github.filippovissani.portfolium.model.PlannedExpense
 import io.github.filippovissani.portfolium.model.Transaction

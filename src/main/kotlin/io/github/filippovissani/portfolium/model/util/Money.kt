@@ -1,4 +1,4 @@
-package io.github.filippovissani.portfolium.util
+package io.github.filippovissani.portfolium.model.util
 
 import java.math.BigDecimal
 import java.math.RoundingMode

@@ -1,19 +1,8 @@
-package io.github.filippovissani.portfolium.logic
+package io.github.filippovissani.portfolium.model
 
-import io.github.filippovissani.portfolium.csv.CsvUtils.toMoney
-import io.github.filippovissani.portfolium.model.Dashboard
-import io.github.filippovissani.portfolium.model.EmergencyFundConfig
-import io.github.filippovissani.portfolium.model.EmergencyFundSummary
-import io.github.filippovissani.portfolium.model.Investment
-import io.github.filippovissani.portfolium.model.InvestmentTransaction
-import io.github.filippovissani.portfolium.model.InvestmentsSummary
-import io.github.filippovissani.portfolium.model.LiquiditySummary
-import io.github.filippovissani.portfolium.model.PlannedExpense
-import io.github.filippovissani.portfolium.model.PlannedExpensesSummary
-import io.github.filippovissani.portfolium.model.Transaction
-import io.github.filippovissani.portfolium.model.TransactionType
-import io.github.filippovissani.portfolium.util.minus
-import io.github.filippovissani.portfolium.util.plus
+import io.github.filippovissani.portfolium.controller.csv.CsvUtils.toMoney
+import io.github.filippovissani.portfolium.model.util.minus
+import io.github.filippovissani.portfolium.model.util.plus
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -117,12 +106,12 @@ object Calculators {
         return summarizeInvestments(items)
     }
 
-    fun buildDashboard(
+    fun buildPortfolio(
         liquidity: LiquiditySummary,
         planned: PlannedExpensesSummary,
         emergency: EmergencyFundSummary,
         investments: InvestmentsSummary
-    ): Dashboard {
+    ): Portfolio {
         val liquidCapital = liquidity.net + planned.totalAccrued + emergency.currentCapital
         val totalNetWorth = (liquidCapital + investments.totalCurrent).toMoney()
         val percentInvested = if (totalNetWorth.signum() == 0) BigDecimal.ZERO else investments.totalCurrent.divide(
@@ -132,7 +121,7 @@ object Calculators {
         )
         val percentLiquid = BigDecimal.ONE - percentInvested
 
-        return Dashboard(
+        return Portfolio(
             liquidity = liquidity,
             planned = planned,
             emergency = emergency,
