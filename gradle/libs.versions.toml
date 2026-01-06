@@ -1,0 +1,14 @@
+[versions]
+kotlin = "2.2.21"
+kotlinCsv = "1.9.3"
+
+[libraries]
+# CSV utilities
+kotlinCsv = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlinCsv" }
+# Kotlin test library (JUnit platform)
+kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
+[plugins]
+# Kotlin JVM plugin
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+

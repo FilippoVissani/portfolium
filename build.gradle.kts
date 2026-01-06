@@ -1,3 +1,5 @@
+import org.gradle.api.artifacts.VersionCatalogsExtension
+
 plugins {
     kotlin("jvm") version "2.2.21"
     application
@@ -10,9 +12,11 @@ repositories {
     mavenCentral()
 }
 
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
 dependencies {
-    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3")
-    testImplementation(kotlin("test"))
+    implementation(libs.findLibrary("kotlinCsv").get())
+    testImplementation(libs.findLibrary("kotlinTest").get())
 }
 
 kotlin {
