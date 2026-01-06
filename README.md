@@ -182,14 +182,3 @@ This repo uses semantic-release to automate versioning, changelog, and GitHub Re
   - Create GitHub Release with notes
 
 To cut a release, push Conventional Commits to the default branch. The Release workflow will run automatically.
-
-## FAQ
-
-**Q**: Can I use this for business expenses?  
-**A**: Yes, just customize the CSVs to match your data sources.
-
-**Q**: Does it really work?  
-**A**: Absolutely, check the tests and example data for verification.
-
-**Q**: How can I contribute?  
-**A**: See the `CONTRIBUTING.md` for guidelines on reporting issues and submitting pull requests.
