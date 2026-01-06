@@ -1,18 +1,17 @@
 package io.github.filippovissani.portfolium.logic
 
 import io.github.filippovissani.portfolium.model.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class CalculatorsTest {
-    private fun bd2(s: String) = s.toBigDecimal().setScale(2)
-    private fun bd4(s: String) = s.toBigDecimal().setScale(4)
-    private fun bd6(s: String) = s.toBigDecimal().setScale(6)
+class CalculatorsTest : StringSpec({
+    fun bd2(s: String) = s.toBigDecimal().setScale(2)
+    fun bd4(s: String) = s.toBigDecimal().setScale(4)
+    fun bd6(s: String) = s.toBigDecimal().setScale(6)
 
-    @Test
-    fun testSummarizeLiquidity_basic() {
+    "summarizeLiquidity basic" {
         val today = LocalDate.of(2026, 1, 1)
         val txs = listOf(
             Transaction(LocalDate.of(2025, 1, 15), "Salary", TransactionType.Income, "Job", "Bank", BigDecimal("1000"), null),
@@ -23,14 +22,13 @@ class CalculatorsTest {
 
         val s = Calculators.summarizeLiquidity(txs, today)
 
-        assertEquals(bd2("1500.00"), s.totalIncome)
-        assertEquals(bd2("500.00"), s.totalExpense)
-        assertEquals(bd2("1000.00"), s.net)
-        assertEquals(bd2("41.67"), s.avgMonthlyExpense12m)
+        s.totalIncome shouldBe bd2("1500.00")
+        s.totalExpense shouldBe bd2("500.00")
+        s.net shouldBe bd2("1000.00")
+        s.avgMonthlyExpense12m shouldBe bd2("41.67")
     }
 
-    @Test
-    fun testSummarizePlanned_basic() {
+    "summarizePlanned basic" {
         val items = listOf(
             PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400")),
             PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"))
@@ -38,26 +36,24 @@ class CalculatorsTest {
 
         val s = Calculators.summarizePlanned(items)
 
-        assertEquals(bd2("1500.00"), s.totalEstimated)
-        assertEquals(bd2("900.00"), s.totalAccrued)
-        assertEquals(bd4("0.6000"), s.coverageRatio)
+        s.totalEstimated shouldBe bd2("1500.00")
+        s.totalAccrued shouldBe bd2("900.00")
+        s.coverageRatio shouldBe bd4("0.6000")
     }
 
-    @Test
-    fun testSummarizeEmergency_basic() {
+    "summarizeEmergency basic" {
         val config = EmergencyFundConfig(targetMonths = 6, currentCapital = BigDecimal("5000"))
         val avgMonthlyExpense = BigDecimal("1000")
 
         val s = Calculators.summarizeEmergency(config, avgMonthlyExpense)
 
-        assertEquals(bd2("6000.00"), s.targetCapital)
-        assertEquals(bd2("5000.00"), s.currentCapital)
-        assertEquals(bd2("1000.00"), s.deltaToTarget)
-        assertEquals("BELOW TARGET", s.status)
+        s.targetCapital shouldBe bd2("6000.00")
+        s.currentCapital shouldBe bd2("5000.00")
+        s.deltaToTarget shouldBe bd2("1000.00")
+        s.status shouldBe "BELOW TARGET"
     }
 
-    @Test
-    fun testSummarizeInvestments_basic() {
+    "summarizeInvestments basic" {
         val a = Investment(
             etf = "ETF A",
             ticker = "A",
@@ -77,16 +73,15 @@ class CalculatorsTest {
 
         val s = Calculators.summarizeInvestments(listOf(a, b))
 
-        assertEquals(bd2("2000.00"), s.totalInvested)
-        assertEquals(bd2("2300.00"), s.totalCurrent)
+        s.totalInvested shouldBe bd2("2000.00")
+        s.totalCurrent shouldBe bd2("2300.00")
 
         val weights = s.itemsWithWeights.toMap()
-        assertEquals(bd6("0.478261"), weights[a])
-        assertEquals(bd6("0.521739"), weights[b])
+        weights[a]!!.setScale(6) shouldBe bd6("0.478261")
+        weights[b]!!.setScale(6) shouldBe bd6("0.521739")
     }
 
-    @Test
-    fun testBuildDashboard_basic() {
+    "buildDashboard basic" {
         val today = LocalDate.of(2026, 1, 1)
         // Liquidity (from first test)
         val liquidity = Calculators.summarizeLiquidity(
@@ -119,67 +114,62 @@ class CalculatorsTest {
 
         val d = Calculators.buildDashboard(liquidity, planned, emergency, inv)
 
-        assertEquals(bd2("9200.00"), d.totalNetWorth)
-        assertEquals(bd4("0.2500"), d.percentInvested)
-        assertEquals(bd4("0.7500"), d.percentLiquid)
+        d.totalNetWorth shouldBe bd2("9200.00")
+        d.percentInvested shouldBe bd4("0.2500")
+        d.percentLiquid shouldBe bd4("0.7500")
     }
 
-    @Test
-    fun testSummarizeLiquidity_empty() {
+    "summarizeLiquidity empty" {
         val s = Calculators.summarizeLiquidity(emptyList(), LocalDate.of(2026, 1, 1))
-        assertEquals(bd2("0.00"), s.totalIncome)
-        assertEquals(bd2("0.00"), s.totalExpense)
-        assertEquals(bd2("0.00"), s.net)
-        assertEquals(bd2("0.00"), s.avgMonthlyExpense12m)
+        s.totalIncome shouldBe bd2("0.00")
+        s.totalExpense shouldBe bd2("0.00")
+        s.net shouldBe bd2("0.00")
+        s.avgMonthlyExpense12m shouldBe bd2("0.00")
     }
 
-    @Test
-    fun testSummarizePlanned_zeroEstimated() {
+    "summarizePlanned zeroEstimated" {
         val items = listOf(
             PlannedExpense("Zero", BigDecimal.ZERO, null, null, BigDecimal("10"))
         )
         val s = Calculators.summarizePlanned(items)
-        assertEquals(bd2("0.00"), s.totalEstimated)
-        assertEquals(bd2("10.00"), s.totalAccrued)
+        s.totalEstimated shouldBe bd2("0.00")
+        s.totalAccrued shouldBe bd2("10.00")
         // coverageRatio is computed as BigDecimal.ZERO when totalEstimated is zero; compare numerically to avoid scale sensitivity
-        assertEquals(0, s.coverageRatio.compareTo(BigDecimal.ZERO))
+        s.coverageRatio.compareTo(BigDecimal.ZERO) shouldBe 0
     }
 
-    @Test
-    fun testSummarizeEmergency_aboveTarget() {
+    "summarizeEmergency aboveTarget" {
         val s = Calculators.summarizeEmergency(
             EmergencyFundConfig(targetMonths = 3, currentCapital = BigDecimal("5000")),
             avgMonthlyExpense = BigDecimal("1000")
         )
-        assertEquals(bd2("3000.00"), s.targetCapital)
-        assertEquals(bd2("5000.00"), s.currentCapital)
-        assertEquals(bd2("-2000.00"), s.deltaToTarget)
-        assertEquals("OK", s.status)
+        s.targetCapital shouldBe bd2("3000.00")
+        s.currentCapital shouldBe bd2("5000.00")
+        s.deltaToTarget shouldBe bd2("-2000.00")
+        s.status shouldBe "OK"
     }
 
-    @Test
-    fun testSummarizeInvestments_empty() {
+    "summarizeInvestments empty" {
         val s = Calculators.summarizeInvestments(emptyList())
-        assertEquals(bd2("0.00"), s.totalInvested)
-        assertEquals(bd2("0.00"), s.totalCurrent)
-        assertEquals(0, s.itemsWithWeights.size)
+        s.totalInvested shouldBe bd2("0.00")
+        s.totalCurrent shouldBe bd2("0.00")
+        s.itemsWithWeights.size shouldBe 0
     }
 
-    @Test
-    fun testBuildDashboard_zeroes() {
+    "buildDashboard zeroes" {
         val d = Calculators.buildDashboard(
             LiquiditySummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), bd2("0.00")),
             PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000")),
             EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK"),
             InvestmentsSummary(bd2("0.00"), bd2("0.00"), emptyList())
         )
-        assertEquals(bd2("0.00"), d.totalNetWorth)
-        assertEquals(BigDecimal.ZERO, d.percentInvested)
-        assertEquals(BigDecimal.ONE, d.percentLiquid)
+        d.totalNetWorth shouldBe bd2("0.00")
+        // compare numerically to avoid scale sensitivity
+        d.percentInvested.compareTo(BigDecimal.ZERO) shouldBe 0
+        d.percentLiquid.compareTo(BigDecimal.ONE) shouldBe 0
     }
 
-    @Test
-    fun testSummarizeInvestmentsFromTransactions_basic() {
+    "summarizeInvestmentsFromTransactions basic" {
         val txs = listOf(
             InvestmentTransaction(LocalDate.of(2025,1,10), "ETF A", "A", null, BigDecimal("10"), BigDecimal("100"), BigDecimal("2.50")),
             InvestmentTransaction(LocalDate.of(2025,2,10), "ETF A", "A", null, BigDecimal("5"), BigDecimal("120"), null),
@@ -195,15 +185,15 @@ class CalculatorsTest {
         )
         val summary = Calculators.summarizeInvestmentsFromTransactions(txs, prices)
         // Only A remains with qty 12 (10 + 5 - 3)
-        assertEquals(bd2("1320.00"), summary.totalCurrent)
+        summary.totalCurrent shouldBe bd2("1320.00")
         // invested value uses computed average price
         // cost: A -> (10*100 + 2.50) + (5*120) + (-3*130 + 1.00) = 1000 + 2.50 + 600 - 390 + 1.00 = 1213.50
         // qty: 12 -> avg price = 1213.50 / 12 = 101.125 -> round to 6 decimals in model
         val item = summary.itemsWithWeights.first().first
-        assertEquals(bd6("101.125000"), item.averagePrice.setScale(6))
+        item.averagePrice.setScale(6) shouldBe bd6("101.125000")
         // compare numerically to avoid scale sensitivity
-        assertEquals(0, item.investedValue.compareTo(bd2("1213.50")))
+        item.investedValue.compareTo(bd2("1213.50")) shouldBe 0
         // weight should be 1 since only one item
-        assertEquals(BigDecimal.ONE.setScale(6), summary.itemsWithWeights.first().second.setScale(6))
+        summary.itemsWithWeights.first().second.setScale(6) shouldBe BigDecimal.ONE.setScale(6)
     }
-}
+})

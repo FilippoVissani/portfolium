@@ -17,6 +17,9 @@ val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 dependencies {
     implementation(libs.findLibrary("kotlinCsv").get())
     testImplementation(libs.findLibrary("kotlinTest").get())
+    // Kotest
+    testImplementation(libs.findLibrary("kotest-assertions-core").get())
+    testImplementation(libs.findLibrary("kotest-runner-junit5").get())
 }
 
 kotlin {
