@@ -1,3 +1,17 @@
+## [2.0.0](https://github.com/FilippoVissani/portfolium/compare/1.0.1...2.0.0) (2026-01-06)
+
+### ⚠ BREAKING CHANGES
+
+* restructure project architecture
+
+### Tests
+
+* migrate tests to use Kotest framework ([d2098f6](https://github.com/FilippoVissani/portfolium/commit/d2098f691412c7613ae098eedb880df51427443b))
+
+### Refactoring
+
+* restructure project architecture ([e26ca17](https://github.com/FilippoVissani/portfolium/commit/e26ca17edd0a6e87af143d15e9e9a73f6ab3c4f8))
+
 ## [1.0.1](https://github.com/FilippoVissani/portfolium/compare/1.0.0...1.0.1) (2026-01-06)
 
 ### Documentation
