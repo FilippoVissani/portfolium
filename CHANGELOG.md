@@ -1,3 +1,9 @@
+## [3.1.0](https://github.com/FilippoVissani/portfolium/compare/3.0.0...3.1.0) (2026-01-07)
+
+### Features
+
+* implement time period selection for historical performance chart ([966e442](https://github.com/FilippoVissani/portfolium/commit/966e442b2802a8d0f14cf4730ef51c98158f9bfd))
+
 ## [3.0.0](https://github.com/FilippoVissani/portfolium/compare/2.2.0...3.0.0) (2026-01-07)
 
 ### ⚠ BREAKING CHANGES
