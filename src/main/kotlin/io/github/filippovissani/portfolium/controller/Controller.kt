@@ -16,7 +16,7 @@ object Controller {
 
         println("Using price source: ${config.priceDataSourceType}")
         if (config.enableHistoricalPerformance) {
-            println("Historical performance enabled (${config.historicalPerformanceMonths} months)")
+            println("Historical performance enabled (all available data)")
         }
 
         // Load data files
@@ -48,10 +48,14 @@ object Controller {
         val historicalPerformance = if (config.enableHistoricalPerformance && investments.isNotEmpty()) {
             println("Calculating historical performance...")
             try {
-                HistoricalPerformanceCalculator.calculatePerformanceLastNMonths(
+                // Calculate from the earliest transaction date to today to support all time period views
+                val earliestDate = investments.minOfOrNull { it.date } ?: java.time.LocalDate.now()
+                HistoricalPerformanceCalculator.calculateHistoricalPerformance(
                     transactions = investments,
                     priceSource = priceSource,
-                    months = config.historicalPerformanceMonths
+                    startDate = earliestDate,
+                    endDate = java.time.LocalDate.now(),
+                    intervalDays = 7 // Weekly data points for better resolution
                 )
             } catch (e: Exception) {
                 println("Warning: Could not calculate historical performance: ${e.message}")

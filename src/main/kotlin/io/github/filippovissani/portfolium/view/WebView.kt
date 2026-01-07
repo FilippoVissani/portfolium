@@ -163,13 +163,38 @@ object WebView {
                                     // Historical Performance Chart (if available)
                                     if (portfolioData.historicalPerformance != null) {
                                         div(classes = "chart-container full-width") {
-                                            div(classes = "chart-title") {
-                                                unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
-                                                +"Historical Performance"
-                                                if (portfolioData.historicalPerformance?.totalReturn != java.math.BigDecimal.ZERO) {
-                                                    val returnClass = portfolioData.historicalPerformance?.totalReturn?.let { if (it >= java.math.BigDecimal.ZERO) "positive" else "negative" }
-                                                    span(classes = "return-badge $returnClass") {
-                                                        +"${portfolioData.historicalPerformance?.totalReturn}%"
+                                            div(classes = "chart-header-with-controls") {
+                                                div(classes = "chart-title") {
+                                                    unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
+                                                    +"Historical Performance"
+                                                    if (portfolioData.historicalPerformance?.totalReturn != java.math.BigDecimal.ZERO) {
+                                                        val returnClass = portfolioData.historicalPerformance?.totalReturn?.let { if (it >= java.math.BigDecimal.ZERO) "positive" else "negative" }
+                                                        span(classes = "return-badge $returnClass") {
+                                                            attributes["id"] = "returnBadge"
+                                                            +"${portfolioData.historicalPerformance?.totalReturn}%"
+                                                        }
+                                                    }
+                                                }
+                                                div(classes = "time-period-selector") {
+                                                    button(classes = "period-btn") {
+                                                        attributes["data-period"] = "1M"
+                                                        +"1M"
+                                                    }
+                                                    button(classes = "period-btn") {
+                                                        attributes["data-period"] = "6M"
+                                                        +"6M"
+                                                    }
+                                                    button(classes = "period-btn") {
+                                                        attributes["data-period"] = "YTD"
+                                                        +"YTD"
+                                                    }
+                                                    button(classes = "period-btn") {
+                                                        attributes["data-period"] = "5Y"
+                                                        +"5Y"
+                                                    }
+                                                    button(classes = "period-btn active") {
+                                                        attributes["data-period"] = "ALL"
+                                                        +"ALL"
                                                     }
                                                 }
                                             }
