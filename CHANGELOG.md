@@ -1,3 +1,9 @@
+## [3.2.1](https://github.com/FilippoVissani/portfolium/compare/3.2.0...3.2.1) (2026-01-07)
+
+### Documentation
+
+* update README with new features and improved formatting ([a3541a9](https://github.com/FilippoVissani/portfolium/commit/a3541a94921978f8f53a660339cf119adace822d))
+
 ## [3.2.0](https://github.com/FilippoVissani/portfolium/compare/3.1.0...3.2.0) (2026-01-07)
 
 ### Features
