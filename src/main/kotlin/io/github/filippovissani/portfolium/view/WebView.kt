@@ -104,6 +104,10 @@ object WebView {
                                             span(classes = "label-icon") {}
                                             +"Target: €${portfolioData.emergency.targetCapital}"
                                         }
+                                        div(classes = "label") {
+                                            span(classes = "label-icon") {}
+                                            +"Type: ${if (portfolioData.emergency.isLiquid) "Liquid" else "Invested"}"
+                                        }
                                         val statusClass = when {
                                             portfolioData.emergency.status.contains("OK", ignoreCase = true) -> "status-good"
                                             portfolioData.emergency.status.contains("below", ignoreCase = true) -> "status-warning"
@@ -240,7 +244,9 @@ object WebView {
                                             },
                                             planned: {
                                                 totalEstimated: ${portfolioData.planned.totalEstimated},
-                                                totalAccrued: ${portfolioData.planned.totalAccrued}
+                                                totalAccrued: ${portfolioData.planned.totalAccrued},
+                                                liquidAccrued: ${portfolioData.planned.liquidAccrued},
+                                                investedAccrued: ${portfolioData.planned.investedAccrued}
                                             },
                                             historicalPerformance: ${
                                                 if (portfolioData.historicalPerformance != null) {

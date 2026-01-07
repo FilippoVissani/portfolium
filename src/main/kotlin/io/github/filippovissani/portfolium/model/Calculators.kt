@@ -33,6 +33,8 @@ object Calculators {
     fun summarizePlanned(items: List<PlannedExpense>): PlannedExpensesSummary {
         val totalEstimated = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.estimatedAmount }
         val totalAccrued = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
+        val liquidAccrued = items.filter { it.isLiquid }.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
+        val investedAccrued = items.filter { !it.isLiquid }.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
         val coverage = if (totalEstimated.signum() == 0) BigDecimal.ZERO else totalAccrued.divide(
             totalEstimated,
             4,
@@ -41,7 +43,9 @@ object Calculators {
         return PlannedExpensesSummary(
             totalEstimated = totalEstimated.toMoney(),
             totalAccrued = totalAccrued.toMoney(),
-            coverageRatio = coverage
+            coverageRatio = coverage,
+            liquidAccrued = liquidAccrued.toMoney(),
+            investedAccrued = investedAccrued.toMoney()
         )
     }
 
@@ -53,7 +57,8 @@ object Calculators {
             targetCapital = targetCapital.toMoney(),
             currentCapital = config.currentCapital.toMoney(),
             deltaToTarget = delta.toMoney(),
-            status = status
+            status = status,
+            isLiquid = config.isLiquid
         )
     }
 
@@ -113,9 +118,16 @@ object Calculators {
         investments: InvestmentsSummary,
         historicalPerformance: HistoricalPerformance? = null
     ): Portfolio {
-        val liquidCapital = liquidity.net + planned.totalAccrued + emergency.currentCapital
-        val totalNetWorth = (liquidCapital + investments.totalCurrent).toMoney()
-        val percentInvested = if (totalNetWorth.signum() == 0) BigDecimal.ZERO else investments.totalCurrent.divide(
+        // Liquid capital includes: net liquidity, liquid planned accrued, and emergency fund if liquid
+        val liquidCapital = liquidity.net + planned.liquidAccrued +
+            if (emergency.isLiquid) emergency.currentCapital else BigDecimal.ZERO
+
+        // Invested capital includes: investments, invested planned accrued, and emergency fund if invested
+        val investedCapital = investments.totalCurrent + planned.investedAccrued +
+            if (!emergency.isLiquid) emergency.currentCapital else BigDecimal.ZERO
+
+        val totalNetWorth = (liquidCapital + investedCapital).toMoney()
+        val percentInvested = if (totalNetWorth.signum() == 0) BigDecimal.ZERO else investedCapital.divide(
             totalNetWorth,
             4,
             RoundingMode.HALF_UP

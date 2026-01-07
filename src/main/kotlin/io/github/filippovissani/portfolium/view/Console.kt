@@ -18,6 +18,8 @@ object Console {
         println("-- Planned & Predictable Expenses --")
         println("Total estimated: ${d.planned.totalEstimated}")
         println("Total accrued: ${d.planned.totalAccrued}")
+        println("  - Liquid: ${d.planned.liquidAccrued}")
+        println("  - Invested: ${d.planned.investedAccrued}")
         println("Coverage: ${(d.planned.coverageRatio * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%")
         println()
 
@@ -26,6 +28,7 @@ object Console {
         println("Current capital: ${d.emergency.currentCapital}")
         println("Delta to target: ${d.emergency.deltaToTarget}")
         println("Status: ${d.emergency.status}")
+        println("Type: ${if (d.emergency.isLiquid) "Liquid" else "Invested"}")
         println()
 
         println("-- Investments (Long Term) --")
