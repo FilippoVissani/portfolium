@@ -1,3 +1,17 @@
+## [3.0.0](https://github.com/FilippoVissani/portfolium/compare/2.2.0...3.0.0) (2026-01-07)
+
+### ⚠ BREAKING CHANGES
+
+* enhance liquid and invested capital calculations in financial summaries
+
+### Features
+
+* enhance liquid and invested capital calculations in financial summaries ([dc0cf29](https://github.com/FilippoVissani/portfolium/commit/dc0cf29ff7140e4ce4b93f969b1c3e2334b85135))
+
+### Tests
+
+* add unit tests for PlannedExpense and EmergencyFundConfig models ([30641f6](https://github.com/FilippoVissani/portfolium/commit/30641f6931a2f3d104c5ecef93ec80e694364d03))
+
 ## [2.2.0](https://github.com/FilippoVissani/portfolium/compare/2.1.0...2.2.0) (2026-01-07)
 
 ### Features
