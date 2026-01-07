@@ -20,6 +20,11 @@ function initializeCharts(portfolioData) {
 
     // Planned Expenses Chart
     initPlannedExpensesChart(portfolioData);
+
+    // Historical Performance Chart (if data available)
+    if (portfolioData.historicalPerformance && portfolioData.historicalPerformance.dataPoints) {
+        initHistoricalPerformanceChart(portfolioData);
+    }
 }
 
 function initAssetAllocationChart(portfolioData) {
@@ -256,3 +261,109 @@ function initPlannedExpensesChart(portfolioData) {
     });
 }
 
+function initHistoricalPerformanceChart(portfolioData) {
+    const perfCtx = document.getElementById('historicalPerformanceChart');
+    if (!perfCtx) return;
+
+    const historicalData = portfolioData.historicalPerformance;
+    const labels = historicalData.dataPoints.map(dp => dp.date);
+    const values = historicalData.dataPoints.map(dp => parseFloat(dp.value));
+
+    // Determine if overall trend is positive or negative for color
+    const firstValue = values[0] || 0;
+    const lastValue = values[values.length - 1] || 0;
+    const isPositive = lastValue >= firstValue;
+    const lineColor = isPositive ? '#10b981' : '#ef4444';
+    const gradientColor = isPositive
+        ? 'rgba(16, 185, 129, 0.1)'
+        : 'rgba(239, 68, 68, 0.1)';
+
+    new Chart(perfCtx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Portfolio Value (€)',
+                data: values,
+                borderColor: lineColor,
+                backgroundColor: gradientColor,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: lineColor,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        padding: 15,
+                        font: { size: 13, weight: '500' },
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    padding: 12,
+                    titleFont: { size: 14, weight: '600' },
+                    bodyFont: { size: 13 },
+                    borderColor: '#e2e8f0',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            return 'Value: €' + context.parsed.y.toFixed(2);
+                        },
+                        afterLabel: function(context) {
+                            if (context.dataIndex > 0) {
+                                const prev = values[context.dataIndex - 1];
+                                const current = values[context.dataIndex];
+                                const change = ((current - prev) / prev * 100).toFixed(2);
+                                return 'Change: ' + (change >= 0 ? '+' : '') + change + '%';
+                            }
+                            return '';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: {
+                        color: '#f1f5f9',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 12 },
+                        callback: function(value) {
+                            return '€' + value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 },
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            }
+        }
+    });
+}

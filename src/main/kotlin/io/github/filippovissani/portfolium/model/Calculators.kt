@@ -110,7 +110,8 @@ object Calculators {
         liquidity: LiquiditySummary,
         planned: PlannedExpensesSummary,
         emergency: EmergencyFundSummary,
-        investments: InvestmentsSummary
+        investments: InvestmentsSummary,
+        historicalPerformance: HistoricalPerformance? = null
     ): Portfolio {
         val liquidCapital = liquidity.net + planned.totalAccrued + emergency.currentCapital
         val totalNetWorth = (liquidCapital + investments.totalCurrent).toMoney()
@@ -128,7 +129,8 @@ object Calculators {
             investments = investments,
             totalNetWorth = totalNetWorth,
             percentInvested = percentInvested,
-            percentLiquid = percentLiquid
+            percentLiquid = percentLiquid,
+            historicalPerformance = historicalPerformance
         )
     }
 }

@@ -1,29 +1,75 @@
 package io.github.filippovissani.portfolium.controller
 
+import io.github.filippovissani.portfolium.controller.config.PortfoliumConfig
 import io.github.filippovissani.portfolium.controller.csv.Loaders
 import io.github.filippovissani.portfolium.model.Calculators
+import io.github.filippovissani.portfolium.model.HistoricalPerformanceCalculator
 import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.WebView
 import java.io.File
 
 object Controller {
-    fun computePortfolioSummary(dataPath: String) {
+    fun computePortfolioSummary(dataPath: String, configFile: File? = null) {
+        // Load configuration
+        val config = configFile?.let { PortfoliumConfig.fromPropertiesFile(it) }
+            ?: PortfoliumConfig.fromEnvironment()
+
+        println("Using price source: ${config.priceDataSourceType}")
+        if (config.enableHistoricalPerformance) {
+            println("Historical performance enabled (${config.historicalPerformanceMonths} months)")
+        }
+
+        // Load data files
         val transactionsCsv = "${dataPath}/transactions.csv"
         val plannedCsv = "${dataPath}/planned_expenses.csv"
         val emergencyCsv = "${dataPath}/emergency_fund.csv"
         val investmentsCsv = "${dataPath}/investments.csv"
-        val pricesCsv = "${dataPath}/current_prices.csv"
+
         val loaders = Loaders()
         val transactions = loaders.loadTransactions(File(transactionsCsv))
         val planned = loaders.loadPlannedExpenses(File(plannedCsv))
         val emergency = loaders.loadEmergencyFund(File(emergencyCsv))
         val investments = loaders.loadInvestmentTransactions(File(investmentsCsv))
-        val currentPrices = loaders.loadCurrentPrices(File(pricesCsv))
+
+        // Get price data source
+        val priceSource = config.createPriceDataSource()
+
+        // Get current prices for all unique tickers
+        val tickers = investments.map { it.ticker }.distinct()
+        val currentPrices = priceSource.getCurrentPrices(tickers)
+
+        // Calculate summaries
         val liquiditySummary = Calculators.summarizeLiquidity(transactions)
         val plannedSummary = Calculators.summarizePlanned(planned)
         val emergencySummary = Calculators.summarizeEmergency(emergency, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestmentsFromTransactions(investments, currentPrices)
-        val portfolio = Calculators.buildPortfolio(liquiditySummary, plannedSummary, emergencySummary, investmentSummary)
+
+        // Calculate historical performance if enabled
+        val historicalPerformance = if (config.enableHistoricalPerformance && investments.isNotEmpty()) {
+            println("Calculating historical performance...")
+            try {
+                HistoricalPerformanceCalculator.calculatePerformanceLastNMonths(
+                    transactions = investments,
+                    priceSource = priceSource,
+                    months = config.historicalPerformanceMonths
+                )
+            } catch (e: Exception) {
+                println("Warning: Could not calculate historical performance: ${e.message}")
+                null
+            }
+        } else {
+            null
+        }
+
+        // Build portfolio with historical performance
+        val portfolio = Calculators.buildPortfolio(
+            liquiditySummary,
+            plannedSummary,
+            emergencySummary,
+            investmentSummary,
+            historicalPerformance
+        )
+
         printDashboard(portfolio)
         WebView.startServer(portfolio, 8080)
     }

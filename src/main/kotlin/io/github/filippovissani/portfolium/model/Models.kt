@@ -101,5 +101,18 @@ data class Portfolio(
     val investments: InvestmentsSummary,
     val totalNetWorth: BigDecimal,
     val percentInvested: BigDecimal,
-    val percentLiquid: BigDecimal
+    val percentLiquid: BigDecimal,
+    val historicalPerformance: HistoricalPerformance? = null
+)
+
+// Historical performance data
+data class HistoricalPerformance(
+    val dataPoints: List<PerformanceDataPoint>,
+    val totalReturn: BigDecimal, // percentage
+    val annualizedReturn: BigDecimal? = null // percentage
+)
+
+data class PerformanceDataPoint(
+    val date: LocalDate,
+    val value: BigDecimal
 )

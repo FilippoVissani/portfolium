@@ -155,6 +155,23 @@ object WebView {
                                         }
                                         canvas { id = "plannedExpensesChart" }
                                     }
+
+                                    // Historical Performance Chart (if available)
+                                    if (portfolioData.historicalPerformance != null) {
+                                        div(classes = "chart-container full-width") {
+                                            div(classes = "chart-title") {
+                                                unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
+                                                +"Historical Performance"
+                                                if (portfolioData.historicalPerformance?.totalReturn != java.math.BigDecimal.ZERO) {
+                                                    val returnClass = portfolioData.historicalPerformance?.totalReturn?.let { if (it >= java.math.BigDecimal.ZERO) "positive" else "negative" }
+                                                    span(classes = "return-badge $returnClass") {
+                                                        +"${portfolioData.historicalPerformance?.totalReturn}%"
+                                                    }
+                                                }
+                                            }
+                                            canvas { id = "historicalPerformanceChart" }
+                                        }
+                                    }
                                 }
 
                                 // Investments Detail Table
@@ -224,6 +241,18 @@ object WebView {
                                             planned: {
                                                 totalEstimated: ${portfolioData.planned.totalEstimated},
                                                 totalAccrued: ${portfolioData.planned.totalAccrued}
+                                            },
+                                            historicalPerformance: ${
+                                                if (portfolioData.historicalPerformance != null) {
+                                                    val dataPoints = portfolioData.historicalPerformance?.dataPoints?.map { dp ->
+                                                        mapOf("date" to dp.date.toString(), "value" to dp.value)
+                                                    }
+                                                    gson.toJson(mapOf(
+                                                        "dataPoints" to dataPoints,
+                                                        "totalReturn" to portfolioData.historicalPerformance?.totalReturn,
+                                                        "annualizedReturn" to portfolioData.historicalPerformance?.annualizedReturn
+                                                    ))
+                                                } else "null"
                                             }
                                         };
                                     """.trimIndent())
