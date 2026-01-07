@@ -1,3 +1,9 @@
+## [3.2.0](https://github.com/FilippoVissani/portfolium/compare/3.1.0...3.2.0) (2026-01-07)
+
+### Features
+
+* implement logging system with SLF4J for improved error handling and information tracking ([2e11427](https://github.com/FilippoVissani/portfolium/commit/2e11427192aad825d5368a5692967083ba6658a3))
+
 ## [3.1.0](https://github.com/FilippoVissani/portfolium/compare/3.0.0...3.1.0) (2026-01-07)
 
 ### Features
