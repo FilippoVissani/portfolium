@@ -43,7 +43,7 @@ tasks.test {
 }
 
 jacoco {
-    toolVersion = "0.8.12"
+    toolVersion = libs.findVersion("jacoco").get().toString()
 }
 
 tasks.jacocoTestReport {
