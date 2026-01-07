@@ -1,3 +1,9 @@
+## [3.2.2](https://github.com/FilippoVissani/portfolium/compare/3.2.1...3.2.2) (2026-01-07)
+
+### Documentation
+
+* remove contributing link from README ([9ac977d](https://github.com/FilippoVissani/portfolium/commit/9ac977d6f539b7a009d38e657335e27d2f502cc7))
+
 ## [3.2.1](https://github.com/FilippoVissani/portfolium/compare/3.2.0...3.2.1) (2026-01-07)
 
 ### Documentation
