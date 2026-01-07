@@ -2,6 +2,7 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    jacoco
     application
 }
 
@@ -38,4 +39,32 @@ application {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // Generate coverage report after tests
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // Tests are required to run before generating the report
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.0".toBigDecimal() // Set minimum coverage threshold
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
