@@ -3,7 +3,7 @@ kotlin = "2.2.21"
 kotlinCsv = "1.9.3"
 kotest = "5.9.1"
 ktor = "3.0.3"
-logback = "1.5.16"
+logback = "1.5.23"
 jacoco = "0.8.12"
 
 [libraries]
