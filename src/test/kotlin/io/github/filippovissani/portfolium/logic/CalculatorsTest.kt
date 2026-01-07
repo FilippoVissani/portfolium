@@ -159,8 +159,8 @@ class CalculatorsTest : StringSpec({
     "buildDashboard zeroes" {
         val d = Calculators.buildPortfolio(
             LiquiditySummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), bd2("0.00")),
-            PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000")),
-            EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK"),
+            PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000"), bd2("0.00"), bd2("0.00")),
+            EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK", true),
             InvestmentsSummary(bd2("0.00"), bd2("0.00"), emptyList())
         )
         d.totalNetWorth shouldBe bd2("0.00")
