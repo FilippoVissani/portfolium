@@ -1,184 +1,358 @@
-# Portfolium
+<div align="center">
+  <img src="portfolium-logo.png" alt="Portfolium Logo" width="200"/>
+  
+  # Portfolium
+  
+  **Professional Personal Finance Dashboard**
 
-[![CI](https://github.com/filippovissani/portfolium/actions/workflows/ci.yml/badge.svg)](https://github.com/filippovissani/portfolium/actions/workflows/ci.yml)
+  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+  [![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org/)
+  [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/)
+  
+  *Take control of your finances with a beautiful, data-driven dashboard powered by CSV files*
+  
+  [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+  
+</div>
 
-A tiny Kotlin CLI that turns personal finance CSVs into a concise, human‑readable dashboard: liquidity, planned expenses, emergency fund, and investments. It reads your data from simple CSV files and prints a formatted summary in the terminal.
+---
 
-## Features
+## 📊 Overview
 
-- Parse transactions and compute income, expenses, net, and 12‑month average monthly expense
-- Track planned/predictable expenses with accrued amounts and coverage ratio
-- Compute emergency fund target vs. current capital using the 12‑month average expense
-- Summarize investments from transactions, including average price, current value, PnL, and portfolio weights
-- Produce an aggregated "Total Net Worth" with invested vs. liquid split
+**Portfolium** is a modern Kotlin-based personal finance tool that transforms your financial data into actionable insights. It provides both a **console dashboard** and an **interactive web interface** with real-time charts and visualizations.
 
-## Project structure
+Perfect for privacy-conscious individuals who want to track their finances without relying on third-party services. All your data stays on your machine, stored in simple CSV files that you fully control.
 
-- Application entrypoint: `src/main/kotlin/io/github/filippovissani/portfolium/Main.kt`
-- Core logic: `src/main/kotlin/io/github/filippovissani/portfolium/logic/Calculators.kt`
-- CSV parsing helpers: `src/main/kotlin/io/github/filippovissani/portfolium/csv/*`
-- Data models: `src/main/kotlin/io/github/filippovissani/portfolium/model/Models.kt`
-- Utility operators: `src/main/kotlin/io/github/filippovissani/portfolium/util/Money.kt`
-- Example data: `data/*.csv`
-- Tests: `src/test/kotlin/io/github/filippovissani/portfolium/*`
+### Why Portfolium?
 
-## Requirements
+- 📈 **Dual Interface**: Console output + beautiful web dashboard
+- 💹 **Investment Tracking**: Real-time portfolio performance with historical charts
+- 🎯 **Goal Management**: Track emergency funds and planned expenses
+- ⚡ **Flexible Data Sources**: CSV files or Yahoo Finance API
 
-- Java 21 (used via Gradle toolchain)
-- Gradle Wrapper (included)
+---
 
-## Build and run
+## ✨ Features
 
-- Build the project:
+### 💰 Liquidity Management
+- Track income and expenses from transaction history
+- Calculate net liquidity and average monthly expenses (12-month rolling)
+- Categorize transactions by type, category, and payment method
 
-```zsh
-./gradlew build
+### 📅 Planned Expenses
+- Monitor upcoming predictable expenses
+- Track accrued amounts vs. estimated totals
+- Calculate coverage ratios to ensure you're saving enough
+
+### 🚨 Emergency Fund
+- Set target months of expenses for your emergency fund
+- Real-time status tracking (target met or shortfall)
+- Automatic calculation based on your spending patterns
+
+### 📊 Investment Portfolio
+- Track multiple investment positions (ETFs, stocks, etc.)
+- Real-time portfolio valuation with live prices
+- Historical performance charts with customizable time periods
+- Calculate profit/loss, average prices, and portfolio weights
+- Support for transaction fees and multiple buy/sell operations
+
+### 🌐 Web Dashboard
+- Modern, responsive web interface on `localhost:8080`
+- Interactive charts powered by Chart.js
+- Visual breakdown of asset allocation
+- Historical performance visualization
+
+### 🔧 Configuration Options
+- **Price Data Sources**: 
+  - CSV files
+  - Yahoo Finance API (real-time market data)
+- **Historical Performance**: Optional performance tracking over time
+- **Environment Variables**: Configure via `.properties` file or env vars
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Java 21** (automatically managed via Gradle toolchain)
+- **Gradle** (wrapper included)
+
+### Installation & Running
+
+1. **Clone the repository**
+   ```zsh
+   git clone https://github.com/filippovissani/portfolium.git
+   cd portfolium
+   ```
+
+2. **Build the project**
+   ```zsh
+   ./gradlew build
+   ```
+
+3. **Run with default data**
+   ```zsh
+   ./gradlew run
+   ```
+   
+   This will:
+   - Load CSV files from the `data/` directory
+   - Print a console dashboard
+   - Start a web server at `http://localhost:8080`
+
+4. **Run with custom data directory**
+   ```zsh
+   ./gradlew run --args="/path/to/your/data"
+   ```
+
+5. **Run the JAR directly**
+   ```zsh
+   java -jar build/libs/portfolium-1.0-SNAPSHOT.jar [data-directory]
+   ```
+
+### First Steps
+
+1. Open `http://localhost:8080` in your browser
+2. Explore the example data in the `data/` folder
+3. Customize the CSV files with your own financial data
+4. Refresh the page to see your personalized dashboard
+
+---
+
+## 📂 Project Structure
+
+```
+portfolium/
+├── src/main/kotlin/io/github/filippovissani/portfolium/
+│   ├── Main.kt                          # Application entry point
+│   ├── controller/
+│   │   ├── Controller.kt                # Main business logic orchestration
+│   │   ├── config/                      # Configuration management
+│   │   ├── csv/                         # CSV parsers and loaders
+│   │   └── datasource/                  # Price data sources (CSV, Yahoo Finance)
+│   ├── model/                           # Domain models and calculators
+│   └── view/
+│       ├── Console.kt                   # Terminal output formatter
+│       └── WebView.kt                   # Web dashboard (Ktor + HTML DSL)
+├── src/test/kotlin/                     # Unit tests (Kotest)
+├── data/                                # Example CSV files
+│   ├── transactions.csv
+│   ├── planned_expenses.csv
+│   ├── emergency_fund.csv
+│   ├── investments.csv
+│   └── current_prices.csv
+├── build.gradle.kts                     # Gradle build configuration
+└── portfolium.properties                # Optional configuration file
 ```
 
-- Run the CLI with default CSV paths (using the bundled `data/*.csv`):
+---
 
-```zsh
-./gradlew run
+## 📋 Documentation
+
+### CSV Data Formats
+
+All CSV files should be placed in a data directory (default: `data/`).
+
+#### 1. Transactions (`transactions.csv`)
+
+Track all income and expenses.
+
+```csv
+date,description,type,category,method,amount,note
+2026-01-05,Salary Deposit,income,Salary,Bank Transfer,3000.00,January salary
+2026-01-10,Grocery Shopping,expense,Groceries,Credit Card,-150.75,Weekly groceries
 ```
 
-- Or pass custom file paths in order:
-
-```zsh
-./gradlew run --args="/path/to/transactions.csv /path/to/planned_expenses.csv /path/to/emergency_fund.csv /path/to/investments.csv /path/to/current_prices.csv"
-```
-
-You can also run the generated jar after building:
-
-```zsh
-java -jar build/libs/portfolium-1.0-SNAPSHOT.jar
-# or with args
-java -jar build/libs/portfolium-1.0-SNAPSHOT.jar /path/transactions.csv /path/planned_expenses.csv /path/emergency_fund.csv /path/investments.csv /path/current_prices.csv
-```
-
-## CSV formats
-
-The app expects headers and values as described below. Extra columns are ignored; missing or invalid values fall back to sensible defaults where possible.
-
-### 1) Transactions (`transactions.csv`)
-
-Header: `date,description,type,category,method,amount,note`
-
+**Fields:**
+- `date`: Date in `YYYY-MM-DD`, `dd/MM/yyyy`, or `MM/dd/yyyy` format
+- `description`: Transaction description
 - `type`: `income` or `expense`
-- `amount`: income as positive, expense as negative
-- `date`: supports formats like `YYYY-MM-DD`, `dd/MM/yyyy`, `MM/dd/yyyy`
+- `category`: Custom category (e.g., Salary, Food, Transport)
+- `method`: Payment method (e.g., Bank Transfer, Credit Card, Cash)
+- `amount`: Positive for income, negative for expenses
+- `note`: Optional notes
 
-Example:
+#### 2. Planned Expenses (`planned_expenses.csv`)
 
+Track predictable future expenses.
+
+```csv
+name,estimated_amount,horizon,due_date,accrued
+Car Insurance,1200.00,Annual,2026-12-01,600.00
+Vacation Fund,2000.00,Semi-Annual,2026-07-01,800.00
 ```
-2025-01-15,Salary,income,Job,Bank,1000,
-2025-02-01,Groceries,expense,Food,Card,-200,
+
+**Fields:**
+- `name`: Expense name
+- `estimated_amount`: Total expected amount
+- `horizon`: Optional (e.g., Annual, Monthly)
+- `due_date`: Optional due date
+- `accrued`: Amount already saved
+
+#### 3. Emergency Fund (`emergency_fund.csv`)
+
+Set your emergency fund target.
+
+```csv
+target_months,current_capital
+6,15000.00
 ```
 
-Outputs: total income, total expense (absolute), net, average monthly expense over last 12 months.
+**Fields:**
+- `target_months`: Number of months of expenses to cover (default: 6)
+- `current_capital`: Current emergency fund balance
 
-### 2) Planned expenses (`planned_expenses.csv`)
+#### 4. Investment Transactions (`investments.csv`)
 
-Header: `name,estimated_amount,horizon,due_date,accrued`
+Track all buy/sell transactions for investments.
 
-- `estimated_amount`: total expected amount
-- `accrued`: amount set aside so far
-- `horizon` and `due_date`: optional; date uses the same formats as transactions
+```csv
+date,etf,ticker,area,quantity,price,fees
+2022-01-05,VTI,VTI,US,10,291.00,1.00
+2023-06-15,VEA,VEA,International,5,47.40,0.50
+2024-01-10,VOO,VOO,US,-2,549.32,0.80
+```
 
-Outputs: total estimated, total accrued, coverage ratio (accrued/estimated).
+**Fields:**
+- `date`: Transaction date
+- `etf`: Investment name/description
+- `ticker`: Stock/ETF ticker symbol
+- `area`: Geographic area or category (e.g., US, International, Emerging Markets)
+- `quantity`: Number of shares (negative for sells)
+- `price`: Price per share
+- `fees`: Transaction fees (optional, defaults to 0)
 
-### 3) Emergency fund (`emergency_fund.csv`)
+#### 5. Current Prices (`current_prices.csv`)
 
-Header: `target_months,current_capital`
+Current market prices for investments (when using CSV price source).
 
-- Typically a single row
-- `target_months`: desired months of expenses to cover (defaults to 6 if missing)
-- `current_capital`: current emergency fund amount
+```csv
+ticker,price
+VTI,295.50
+VEA,48.20
+VOO,562.80
+```
 
-Outputs: target capital, delta to target, status (`OK` if current >= target).
+**Fields:**
+- `ticker`: Ticker symbol (must match tickers in `investments.csv`)
+- `price`: Current market price per share
 
-### 4) Investment transactions (`investments.csv`)
+### Configuration
 
-Header: `date,etf,ticker,area,quantity,price,fees`
+Create a `portfolium.properties` file in the project root:
 
-- `quantity`: can be negative for sells
-- `price`: per unit
-- `fees`: optional per transaction cost
-- Positions fully sold (net quantity = 0) are omitted from summary
+```properties
+# Price data source: CSV or YAHOO_FINANCE
+price.data.source=CSV
 
-Outputs: invested and current totals, items with weights, average price, current value, and PnL.
+# Path to current prices CSV (when using CSV source)
+csv.prices.path=data/current_prices.csv
 
-### 5) Current prices (`current_prices.csv`)
+# Enable historical performance tracking
+enable.historical.performance=true
 
-Header: `ticker,price`
+# Historical performance period in months
+historical.performance.months=12
+```
 
-- Maps tickers to current market prices used for the investment summary
+**Or use environment variables:**
 
-## Output example
+```zsh
+export PRICE_DATA_SOURCE=YAHOO_FINANCE
+export ENABLE_HISTORICAL_PERFORMANCE=true
+```
 
-Running the app prints something like:
+### Console Output Example
 
 ```
 === Personal Finance Dashboard ===
 
 -- Liquidity (Transactions) --
-Total income: 1500.00
-Total expense: 500.00
-Net: 1000.00
-Avg monthly expense (12m): 41.67
+Total income: 12,000.00 €
+Total expense: 4,500.00 €
+Net: 7,500.00 €
+Avg monthly expense (12m): 375.00 €
 
 -- Planned & Predictable Expenses --
-Total estimated: 1500.00
-Total accrued: 900.00
-Coverage: 60.00%
+Total estimated: 3,200.00 €
+Total accrued: 1,400.00 €
+Coverage: 43.75%
 
 -- Emergency Fund --
-Target capital: 6000.00
-Current capital: 5000.00
-Delta to target: 1000.00
-Status: BELOW TARGET
+Target capital (6 months): 2,250.00 €
+Current capital: 15,000.00 €
+Delta to target: +12,750.00 €
+Status: ✓ TARGET REACHED
 
 -- Investments (Long Term) --
-Total invested: 2000.00
-Total current: 2300.00
-Breakdown:
-  - ETF A (A): current=1100.00, pnl=100.00, weight=47.83%
-  - ETF B (B): current=1200.00, pnl=200.00, weight=52.17%
+Total invested: 10,000.00 €
+Total current value: 11,250.00 €
+Total P&L: +1,250.00 € (+12.50%)
 
--- Summary --
-Total net worth: 9200.00
-% Invested: 25.00%
-% Liquid: 75.00%
+Portfolio Breakdown:
+  • VTI (US): 10 shares @ avg 291.00 € → 2,955.00 € (+1.71%, weight: 26.27%)
+  • VEA (International): 5 shares @ avg 47.40 € → 241.00 € (+1.69%, weight: 2.14%)
+  • VOO (US): 8 shares @ avg 549.32 € → 4,502.40 € (+2.77%, weight: 40.02%)
+
+-- Total Net Worth --
+Total: 34,000.00 €
+% Invested: 33.09%
+% Liquid: 66.91%
+
+Web dashboard running at http://localhost:8080
 ```
 
-Note: Percentages are rounded to 2 decimals for display.
+---
 
-## Data parsing details
+## 🧪 Testing
 
-- Dates: multiple formats supported; if a date can’t be parsed, the app throws an error listing the offending value
-- Numbers: both `,` and `.` decimal separators are supported; `€` and spaces are stripped (e.g., `"1 234,56" -> 1234.56`)
-- Missing values: numeric fields default to 0, optional strings may be `null`
-
-## Testing
-
-Run unit tests and view the reports:
+Run the test suite:
 
 ```zsh
 ./gradlew test
-# HTML report: build/reports/tests/test/index.html
 ```
 
-## Release automation (semantic-release)
+View the HTML test report:
 
-This repo uses semantic-release to automate versioning, changelog, and GitHub Releases based on Conventional Commits.
+```zsh
+open build/reports/tests/test/index.html
+```
 
-- Commit format: `type(scope?): subject` with body/footer for BREAKING CHANGES
-  - Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
-  - BREAKING change: include `BREAKING CHANGE:` in the commit body or use `!` after type/scope (e.g., `feat!: ...`)
-- Branches: releases run on `main` or `master`
-- What happens on release:
-  - Determine next version from commit history
-  - Update `CHANGELOG.md`
-  - Build artifacts are uploaded to the GitHub Release (the CLI JAR)
-  - Create GitHub Release with notes
+Tests are written using **Kotest** and cover:
+- CSV parsing and data loading
+- Financial calculations (liquidity, emergency fund, investments)
+- Portfolio construction and aggregation
+- Historical performance tracking
 
-To cut a release, push Conventional Commits to the default branch. The Release workflow will run automatically.
+---
+
+## 🛠️ Technology Stack
+
+- **Language**: Kotlin 1.9+
+- **Runtime**: Java 21 (via Gradle toolchain)
+- **Web Framework**: Ktor (Netty engine)
+- **CSV Parsing**: kotlin-csv
+- **Logging**: SLF4J + Logback
+- **Testing**: Kotest
+- **Frontend**: Chart.js, vanilla JavaScript
+- **Build Tool**: Gradle with Kotlin DSL
+
+---
+
+
+- Built with ❤️ using Kotlin
+- Charts powered by [Chart.js](https://www.chartjs.org/)
+- Price data from [Yahoo Finance](https://finance.yahoo.com/)
+- Inspired by the principles of financial independence and data ownership
+
+---
+
+<div align="center">
+  
+  **Made with ☕ by [Filippo Vissani](https://github.com/filippovissani)**
+  
+  If you find this project useful, please consider giving it a ⭐!
+  
+</div>
+
