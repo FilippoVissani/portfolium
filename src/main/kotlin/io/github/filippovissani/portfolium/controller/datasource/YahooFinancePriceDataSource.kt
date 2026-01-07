@@ -1,5 +1,6 @@
 package io.github.filippovissani.portfolium.controller.datasource
 
+import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.net.URI
 import java.net.http.HttpClient
@@ -22,6 +23,7 @@ class YahooFinancePriceDataSource(
 
     companion object {
         private const val BASE_URL = "https://query1.finance.yahoo.com/v8/finance/chart"
+        private val logger = LoggerFactory.getLogger(YahooFinancePriceDataSource::class.java)
     }
 
     override fun getCurrentPrice(ticker: String): BigDecimal? {
@@ -30,7 +32,7 @@ class YahooFinancePriceDataSource(
             val response = makeRequest(url)
             parseCurrentPrice(response)
         } catch (e: Exception) {
-            println("Error fetching current price for $ticker: ${e.message}")
+            logger.error("Error fetching current price for ticker: {}", ticker, e)
             null
         }
     }
@@ -48,7 +50,7 @@ class YahooFinancePriceDataSource(
             prices.filter { it.key <= date }
                 .maxByOrNull { it.key }?.value
         } catch (e: Exception) {
-            println("Error fetching historical price for $ticker on $date: ${e.message}")
+            logger.error("Error fetching historical price for ticker: {} on date: {}", ticker, date, e)
             null
         }
     }
@@ -62,7 +64,7 @@ class YahooFinancePriceDataSource(
             val response = makeRequest(url)
             parseHistoricalPrices(response)
         } catch (e: Exception) {
-            println("Error fetching historical prices for $ticker: ${e.message}")
+            logger.error("Error fetching historical prices for ticker: {}", ticker, e)
             emptyMap()
         }
     }
@@ -90,7 +92,7 @@ class YahooFinancePriceDataSource(
             val regularPrice = meta.get("regularMarketPrice")?.asDouble ?: return null
             return BigDecimal.valueOf(regularPrice)
         } catch (e: Exception) {
-            println("Error parsing current price: ${e.message}")
+            logger.error("Error parsing current price from JSON response", e)
             return null
         }
     }
@@ -119,7 +121,7 @@ class YahooFinancePriceDataSource(
             }
             return prices
         } catch (e: Exception) {
-            println("Error parsing historical prices: ${e.message}")
+            logger.error("Error parsing historical prices from JSON response", e)
             return emptyMap()
         }
     }
