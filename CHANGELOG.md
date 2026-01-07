@@ -1,3 +1,9 @@
+## [2.2.0](https://github.com/FilippoVissani/portfolium/compare/2.1.0...2.2.0) (2026-01-07)
+
+### Features
+
+* implement historical performance tracking and visualization ([2f407be](https://github.com/FilippoVissani/portfolium/commit/2f407bea74e8745294e9f9c23918a87db3c2c56a))
+
 ## [2.1.0](https://github.com/FilippoVissani/portfolium/compare/2.0.0...2.1.0) (2026-01-06)
 
 ### Features
