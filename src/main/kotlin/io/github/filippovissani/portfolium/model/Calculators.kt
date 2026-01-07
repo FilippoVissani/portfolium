@@ -75,7 +75,7 @@ object Calculators {
         )
     }
 
-    // New: summarize investments from individual transactions and a map of current prices per ticker
+    // summarize investments from individual transactions and a map of current prices per ticker
     fun summarizeInvestmentsFromTransactions(
         txs: List<InvestmentTransaction>,
         currentPricesByTicker: Map<String, BigDecimal>
@@ -110,7 +110,8 @@ object Calculators {
         liquidity: LiquiditySummary,
         planned: PlannedExpensesSummary,
         emergency: EmergencyFundSummary,
-        investments: InvestmentsSummary
+        investments: InvestmentsSummary,
+        historicalPerformance: HistoricalPerformance? = null
     ): Portfolio {
         val liquidCapital = liquidity.net + planned.totalAccrued + emergency.currentCapital
         val totalNetWorth = (liquidCapital + investments.totalCurrent).toMoney()
@@ -128,7 +129,8 @@ object Calculators {
             investments = investments,
             totalNetWorth = totalNetWorth,
             percentInvested = percentInvested,
-            percentLiquid = percentLiquid
+            percentLiquid = percentLiquid,
+            historicalPerformance = historicalPerformance
         )
     }
 }

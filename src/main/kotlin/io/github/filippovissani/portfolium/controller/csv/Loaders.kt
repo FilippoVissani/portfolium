@@ -11,7 +11,6 @@ import io.github.filippovissani.portfolium.model.PlannedExpense
 import io.github.filippovissani.portfolium.model.Transaction
 import io.github.filippovissani.portfolium.model.TransactionType
 import java.io.File
-import java.math.BigDecimal
 import java.time.LocalDate
 
 class Loaders(
@@ -82,19 +81,5 @@ class Loaders(
                 fees = r["fees"]?.let { parseBigDecimal(it) }
             )
         }
-    }
-
-    fun loadCurrentPrices(file: File): Map<String, BigDecimal> {
-        file.ensureExists()
-        val rows = reader.readAllWithHeader(file)
-        return rows.mapNotNull { r ->
-            val ticker = r["ticker"]?.trim()
-            val price = r["price"]?.trim()?.let { parseBigDecimal(it) }
-            if (ticker != null && price != null) {
-                ticker to price
-            } else {
-                null
-            }
-        }.toMap()
     }
 }
