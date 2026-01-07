@@ -6,12 +6,11 @@
   **Professional Personal Finance Dashboard**
 
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-  [![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org/)
   [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/)
   
   *Take control of your finances with a beautiful, data-driven dashboard powered by CSV files*
   
-  [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+  [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
   
 </div>
 
@@ -329,7 +328,6 @@ Tests are written using **Kotest** and cover:
 
 ## 🛠️ Technology Stack
 
-- **Language**: Kotlin 1.9+
 - **Runtime**: Java 21 (via Gradle toolchain)
 - **Web Framework**: Ktor (Netty engine)
 - **CSV Parsing**: kotlin-csv
