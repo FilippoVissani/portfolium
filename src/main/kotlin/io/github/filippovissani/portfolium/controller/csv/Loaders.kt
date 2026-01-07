@@ -50,12 +50,13 @@ class Loaders(
                 estimatedAmount = parseBigDecimal(r["estimated_amount"]),
                 horizon = r["horizon"],
                 dueDate = parseDate(r["due_date"]),
-                accrued = parseBigDecimal(r["accrued"])
+                accrued = parseBigDecimal(r["accrued"]),
+                instrument = r["instrument"]
             )
         }
     }
 
-    // Emergency fund config CSV header (single row is enough): target_months,current_capital
+    // Emergency fund config CSV header (single row is enough): target_months,current_capital,instrument
     fun loadEmergencyFund(file: File): EmergencyFundConfig {
         file.ensureExists()
         val rows = reader.readAllWithHeader(file)
@@ -63,6 +64,7 @@ class Loaders(
         return EmergencyFundConfig(
             targetMonths = r["target_months"]?.trim()?.toIntOrNull() ?: 6,
             currentCapital = parseBigDecimal(r["current_capital"]),
+            instrument = r["instrument"]
         )
     }
 

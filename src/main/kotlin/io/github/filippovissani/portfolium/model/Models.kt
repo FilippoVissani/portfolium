@@ -24,15 +24,20 @@ data class PlannedExpense(
     val horizon: String?,
     val dueDate: LocalDate?,
     val accrued: BigDecimal,
+    val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
 ) {
     val delta: BigDecimal get() = estimatedAmount - accrued
+    val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
 }
 
 
 data class EmergencyFundConfig(
     val targetMonths: Int,
-    val currentCapital: BigDecimal
-)
+    val currentCapital: BigDecimal,
+    val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
+) {
+    val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
+}
 
 
 // individual investment transaction (e.g., buy/sell)
@@ -75,7 +80,9 @@ data class LiquiditySummary(
 data class PlannedExpensesSummary(
     val totalEstimated: BigDecimal,
     val totalAccrued: BigDecimal,
-    val coverageRatio: BigDecimal
+    val coverageRatio: BigDecimal,
+    val liquidAccrued: BigDecimal,
+    val investedAccrued: BigDecimal
 )
 
 
@@ -83,7 +90,8 @@ data class EmergencyFundSummary(
     val targetCapital: BigDecimal,
     val currentCapital: BigDecimal,
     val deltaToTarget: BigDecimal,
-    val status: String
+    val status: String,
+    val isLiquid: Boolean
 )
 
 
