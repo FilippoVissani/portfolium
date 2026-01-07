@@ -6,17 +6,19 @@ import io.github.filippovissani.portfolium.model.Calculators
 import io.github.filippovissani.portfolium.model.HistoricalPerformanceCalculator
 import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.WebView
+import org.slf4j.LoggerFactory
 import java.io.File
 
 object Controller {
+    private val logger = LoggerFactory.getLogger(Controller::class.java)
     fun computePortfolioSummary(dataPath: String, configFile: File? = null) {
         // Load configuration
         val config = configFile?.let { PortfoliumConfig.fromPropertiesFile(it) }
             ?: PortfoliumConfig.fromEnvironment()
 
-        println("Using price source: ${config.priceDataSourceType}")
+        logger.info("Using price source: {}", config.priceDataSourceType)
         if (config.enableHistoricalPerformance) {
-            println("Historical performance enabled (all available data)")
+            logger.info("Historical performance enabled (all available data)")
         }
 
         // Load data files
@@ -46,7 +48,7 @@ object Controller {
 
         // Calculate historical performance if enabled
         val historicalPerformance = if (config.enableHistoricalPerformance && investments.isNotEmpty()) {
-            println("Calculating historical performance...")
+            logger.info("Calculating historical performance...")
             try {
                 // Calculate from the earliest transaction date to today to support all time period views
                 val earliestDate = investments.minOfOrNull { it.date } ?: java.time.LocalDate.now()
@@ -58,7 +60,7 @@ object Controller {
                     intervalDays = 7 // Weekly data points for better resolution
                 )
             } catch (e: Exception) {
-                println("Warning: Could not calculate historical performance: ${e.message}")
+                logger.warn("Could not calculate historical performance", e)
                 null
             }
         } else {
