@@ -75,7 +75,7 @@ object Calculators {
         )
     }
 
-    // New: summarize investments from individual transactions and a map of current prices per ticker
+    // summarize investments from individual transactions and a map of current prices per ticker
     fun summarizeInvestmentsFromTransactions(
         txs: List<InvestmentTransaction>,
         currentPricesByTicker: Map<String, BigDecimal>

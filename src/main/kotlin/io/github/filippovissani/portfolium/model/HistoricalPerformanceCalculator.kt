@@ -7,6 +7,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import kotlin.math.pow
 
 object HistoricalPerformanceCalculator {
 
@@ -60,7 +61,7 @@ object HistoricalPerformanceCalculator {
                 // Convert to double for power calculation, then back to BigDecimal
                 val ratioDouble = ratio.toDouble()
                 val yearsDouble = years.toDouble()
-                val annualized = (Math.pow(ratioDouble, 1.0 / yearsDouble) - 1.0) * 100.0
+                val annualized = (ratioDouble.pow(1.0 / yearsDouble) - 1.0) * 100.0
                 BigDecimal.valueOf(annualized).setScale(2, RoundingMode.HALF_UP)
             } else {
                 null
