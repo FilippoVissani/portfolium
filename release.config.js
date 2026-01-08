@@ -7,6 +7,7 @@ const releaseBranches = ["main"]
 config.branches = releaseBranches
 config.plugins.push(
     ["@semantic-release/exec", {
+        "prepareCmd": "sed -i 's/^version = \".*\"/version = \"${nextRelease.version}\"/' build.gradle.kts",
         "publishCmd": publishCommands,
     }],
     ["@semantic-release/github", {
@@ -15,7 +16,7 @@ config.plugins.push(
         ]
     }],
     ["@semantic-release/git", {
-        "assets": ["CHANGELOG.md", "package.json"],
+        "assets": ["CHANGELOG.md", "package.json", "build.gradle.kts"],
         "message": "chore(release)!: [skip ci] ${nextRelease.version} released"
     }],
 )
