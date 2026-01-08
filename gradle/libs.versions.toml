@@ -8,7 +8,7 @@ jacoco = "0.8.14"
 
 [libraries]
 # CSV utilities
-kotlinCsv = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlinCsv" }
+kotlinCsv = { module = "com.jsoizo:kotlin-csv", version.ref = "kotlinCsv" }
 # Kotlin test library (JUnit platform)
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 # Kotest
