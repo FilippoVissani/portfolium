@@ -1,3 +1,39 @@
+## [3.2.3](https://github.com/FilippoVissani/portfolium/compare/3.2.2...3.2.3) (2026-01-08)
+
+### Dependency updates
+
+* **deps:** add renovate.json ([4903366](https://github.com/FilippoVissani/portfolium/commit/4903366c562ce87ef8ced3987ac295595f5f3c93))
+* **deps:** switch kotlinCsv dependency to a new repository ([16d19f9](https://github.com/FilippoVissani/portfolium/commit/16d19f90ac1aea0b61a614812231fb04a39f3737))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.23 ([#16](https://github.com/FilippoVissani/portfolium/issues/16)) ([736c451](https://github.com/FilippoVissani/portfolium/commit/736c451ca93e399022b60c74b641feb747a98439))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.24 ([50df52e](https://github.com/FilippoVissani/portfolium/commit/50df52e8b62a0463cd6bbe0af366115178a3b1cf))
+* **deps:** update dependency com.github.doyaaaaaken:kotlin-csv-jvm to v1.10.0 ([#18](https://github.com/FilippoVissani/portfolium/issues/18)) ([3d5f212](https://github.com/FilippoVissani/portfolium/commit/3d5f2128fce619d81d92354bcc2af4d47f97f7dd))
+* **deps:** update gradle to v8.14.3 ([#17](https://github.com/FilippoVissani/portfolium/issues/17)) ([46d3e9b](https://github.com/FilippoVissani/portfolium/commit/46d3e9b1075ce7b4162fed629feb0444689c4104))
+* **deps:** update gradle to v9 ([#22](https://github.com/FilippoVissani/portfolium/issues/22)) ([0f2c5de](https://github.com/FilippoVissani/portfolium/commit/0f2c5de3e380cdd17a3610e475854436deccb0fc))
+* **deps:** update JaCoCo version to 0.8.14 ([8bfbfbf](https://github.com/FilippoVissani/portfolium/commit/8bfbfbfdea90888752ff05242a800541d84a9913))
+* **deps:** update kotlin monorepo to v2.3.0 ([#19](https://github.com/FilippoVissani/portfolium/issues/19)) ([ba4c572](https://github.com/FilippoVissani/portfolium/commit/ba4c572709dc4ff6b2a065b60c6338bdb71f32a5))
+* **deps:** update ktor monorepo to v3.3.3 ([#20](https://github.com/FilippoVissani/portfolium/issues/20)) ([e49fdee](https://github.com/FilippoVissani/portfolium/commit/e49fdee82e0f34983397c032a51c44aa0abe8cc2))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v0.10.0 ([#21](https://github.com/FilippoVissani/portfolium/issues/21)) ([ab0c083](https://github.com/FilippoVissani/portfolium/commit/ab0c083f22cd9692bde9788fc50548a872e224c5))
+* **deps:** update plugin org.gradle.toolchains.foojay-resolver-convention to v1 ([#24](https://github.com/FilippoVissani/portfolium/issues/24)) ([b4e3fa3](https://github.com/FilippoVissani/portfolium/commit/b4e3fa3b67f3976d8811c358af5a0010674955ca))
+
+### Documentation
+
+* add CI badge to README ([6e855ec](https://github.com/FilippoVissani/portfolium/commit/6e855ecdac36b518e80d619b31f1e3c848c2363d))
+* update Java version badge in README to 25 ([e9689da](https://github.com/FilippoVissani/portfolium/commit/e9689da569e3d2a9794aa13f074b1d18cc77308e))
+
+### Build and continuous integration
+
+* add coverage report generation and publishing to CI workflow ([9e2001b](https://github.com/FilippoVissani/portfolium/commit/9e2001bb98fbcde0bacf5179f1e27ab122e4a332))
+* add JaCoCo integration ([4499620](https://github.com/FilippoVissani/portfolium/commit/449962078a11b70bfef818414549f901dcda4f92))
+* **deps:** update actions/checkout action to v5 ([#26](https://github.com/FilippoVissani/portfolium/issues/26)) ([4d24a9d](https://github.com/FilippoVissani/portfolium/commit/4d24a9ddc994e915427306783f2a046811e64f0b))
+* **deps:** update actions/checkout action to v6 ([#27](https://github.com/FilippoVissani/portfolium/issues/27)) ([513f186](https://github.com/FilippoVissani/portfolium/commit/513f1860e9ccfee569be0c1fe062beb44190c22c))
+* **deps:** update actions/setup-java action to v5 ([#28](https://github.com/FilippoVissani/portfolium/issues/28)) ([241bdfb](https://github.com/FilippoVissani/portfolium/commit/241bdfb16cc3e3fbe3b778fe55c302e7f599f614))
+* **deps:** update actions/upload-artifact action to v5 ([#29](https://github.com/FilippoVissani/portfolium/issues/29)) ([4eace2f](https://github.com/FilippoVissani/portfolium/commit/4eace2f655232c53af644dff70b453bf260369c6))
+* **deps:** update gradle/wrapper-validation-action action to v3 ([fc12e6e](https://github.com/FilippoVissani/portfolium/commit/fc12e6e6622dc10111f856d49a97bd4bc7fb3fdc))
+* remove renovate config ([b8e1e9c](https://github.com/FilippoVissani/portfolium/commit/b8e1e9c6bdea49915e5296d2ebac98e234530815))
+* update Gradle wrapper validation action to use the new repository path ([594f2fd](https://github.com/FilippoVissani/portfolium/commit/594f2fd1cfb7aa57e34a1e23f027088a3801ffd4))
+* update JaCoCo tool version to use version from libs.versions.toml ([942afbe](https://github.com/FilippoVissani/portfolium/commit/942afbe006b1e39cd2b60deeac818e5136c0e0d6))
+* upgrade JDK from 21 to 25 in build configuration and CI workflow ([f10fe61](https://github.com/FilippoVissani/portfolium/commit/f10fe61c9eba407b1e9959d5b8999959c9a9c8f6))
+
 ## [3.2.2](https://github.com/FilippoVissani/portfolium/compare/3.2.1...3.2.2) (2026-01-07)
 
 ### Documentation
