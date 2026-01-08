@@ -1,3 +1,9 @@
+## [4.0.1](https://github.com/FilippoVissani/portfolium/compare/4.0.0...4.0.1) (2026-01-08)
+
+### Documentation
+
+* update README ([2e4f668](https://github.com/FilippoVissani/portfolium/commit/2e4f668fa8d44c54ab3a83c28878722f05c3c373))
+
 ## [4.0.0](https://github.com/FilippoVissani/portfolium/compare/3.4.0...4.0.0) (2026-01-08)
 
 ### ⚠ BREAKING CHANGES
