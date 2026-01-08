@@ -17,9 +17,6 @@ object Controller {
         val config = ConfigLoader.loadConfig()
         logger.info("Configuration loaded: data path = ${config.dataPath}")
 
-        logger.info("Using Yahoo Finance price source with caching")
-        logger.info("Historical performance enabled (all available data)")
-
         // Load data files
         val loaders = Loaders()
         val transactions = loaders.loadTransactions(config.getTransactionsPath())
