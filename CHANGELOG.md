@@ -1,3 +1,18 @@
+## [3.2.4](https://github.com/FilippoVissani/portfolium/compare/3.2.3...3.2.4) (2026-01-08)
+
+### Dependency updates
+
+* **deps:** update kotest to v6 ([14e5c80](https://github.com/FilippoVissani/portfolium/commit/14e5c80e0e4494d28a990a7bb8d2312e92713c80))
+
+### Bug Fixes
+
+* implement data downsampling for history chart ([#43](https://github.com/FilippoVissani/portfolium/issues/43)) ([33e6fee](https://github.com/FilippoVissani/portfolium/commit/33e6fee75317bb66c4f7f3036892752301590025))
+
+### Build and continuous integration
+
+* **deps:** update gradle/actions action to v4 ([#36](https://github.com/FilippoVissani/portfolium/issues/36)) ([fc42e2a](https://github.com/FilippoVissani/portfolium/commit/fc42e2ac43ddf00eb80ac9a9567d371172f547bc))
+* update release configuration to modify version in build.gradle.kts ([d9646d1](https://github.com/FilippoVissani/portfolium/commit/d9646d1109169c9b21e9d2e570fc9db87a7f165b))
+
 ## [3.2.3](https://github.com/FilippoVissani/portfolium/compare/3.2.2...3.2.3) (2026-01-08)
 
 ### Dependency updates

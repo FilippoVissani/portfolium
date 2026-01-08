@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.filippovissani"
-version = "1.0-SNAPSHOT"
+version = "3.2.4"
 
 repositories {
     mavenCentral()
