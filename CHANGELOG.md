@@ -1,3 +1,14 @@
+## [3.4.0](https://github.com/FilippoVissani/portfolium/compare/3.3.0...3.4.0) (2026-01-08)
+
+### Features
+
+* enhance chart tooltips to display monetary ([9ac73c9](https://github.com/FilippoVissani/portfolium/commit/9ac73c9f4c003aecdbd2f993b509b50442b7f229))
+
+### Build and continuous integration
+
+* **deps:** update actions/cache action to v5 ([#25](https://github.com/FilippoVissani/portfolium/issues/25)) ([1f0d502](https://github.com/FilippoVissani/portfolium/commit/1f0d502715dd6a6665b60bda7e5a1066d5f123a0))
+* fix versioning ([8de504e](https://github.com/FilippoVissani/portfolium/commit/8de504ed9532e0c6748129f02063b040492b9d97))
+
 ## [3.3.0](https://github.com/FilippoVissani/portfolium/compare/3.2.4...3.3.0) (2026-01-08)
 
 ### Features
