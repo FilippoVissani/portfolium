@@ -1,5 +1,6 @@
 package io.github.filippovissani.portfolium.controller
 
+import io.github.filippovissani.portfolium.controller.config.ConfigLoader
 import io.github.filippovissani.portfolium.controller.csv.Loaders
 import io.github.filippovissani.portfolium.controller.datasource.CachedPriceDataSource
 import io.github.filippovissani.portfolium.controller.datasource.YahooFinancePriceDataSource
@@ -8,31 +9,29 @@ import io.github.filippovissani.portfolium.model.HistoricalPerformanceCalculator
 import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.WebView
 import org.slf4j.LoggerFactory
-import java.io.File
 
 object Controller {
     private val logger = LoggerFactory.getLogger(Controller::class.java)
-    fun computePortfolioSummary(dataPath: String) {
+    fun computePortfolioSummary() {
+        // Load configuration
+        val config = ConfigLoader.loadConfig()
+        logger.info("Configuration loaded: data path = ${config.dataPath}")
+
         logger.info("Using Yahoo Finance price source with caching")
         logger.info("Historical performance enabled (all available data)")
 
         // Load data files
-        val transactionsCsv = "${dataPath}/transactions.csv"
-        val plannedCsv = "${dataPath}/planned_expenses.csv"
-        val emergencyCsv = "${dataPath}/emergency_fund.csv"
-        val investmentsCsv = "${dataPath}/investments.csv"
-
         val loaders = Loaders()
-        val transactions = loaders.loadTransactions(File(transactionsCsv))
-        val planned = loaders.loadPlannedExpenses(File(plannedCsv))
-        val emergency = loaders.loadEmergencyFund(File(emergencyCsv))
-        val investments = loaders.loadInvestmentTransactions(File(investmentsCsv))
+        val transactions = loaders.loadTransactions(config.getTransactionsPath())
+        val planned = loaders.loadPlannedExpenses(config.getPlannedExpensesPath())
+        val emergency = loaders.loadEmergencyFund(config.getEmergencyFundPath())
+        val investments = loaders.loadInvestmentTransactions(config.getInvestmentsPath())
 
         // Use YahooFinancePriceDataSource with caching by default
         val priceSource = CachedPriceDataSource(
             delegate = YahooFinancePriceDataSource(),
-            cacheFile = File("data/price_cache.csv"),
-            cacheDurationHours = 24
+            cacheFile = config.getPriceCachePath(),
+            cacheDurationHours = config.cacheDurationHours
         )
 
         // Get current prices for all unique tickers
@@ -56,7 +55,7 @@ object Controller {
                     priceSource = priceSource,
                     startDate = earliestDate,
                     endDate = java.time.LocalDate.now(),
-                    intervalDays = 7 // Weekly data points for better resolution
+                    intervalDays = config.historicalPerformanceIntervalDays
                 )
             } catch (e: Exception) {
                 logger.warn("Could not calculate historical performance", e)
@@ -76,6 +75,6 @@ object Controller {
         )
 
         printDashboard(portfolio)
-        WebView.startServer(portfolio, 8080)
+        WebView.startServer(portfolio, config.serverPort)
     }
 }
