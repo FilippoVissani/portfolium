@@ -6,7 +6,7 @@
 **Portfolium** is a personal finance and investment portfolio management tool written in Kotlin. Track your liquidity, planned expenses, emergency fund, and investment performance—all from CSV files. View your financial dashboard in the terminal or via a web interface with interactive charts.
 
 <p align="center">
-  <img src="portfolium-logo.png" alt="Portfolium Logo" />
+  <img src="portfolium-logo.png" alt="Portfolium Logo" width="400" />
 </p>
 
 ## Features
