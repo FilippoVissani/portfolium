@@ -7,7 +7,8 @@
 
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
   [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.org/)
-  
+  [![CI](https://github.com/FilippoVissani/portfolium/actions/workflows/main.yml/badge.svg)](https://github.com/FilippoVissani/portfolium/actions/workflows/main.yml)
+
   *Take control of your finances with a beautiful, data-driven dashboard powered by CSV files*
   
   [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
