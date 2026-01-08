@@ -6,7 +6,7 @@
   **Professional Personal Finance Dashboard**
 
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-  [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/)
+  [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.org/)
   
   *Take control of your finances with a beautiful, data-driven dashboard powered by CSV files*
   
