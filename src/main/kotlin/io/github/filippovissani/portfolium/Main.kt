@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("io.github.filippovissani.portfolium.Main")
 
-fun main(args: Array<String>) {
+fun main() {
     try {
-        computePortfolioSummary(args.getOrNull(0) ?: "data")
+        computePortfolioSummary()
     } catch (e: Exception) {
         logger.error("Error computing portfolio summary", e)
     }
