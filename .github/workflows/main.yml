@@ -93,9 +93,6 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Build JAR
-        run: ./gradlew --no-daemon clean build
-      
       - uses: actions/setup-node@v6
         with:
           node-version: '24.12.0'

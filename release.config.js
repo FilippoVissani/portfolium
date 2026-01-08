@@ -1,7 +1,8 @@
 const config = require('semantic-release-preconfigured-conventional-commits')
 const publishCommands = `
-git tag -a -f \${nextRelease.version} \${nextRelease.version} -F CHANGELOG.md || exit 1
-git push --force origin \${nextRelease.version} || exit 2
+./gradlew --no-daemon clean build || exit 1
+git tag -a -f \${nextRelease.version} \${nextRelease.version} -F CHANGELOG.md || exit 2
+git push --force origin \${nextRelease.version} || exit 3
 `
 const releaseBranches = ["main"]
 config.branches = releaseBranches
