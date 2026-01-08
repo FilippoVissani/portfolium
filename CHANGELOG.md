@@ -1,3 +1,13 @@
+## [4.0.0](https://github.com/FilippoVissani/portfolium/compare/3.4.0...4.0.0) (2026-01-08)
+
+### ⚠ BREAKING CHANGES
+
+* add configuration management with application.properties
+
+### Features
+
+* add configuration management with application.properties ([5a16e48](https://github.com/FilippoVissani/portfolium/commit/5a16e48d1dd0b52ec369e4dcba90cd533d27d6c9))
+
 ## [3.4.0](https://github.com/FilippoVissani/portfolium/compare/3.3.0...3.4.0) (2026-01-08)
 
 ### Features
