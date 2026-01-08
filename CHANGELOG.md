@@ -1,3 +1,14 @@
+## [4.0.2](https://github.com/FilippoVissani/portfolium/compare/4.0.1...4.0.2) (2026-01-08)
+
+### Documentation
+
+* update README ([8c10181](https://github.com/FilippoVissani/portfolium/commit/8c10181bee8469c7ca1750a135614176d8eb16aa))
+
+### Build and continuous integration
+
+* **deps:** update actions/upload-artifact action to v6 ([cf28735](https://github.com/FilippoVissani/portfolium/commit/cf28735fdffc1072023804c204a8ec8813ed9a30))
+* **deps:** update gradle/actions action to v5 ([514274a](https://github.com/FilippoVissani/portfolium/commit/514274ad6dc5e20da21b617ac3b92300a7f6de2f))
+
 ## [4.0.1](https://github.com/FilippoVissani/portfolium/compare/4.0.0...4.0.1) (2026-01-08)
 
 ### Documentation
