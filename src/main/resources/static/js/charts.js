@@ -271,13 +271,39 @@ function initHistoricalPerformanceChart(portfolioData) {
     // Store the chart instance globally so we can update it
     let performanceChart = null;
 
+    // Function to downsample data points for better visualization
+    function downsampleData(data, maxPoints) {
+        if (data.length <= maxPoints) {
+            return data;
+        }
+
+        const result = [];
+        const interval = Math.ceil(data.length / maxPoints);
+
+        // Always include the first point
+        result.push(data[0]);
+
+        // Sample points at intervals
+        for (let i = interval; i < data.length - 1; i += interval) {
+            result.push(data[i]);
+        }
+
+        // Always include the last point
+        result.push(data[data.length - 1]);
+
+        return result;
+    }
+
     // Function to filter data based on selected period
     function filterDataByPeriod(period) {
         const today = new Date();
         let startDate = null;
+        let maxPoints = null;
 
         if (period === 'ALL') {
-            return allDataPoints;
+            // For ALL, limit to ~100 points for better performance
+            maxPoints = 100;
+            return downsampleData(allDataPoints, maxPoints);
         } else if (period === '1M') {
             startDate = new Date(today);
             startDate.setMonth(startDate.getMonth() - 1);
@@ -289,14 +315,19 @@ function initHistoricalPerformanceChart(portfolioData) {
         } else if (period === '5Y') {
             startDate = new Date(today);
             startDate.setFullYear(startDate.getFullYear() - 5);
+            // For 5Y, limit to ~150 points
+            maxPoints = 150;
         }
 
         if (!startDate) return allDataPoints;
 
-        return allDataPoints.filter(dp => {
+        const filtered = allDataPoints.filter(dp => {
             const dpDate = new Date(dp.date);
             return dpDate >= startDate;
         });
+
+        // Apply downsampling if maxPoints is set
+        return maxPoints ? downsampleData(filtered, maxPoints) : filtered;
     }
 
     // Function to calculate return percentage
@@ -312,6 +343,10 @@ function initHistoricalPerformanceChart(portfolioData) {
         const filteredData = filterDataByPeriod(period);
         const labels = filteredData.map(dp => dp.date);
         const values = filteredData.map(dp => parseFloat(dp.value));
+
+        // Adjust point size based on number of data points
+        const pointRadius = filteredData.length > 100 ? 2 : filteredData.length > 50 ? 3 : 4;
+        const pointHoverRadius = pointRadius + 2;
 
         // Calculate return for this period
         const periodReturn = calculateReturn(filteredData);
@@ -339,6 +374,8 @@ function initHistoricalPerformanceChart(portfolioData) {
             performanceChart.data.datasets[0].borderColor = lineColor;
             performanceChart.data.datasets[0].backgroundColor = gradientColor;
             performanceChart.data.datasets[0].pointBackgroundColor = lineColor;
+            performanceChart.data.datasets[0].pointRadius = pointRadius;
+            performanceChart.data.datasets[0].pointHoverRadius = pointHoverRadius;
             performanceChart.update('none'); // Update without animation
         } else {
             // Create new chart
@@ -354,8 +391,8 @@ function initHistoricalPerformanceChart(portfolioData) {
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
+                        pointRadius: pointRadius,
+                        pointHoverRadius: pointHoverRadius,
                         pointBackgroundColor: lineColor,
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2
