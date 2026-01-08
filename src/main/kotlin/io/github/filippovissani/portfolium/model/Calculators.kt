@@ -30,7 +30,19 @@ object Calculators {
         )
     }
 
-    fun summarizePlanned(items: List<PlannedExpense>): PlannedExpensesSummary {
+    fun summarizePlanned(goals: List<PlannedExpenseGoal>, transactions: List<PlannedExpenseTransaction>): PlannedExpensesSummary {
+        // Calculate accrued amounts from transactions for each goal
+        val accruedByName = transactions.groupBy { it.expenseName }
+            .mapValues { (_, txs) -> txs.fold(BigDecimal.ZERO) { acc, tx -> acc + tx.amount } }
+
+        // Build PlannedExpense objects combining goals with their accrued amounts
+        val items = goals.map { goal ->
+            PlannedExpense(
+                goal = goal,
+                accrued = accruedByName[goal.name] ?: BigDecimal.ZERO
+            )
+        }
+
         val totalEstimated = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.estimatedAmount }
         val totalAccrued = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
         val liquidAccrued = items.filter { it.isLiquid }.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
@@ -49,16 +61,19 @@ object Calculators {
         )
     }
 
-    fun summarizeEmergency(config: EmergencyFundConfig, avgMonthlyExpense: BigDecimal): EmergencyFundSummary {
-        val targetCapital = avgMonthlyExpense.multiply(BigDecimal(config.targetMonths))
-        val delta = targetCapital - config.currentCapital
-        val status = if (config.currentCapital >= targetCapital) "OK" else "BELOW TARGET"
+    fun summarizeEmergency(goal: EmergencyFundGoal, transactions: List<EmergencyFundTransaction>, avgMonthlyExpense: BigDecimal): EmergencyFundSummary {
+        // Calculate current capital from transactions
+        val currentCapital = transactions.fold(BigDecimal.ZERO) { acc, tx -> acc + tx.amount }
+
+        val targetCapital = avgMonthlyExpense.multiply(BigDecimal(goal.targetMonths))
+        val delta = targetCapital - currentCapital
+        val status = if (currentCapital >= targetCapital) "OK" else "BELOW TARGET"
         return EmergencyFundSummary(
             targetCapital = targetCapital.toMoney(),
-            currentCapital = config.currentCapital.toMoney(),
+            currentCapital = currentCapital.toMoney(),
             deltaToTarget = delta.toMoney(),
             status = status,
-            isLiquid = config.isLiquid
+            isLiquid = goal.isLiquid
         )
     }
 

@@ -9,59 +9,68 @@ class ModelsTest : StringSpec({
     fun bd(s: String) = s.toBigDecimal()
 
     "PlannedExpense delta is calculated correctly" {
-        val expense = PlannedExpense(
+        val goal = PlannedExpenseGoal(
             name = "Laptop",
             estimatedAmount = bd("1000"),
             horizon = "Short-term",
             dueDate = LocalDate.of(2026, 6, 1),
-            accrued = bd("600"),
             instrument = null
         )
+        val expense = PlannedExpense(goal = goal, accrued = bd("600"))
         expense.delta shouldBe bd("400")
     }
 
     "PlannedExpense isLiquid returns true for null instrument" {
-        val expense = PlannedExpense("Item", bd("100"), null, null, bd("50"), null)
+        val goal = PlannedExpenseGoal("Item", bd("100"), null, null, null)
+        val expense = PlannedExpense(goal, bd("50"))
         expense.isLiquid shouldBe true
     }
 
     "PlannedExpense isLiquid returns true for empty instrument" {
-        val expense = PlannedExpense("Item", bd("100"), null, null, bd("50"), "")
+        val goal = PlannedExpenseGoal("Item", bd("100"), null, null, "")
+        val expense = PlannedExpense(goal, bd("50"))
         expense.isLiquid shouldBe true
     }
 
     "PlannedExpense isLiquid returns true for liquid instrument" {
-        val expense = PlannedExpense("Item", bd("100"), null, null, bd("50"), "liquid")
+        val goal = PlannedExpenseGoal("Item", bd("100"), null, null, "liquid")
+        val expense = PlannedExpense(goal, bd("50"))
         expense.isLiquid shouldBe true
     }
 
     "PlannedExpense isLiquid returns true for liquid instrument case insensitive" {
-        val expense = PlannedExpense("Item", bd("100"), null, null, bd("50"), "LIQUID")
+        val goal = PlannedExpenseGoal("Item", bd("100"), null, null, "LIQUID")
+        val expense = PlannedExpense(goal, bd("50"))
         expense.isLiquid shouldBe true
     }
 
     "PlannedExpense isLiquid returns false for non-liquid instrument" {
-        val expense = PlannedExpense("Item", bd("100"), null, null, bd("50"), "etf")
+        val goal = PlannedExpenseGoal("Item", bd("100"), null, null, "etf")
+        val expense = PlannedExpense(goal, bd("50"))
         expense.isLiquid shouldBe false
     }
 
     "EmergencyFundConfig isLiquid returns true for null instrument" {
-        val config = EmergencyFundConfig(6, bd("5000"), null)
+        val goal = EmergencyFundGoal(6, null)
+        val config = EmergencyFundConfig(goal, bd("5000"))
         config.isLiquid shouldBe true
     }
 
     "EmergencyFundConfig isLiquid returns true for empty instrument" {
-        val config = EmergencyFundConfig(6, bd("5000"), "")
+        val goal = EmergencyFundGoal(6, "")
+        val config = EmergencyFundConfig(goal, bd("5000"))
         config.isLiquid shouldBe true
     }
 
     "EmergencyFundConfig isLiquid returns true for liquid instrument" {
-        val config = EmergencyFundConfig(6, bd("5000"), "liquid")
+        val goal = EmergencyFundGoal(6, "liquid")
+        val config = EmergencyFundConfig(goal, bd("5000"))
         config.isLiquid shouldBe true
     }
 
     "EmergencyFundConfig isLiquid returns false for non-liquid instrument" {
-        val config = EmergencyFundConfig(6, bd("5000"), "bond")
+        val goal = EmergencyFundGoal(6, "bond")
+        val config = EmergencyFundConfig(goal, bd("5000"))
         config.isLiquid shouldBe false
     }
 

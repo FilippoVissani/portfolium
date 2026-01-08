@@ -18,26 +18,59 @@ data class Transaction(
 enum class TransactionType { Income, Expense }
 
 
-data class PlannedExpense(
+data class PlannedExpenseGoal(
     val name: String,
     val estimatedAmount: BigDecimal,
     val horizon: String?,
     val dueDate: LocalDate?,
-    val accrued: BigDecimal,
     val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
 ) {
-    val delta: BigDecimal get() = estimatedAmount - accrued
     val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
 }
 
+data class PlannedExpense(
+    val goal: PlannedExpenseGoal,
+    val accrued: BigDecimal
+) {
+    val name: String get() = goal.name
+    val estimatedAmount: BigDecimal get() = goal.estimatedAmount
+    val horizon: String? get() = goal.horizon
+    val dueDate: LocalDate? get() = goal.dueDate
+    val instrument: String? get() = goal.instrument
+    val delta: BigDecimal get() = estimatedAmount - accrued
+    val isLiquid: Boolean get() = goal.isLiquid
+}
+
+data class PlannedExpenseTransaction(
+    val date: LocalDate,
+    val expenseName: String,
+    val description: String,
+    val amount: BigDecimal, // positive for deposits, negative for withdrawals
+    val note: String?
+)
+
+data class EmergencyFundGoal(
+    val targetMonths: Int,
+    val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
+) {
+    val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
+}
 
 data class EmergencyFundConfig(
-    val targetMonths: Int,
-    val currentCapital: BigDecimal,
-    val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
+    val goal: EmergencyFundGoal,
+    val currentCapital: BigDecimal
 ) {
-    val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
+    val targetMonths: Int get() = goal.targetMonths
+    val instrument: String? get() = goal.instrument
+    val isLiquid: Boolean get() = goal.isLiquid
 }
+
+data class EmergencyFundTransaction(
+    val date: LocalDate,
+    val description: String,
+    val amount: BigDecimal, // positive for deposits, negative for withdrawals
+    val note: String?
+)
 
 
 // individual investment transaction (e.g., buy/sell)

@@ -20,8 +20,8 @@ object Controller {
         // Load data files
         val loaders = Loaders()
         val transactions = loaders.loadTransactions(config.getTransactionsPath())
-        val planned = loaders.loadPlannedExpenses(config.getPlannedExpensesPath())
-        val emergency = loaders.loadEmergencyFund(config.getEmergencyFundPath())
+        val plannedExpenseTransactions = loaders.loadPlannedExpenseTransactions(config.getPlannedExpensesTransactionsPath())
+        val emergencyFundTransactions = loaders.loadEmergencyFundTransactions(config.getEmergencyFundTransactionsPath())
         val investments = loaders.loadInvestmentTransactions(config.getInvestmentsPath())
 
         // Use YahooFinancePriceDataSource with caching by default
@@ -37,8 +37,8 @@ object Controller {
 
         // Calculate summaries
         val liquiditySummary = Calculators.summarizeLiquidity(transactions)
-        val plannedSummary = Calculators.summarizePlanned(planned)
-        val emergencySummary = Calculators.summarizeEmergency(emergency, liquiditySummary.avgMonthlyExpense12m)
+        val plannedSummary = Calculators.summarizePlanned(config.plannedExpenseGoals, plannedExpenseTransactions)
+        val emergencySummary = Calculators.summarizeEmergency(config.emergencyFundGoal, emergencyFundTransactions, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestmentsFromTransactions(investments, currentPrices)
 
         // Calculate historical performance
