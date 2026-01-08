@@ -50,14 +50,14 @@ jobs:
 
       - name: Publish test report artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-reports
           path: build/reports/tests/test
 
       - name: Publish coverage report artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-reports
           path: build/reports/jacoco/test
