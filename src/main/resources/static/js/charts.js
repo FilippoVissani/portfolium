@@ -31,6 +31,11 @@ function initAssetAllocationChart(portfolioData) {
     const assetCtx = document.getElementById('assetAllocationChart');
     if (!assetCtx) return;
 
+    // Calculate actual monetary values for tooltips
+    const liquidValue = portfolioData.liquidity?.net || 0;
+    const investedValue = portfolioData.investments?.totalCurrent || 0;
+    const monetaryValues = [liquidValue, investedValue];
+
     new Chart(assetCtx, {
         type: 'doughnut',
         data: {
@@ -68,7 +73,9 @@ function initAssetAllocationChart(portfolioData) {
                     borderWidth: 1,
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': ' + context.parsed.toFixed(2) + '%';
+                            const percentage = context.parsed.toFixed(2);
+                            const value = monetaryValues[context.dataIndex];
+                            return context.label + ': €' + value.toFixed(2) + ' (' + percentage + '%)';
                         }
                     }
                 }
@@ -186,7 +193,10 @@ function initInvestmentsChart(portfolioData) {
                     borderWidth: 1,
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': €' + context.parsed.toFixed(2);
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(2);
+                            return context.label + ': €' + value.toFixed(2) + ' (' + percentage + '%)';
                         }
                     }
                 }
