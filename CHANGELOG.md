@@ -1,3 +1,9 @@
+## [3.3.0](https://github.com/FilippoVissani/portfolium/compare/3.2.4...3.3.0) (2026-01-08)
+
+### Features
+
+* implement caching for price data source with CSV persistence ([4b0a1db](https://github.com/FilippoVissani/portfolium/commit/4b0a1db728670f5bee0200696ae78cab9d818b64))
+
 ## [3.2.4](https://github.com/FilippoVissani/portfolium/compare/3.2.3...3.2.4) (2026-01-08)
 
 ### Dependency updates
