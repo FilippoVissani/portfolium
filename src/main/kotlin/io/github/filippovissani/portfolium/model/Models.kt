@@ -18,7 +18,6 @@ data class InvestmentTransaction(
 )
 
 
-
 data class Investment(
     val etf: String,
     val ticker: String,
@@ -197,13 +196,17 @@ data class PlannedExpensesBankAccount(
                     is DepositTransaction -> balance += transaction.amount
                     is WithdrawalTransaction -> balance -= transaction.amount
                     is EtfBuyTransaction -> {
-                        val totalCost = (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
+                        val totalCost =
+                            (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
                         balance -= totalCost
                     }
+
                     is EtfSellTransaction -> {
-                        val totalProceeds = (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
+                        val totalProceeds =
+                            (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
                         balance += totalProceeds
                     }
+
                     else -> {}
                 }
             }
@@ -219,13 +222,33 @@ data class PlannedExpensesBankAccount(
                     is EtfBuyTransaction -> {
                         val key = transaction.ticker
                         holdings.getOrPut(key) { mutableListOf() }
-                            .add(EtfTransaction(transaction.date, transaction.quantity, transaction.price, transaction.fees, transaction.name, transaction.area))
+                            .add(
+                                EtfTransaction(
+                                    transaction.date,
+                                    transaction.quantity,
+                                    transaction.price,
+                                    transaction.fees,
+                                    transaction.name,
+                                    transaction.area
+                                )
+                            )
                     }
+
                     is EtfSellTransaction -> {
                         val key = transaction.ticker
                         holdings.getOrPut(key) { mutableListOf() }
-                            .add(EtfTransaction(transaction.date, -transaction.quantity, transaction.price, transaction.fees, transaction.name, transaction.area))
+                            .add(
+                                EtfTransaction(
+                                    transaction.date,
+                                    -transaction.quantity,
+                                    transaction.price,
+                                    transaction.fees,
+                                    transaction.name,
+                                    transaction.area
+                                )
+                            )
                     }
+
                     else -> {}
                 }
             }
@@ -295,13 +318,17 @@ data class InvestmentBankAccount(
                     is DepositTransaction -> balance += transaction.amount
                     is WithdrawalTransaction -> balance -= transaction.amount
                     is EtfBuyTransaction -> {
-                        val totalCost = (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
+                        val totalCost =
+                            (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
                         balance -= totalCost
                     }
+
                     is EtfSellTransaction -> {
-                        val totalProceeds = (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
+                        val totalProceeds =
+                            (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
                         balance += totalProceeds
                     }
+
                     else -> {}
                 }
             }
@@ -317,13 +344,33 @@ data class InvestmentBankAccount(
                     is EtfBuyTransaction -> {
                         val key = transaction.ticker
                         holdings.getOrPut(key) { mutableListOf() }
-                            .add(EtfTransaction(transaction.date, transaction.quantity, transaction.price, transaction.fees, transaction.name, transaction.area))
+                            .add(
+                                EtfTransaction(
+                                    transaction.date,
+                                    transaction.quantity,
+                                    transaction.price,
+                                    transaction.fees,
+                                    transaction.name,
+                                    transaction.area
+                                )
+                            )
                     }
+
                     is EtfSellTransaction -> {
                         val key = transaction.ticker
                         holdings.getOrPut(key) { mutableListOf() }
-                            .add(EtfTransaction(transaction.date, -transaction.quantity, transaction.price, transaction.fees, transaction.name, transaction.area))
+                            .add(
+                                EtfTransaction(
+                                    transaction.date,
+                                    -transaction.quantity,
+                                    transaction.price,
+                                    transaction.fees,
+                                    transaction.name,
+                                    transaction.area
+                                )
+                            )
                     }
+
                     else -> {}
                 }
             }

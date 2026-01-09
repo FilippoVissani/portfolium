@@ -1,7 +1,7 @@
 package io.github.filippovissani.portfolium.controller.config
 
 import org.slf4j.LoggerFactory
-import java.util.Properties
+import java.util.*
 
 /**
  * Loads configuration from application.properties file in resources
@@ -36,12 +36,22 @@ object ConfigLoader {
         return Config(
             dataPath = properties.getProperty("data.path", "data"),
             mainBankAccountFile = properties.getProperty("data.main.bank.account", "main_bank_account.yaml"),
-            plannedExpensesBankAccountFile = properties.getProperty("data.planned.expenses.bank.account", "planned_expenses_bank_account.yaml"),
-            emergencyFundBankAccountFile = properties.getProperty("data.emergency.fund.bank.account", "emergency_fund_bank_account.yaml"),
-            investmentBankAccountFile = properties.getProperty("data.investment.bank.account", "investment_bank_account.yaml"),
+            plannedExpensesBankAccountFile = properties.getProperty(
+                "data.planned.expenses.bank.account",
+                "planned_expenses_bank_account.yaml"
+            ),
+            emergencyFundBankAccountFile = properties.getProperty(
+                "data.emergency.fund.bank.account",
+                "emergency_fund_bank_account.yaml"
+            ),
+            investmentBankAccountFile = properties.getProperty(
+                "data.investment.bank.account",
+                "investment_bank_account.yaml"
+            ),
             priceCacheFile = properties.getProperty("data.price.cache", "price_cache.csv"),
             cacheDurationHours = properties.getProperty("cache.duration.hours", "24").toLongOrNull() ?: 24L,
-            historicalPerformanceIntervalDays = properties.getProperty("historical.performance.interval.days", "7").toLongOrNull() ?: 7L,
+            historicalPerformanceIntervalDays = properties.getProperty("historical.performance.interval.days", "7")
+                .toLongOrNull() ?: 7L,
             serverPort = properties.getProperty("server.port", "8080").toIntOrNull() ?: 8080
         )
     }

@@ -92,7 +92,8 @@ object Controller {
         // Calculate summaries using new bank accounts
         val liquiditySummary = Calculators.summarizeLiquidity(mainBankAccount)
         var plannedSummary = Calculators.summarizePlanned(plannedExpensesBankAccount, currentPrices)
-        var emergencySummary = Calculators.summarizeEmergency(emergencyFundBankAccount, liquiditySummary.avgMonthlyExpense12m)
+        var emergencySummary =
+            Calculators.summarizeEmergency(emergencyFundBankAccount, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestments(investmentBankAccount, currentPrices)
 
         // Calculate historical performance from investment bank account
@@ -109,31 +110,33 @@ object Controller {
         }
 
         // Calculate historical performance for planned expenses if invested
-        val plannedHistoricalPerformance = if (plannedSummary.isInvested && plannedExpensesBankAccount.transactions.isNotEmpty()) {
-            logger.info("Calculating planned expenses historical performance...")
-            try {
-                calculateHistoricalPerformanceForAccount(plannedExpensesBankAccount, priceSource, config)
-            } catch (e: Exception) {
-                logger.warn("Could not calculate planned expenses historical performance", e)
+        val plannedHistoricalPerformance =
+            if (plannedSummary.isInvested && plannedExpensesBankAccount.transactions.isNotEmpty()) {
+                logger.info("Calculating planned expenses historical performance...")
+                try {
+                    calculateHistoricalPerformanceForAccount(plannedExpensesBankAccount, priceSource, config)
+                } catch (e: Exception) {
+                    logger.warn("Could not calculate planned expenses historical performance", e)
+                    null
+                }
+            } else {
                 null
             }
-        } else {
-            null
-        }
         plannedSummary = plannedSummary.copy(historicalPerformance = plannedHistoricalPerformance)
 
         // Calculate historical performance for emergency fund if invested
-        val emergencyHistoricalPerformance = if (!emergencySummary.isLiquid && emergencyFundBankAccount.transactions.isNotEmpty()) {
-            logger.info("Calculating emergency fund historical performance...")
-            try {
-                calculateHistoricalPerformanceForAccount(emergencyFundBankAccount, priceSource, config)
-            } catch (e: Exception) {
-                logger.warn("Could not calculate emergency fund historical performance", e)
+        val emergencyHistoricalPerformance =
+            if (!emergencySummary.isLiquid && emergencyFundBankAccount.transactions.isNotEmpty()) {
+                logger.info("Calculating emergency fund historical performance...")
+                try {
+                    calculateHistoricalPerformanceForAccount(emergencyFundBankAccount, priceSource, config)
+                } catch (e: Exception) {
+                    logger.warn("Could not calculate emergency fund historical performance", e)
+                    null
+                }
+            } else {
                 null
             }
-        } else {
-            null
-        }
         emergencySummary = emergencySummary.copy(historicalPerformance = emergencyHistoricalPerformance)
 
         // Calculate overall historical performance combining all invested accounts
@@ -193,6 +196,7 @@ object Controller {
                         price = tx.price,
                         fees = tx.fees
                     )
+
                 is EtfSellTransaction ->
                     InvestmentTransaction(
                         date = tx.date,
@@ -203,6 +207,7 @@ object Controller {
                         price = tx.price,
                         fees = tx.fees
                     )
+
                 else -> null
             }
         }
@@ -246,6 +251,7 @@ object Controller {
                             price = tx.price,
                             fees = tx.fees
                         )
+
                     is EtfSellTransaction ->
                         InvestmentTransaction(
                             date = tx.date,
@@ -256,6 +262,7 @@ object Controller {
                             price = tx.price,
                             fees = tx.fees
                         )
+
                     else -> null
                 }
             }

@@ -1,9 +1,8 @@
 package io.github.filippovissani.portfolium.controller.datasource
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -16,13 +15,17 @@ class CachedPriceDataSourceTest : FunSpec({
 
         var callCount = 0
         val mockDelegate = object : PriceDataSource {
-            override fun getCurrentPrice(ticker: String): BigDecimal? {
+            override fun getCurrentPrice(ticker: String): BigDecimal {
                 callCount++
                 return BigDecimal("100.50")
             }
 
             override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
-            override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> = emptyMap()
+            override fun getHistoricalPrices(
+                ticker: String,
+                startDate: LocalDate,
+                endDate: LocalDate
+            ): Map<LocalDate, BigDecimal> = emptyMap()
         }
 
         val cachedSource = CachedPriceDataSource(mockDelegate, cacheFile, cacheDurationHours = 24)
@@ -49,12 +52,16 @@ class CachedPriceDataSourceTest : FunSpec({
         val mockDelegate = object : PriceDataSource {
             override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-            override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? {
+            override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal {
                 callCount++
                 return BigDecimal("150.25")
             }
 
-            override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> = emptyMap()
+            override fun getHistoricalPrices(
+                ticker: String,
+                startDate: LocalDate,
+                endDate: LocalDate
+            ): Map<LocalDate, BigDecimal> = emptyMap()
         }
 
         val cachedSource = CachedPriceDataSource(mockDelegate, cacheFile)
@@ -77,9 +84,13 @@ class CachedPriceDataSourceTest : FunSpec({
         cacheFile.deleteOnExit()
 
         val mockDelegate = object : PriceDataSource {
-            override fun getCurrentPrice(ticker: String): BigDecimal? = BigDecimal("200.00")
+            override fun getCurrentPrice(ticker: String): BigDecimal = BigDecimal("200.00")
             override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
-            override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> = emptyMap()
+            override fun getHistoricalPrices(
+                ticker: String,
+                startDate: LocalDate,
+                endDate: LocalDate
+            ): Map<LocalDate, BigDecimal> = emptyMap()
         }
 
         // Create cached source and fetch a price
@@ -89,12 +100,17 @@ class CachedPriceDataSourceTest : FunSpec({
         // Create a new instance with same cache file
         var delegateCallCount = 0
         val mockDelegate2 = object : PriceDataSource {
-            override fun getCurrentPrice(ticker: String): BigDecimal? {
+            override fun getCurrentPrice(ticker: String): BigDecimal {
                 delegateCallCount++
                 return BigDecimal("200.00")
             }
+
             override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
-            override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> = emptyMap()
+            override fun getHistoricalPrices(
+                ticker: String,
+                startDate: LocalDate,
+                endDate: LocalDate
+            ): Map<LocalDate, BigDecimal> = emptyMap()
         }
 
         val cachedSource2 = CachedPriceDataSource(mockDelegate2, cacheFile)
@@ -125,7 +141,11 @@ class CachedPriceDataSourceTest : FunSpec({
             override fun getCurrentPrice(ticker: String): BigDecimal? = null
             override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
 
-            override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> {
+            override fun getHistoricalPrices(
+                ticker: String,
+                startDate: LocalDate,
+                endDate: LocalDate
+            ): Map<LocalDate, BigDecimal> {
                 callCount++
                 return mockPrices
             }

@@ -279,7 +279,7 @@ function getStandardLineChartOptions() {
                 position: 'top',
                 labels: {
                     padding: 15,
-                    font: { size: 13, weight: '500' },
+                    font: {size: 13, weight: '500'},
                     usePointStyle: true,
                     pointStyle: 'circle'
                 }
@@ -287,12 +287,12 @@ function getStandardLineChartOptions() {
             tooltip: {
                 backgroundColor: 'rgba(15, 23, 42, 0.95)',
                 padding: 12,
-                titleFont: { size: 14, weight: '600' },
-                bodyFont: { size: 13 },
+                titleFont: {size: 14, weight: '600'},
+                bodyFont: {size: 13},
                 borderColor: '#e2e8f0',
                 borderWidth: 1,
                 callbacks: {
-                    label: function(context) {
+                    label: function (context) {
                         return context.dataset.label + ': €' + context.parsed.y.toFixed(2);
                     }
                 }
@@ -306,8 +306,8 @@ function getStandardLineChartOptions() {
                     drawBorder: false
                 },
                 ticks: {
-                    font: { size: 12 },
-                    callback: function(value) {
+                    font: {size: 12},
+                    callback: function (value) {
                         return '€' + value.toLocaleString();
                     }
                 }
@@ -318,7 +318,7 @@ function getStandardLineChartOptions() {
                     drawBorder: false
                 },
                 ticks: {
-                    font: { size: 11 },
+                    font: {size: 11},
                     maxRotation: 45,
                     minRotation: 45
                 }
@@ -332,16 +332,16 @@ function getStandardBarChartOptions() {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-            legend: { display: false },
+            legend: {display: false},
             tooltip: {
                 backgroundColor: 'rgba(15, 23, 42, 0.95)',
                 padding: 12,
-                titleFont: { size: 14, weight: '600' },
-                bodyFont: { size: 13 },
+                titleFont: {size: 14, weight: '600'},
+                bodyFont: {size: 13},
                 borderColor: '#e2e8f0',
                 borderWidth: 1,
                 callbacks: {
-                    label: function(context) {
+                    label: function (context) {
                         return 'Amount: €' + context.parsed.y.toFixed(2);
                     }
                 }
@@ -355,8 +355,8 @@ function getStandardBarChartOptions() {
                     drawBorder: false
                 },
                 ticks: {
-                    font: { size: 12 },
-                    callback: function(value) {
+                    font: {size: 12},
+                    callback: function (value) {
                         return '€' + value.toLocaleString();
                     }
                 }
@@ -367,7 +367,7 @@ function getStandardBarChartOptions() {
                     drawBorder: false
                 },
                 ticks: {
-                    font: { size: 12, weight: '500' }
+                    font: {size: 12, weight: '500'}
                 }
             }
         }
@@ -383,7 +383,7 @@ function getStandardPieChartOptions() {
                 position: 'bottom',
                 labels: {
                     padding: 15,
-                    font: { size: 12, weight: '500' },
+                    font: {size: 12, weight: '500'},
                     usePointStyle: true,
                     pointStyle: 'circle'
                 }
@@ -391,12 +391,12 @@ function getStandardPieChartOptions() {
             tooltip: {
                 backgroundColor: 'rgba(15, 23, 42, 0.95)',
                 padding: 12,
-                titleFont: { size: 14, weight: '600' },
-                bodyFont: { size: 13 },
+                titleFont: {size: 14, weight: '600'},
+                bodyFont: {size: 13},
                 borderColor: '#e2e8f0',
                 borderWidth: 1,
                 callbacks: {
-                    label: function(context) {
+                    label: function (context) {
                         const value = context.parsed;
                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
                         const percentage = ((value / total) * 100).toFixed(2);

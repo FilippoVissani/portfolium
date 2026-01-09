@@ -1,7 +1,7 @@
 package io.github.filippovissani.portfolium.model
 
-import io.github.filippovissani.portfolium.controller.datasource.PriceDataSource
 import io.github.filippovissani.portfolium.controller.csv.CsvUtils.toMoney
+import io.github.filippovissani.portfolium.controller.datasource.PriceDataSource
 import io.github.filippovissani.portfolium.model.util.times
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -87,6 +87,7 @@ object HistoricalPerformanceCalculator {
     ): BigDecimal {
         // Group transactions by ticker up to the given date
         data class Position(var quantity: BigDecimal)
+
         val positions = mutableMapOf<String, Position>()
 
         transactions

@@ -37,7 +37,11 @@ class CsvPriceDataSource(private val csvFile: File) : PriceDataSource {
         return getCurrentPrice(ticker)
     }
 
-    override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> {
+    override fun getHistoricalPrices(
+        ticker: String,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): Map<LocalDate, BigDecimal> {
         // CSV doesn't support historical data, return empty map
         return emptyMap()
     }

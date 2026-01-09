@@ -1,5 +1,6 @@
 package io.github.filippovissani.portfolium.controller.datasource
 
+import com.google.gson.JsonParser
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.net.URI
@@ -9,7 +10,6 @@ import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.LocalDate
 import java.time.ZoneId
-import com.google.gson.JsonParser
 
 /**
  * Yahoo Finance API-based price data source
@@ -55,7 +55,11 @@ class YahooFinancePriceDataSource(
         }
     }
 
-    override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> {
+    override fun getHistoricalPrices(
+        ticker: String,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): Map<LocalDate, BigDecimal> {
         return try {
             val period1 = startDate.atStartOfDay(ZoneId.of("UTC")).toEpochSecond()
             val period2 = endDate.atStartOfDay(ZoneId.of("UTC")).toEpochSecond()

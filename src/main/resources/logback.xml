@@ -41,16 +41,16 @@
 
     <!-- Set the root logger level -->
     <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-        <appender-ref ref="ERROR_FILE" />
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
     </root>
 
     <!-- Application-specific logger -->
-    <logger name="io.github.filippovissani.portfolium" level="DEBUG" />
+    <logger name="io.github.filippovissani.portfolium" level="DEBUG"/>
 
     <!-- Reduce verbosity of third-party libraries -->
-    <logger name="io.ktor" level="INFO" />
-    <logger name="io.netty" level="INFO" />
+    <logger name="io.ktor" level="INFO"/>
+    <logger name="io.netty" level="INFO"/>
 </configuration>
 

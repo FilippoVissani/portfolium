@@ -80,7 +80,10 @@ object Calculators {
     }
 
     // Planned expenses summary from PlannedExpensesBankAccount
-    fun summarizePlanned(account: PlannedExpensesBankAccount, currentPrices: Map<String, BigDecimal> = emptyMap()): PlannedExpensesSummary {
+    fun summarizePlanned(
+        account: PlannedExpensesBankAccount,
+        currentPrices: Map<String, BigDecimal> = emptyMap()
+    ): PlannedExpensesSummary {
         val totalEstimated = account.plannedExpenses.sumOf { it.estimatedAmount }
 
         // Calculate the current value of ETF holdings
@@ -155,7 +158,10 @@ object Calculators {
     }
 
     // Investment summary from InvestmentBankAccount
-    fun summarizeInvestments(account: InvestmentBankAccount, currentPricesByTicker: Map<String, BigDecimal>): InvestmentsSummary {
+    fun summarizeInvestments(
+        account: InvestmentBankAccount,
+        currentPricesByTicker: Map<String, BigDecimal>
+    ): InvestmentsSummary {
         val items = account.etfHoldings.values.map { holding ->
             val currentPrice = currentPricesByTicker[holding.ticker] ?: BigDecimal.ZERO
             Investment(
@@ -181,11 +187,11 @@ object Calculators {
     ): Portfolio {
         // Liquid capital includes: net liquidity, liquid planned accrued, and emergency fund if liquid
         val liquidCapital = liquidity.net + planned.liquidAccrued +
-            if (emergency.isLiquid) emergency.currentCapital else BigDecimal.ZERO
+                if (emergency.isLiquid) emergency.currentCapital else BigDecimal.ZERO
 
         // Invested capital includes: investments, invested planned accrued, and emergency fund if invested
         val investedCapital = investments.totalCurrent + planned.investedAccrued +
-            if (!emergency.isLiquid) emergency.currentCapital else BigDecimal.ZERO
+                if (!emergency.isLiquid) emergency.currentCapital else BigDecimal.ZERO
 
         val totalNetWorth = (liquidCapital + investedCapital).toMoney()
         val percentInvested = if (totalNetWorth.signum() == 0) BigDecimal.ZERO else investedCapital.divide(

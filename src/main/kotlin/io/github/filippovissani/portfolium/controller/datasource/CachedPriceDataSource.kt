@@ -120,7 +120,11 @@ class CachedPriceDataSource(
         return price
     }
 
-    override fun getHistoricalPrices(ticker: String, startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> {
+    override fun getHistoricalPrices(
+        ticker: String,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): Map<LocalDate, BigDecimal> {
         val result = mutableMapOf<LocalDate, BigDecimal>()
         val missingDates = mutableListOf<LocalDate>()
 
@@ -303,6 +307,7 @@ class CachedPriceDataSource(
 
     private fun currentPriceCacheKey(ticker: String): String = "$ticker|$CURRENT_PRICE_TYPE"
 
-    private fun historicalPriceCacheKey(ticker: String, date: LocalDate): String = "$ticker|$HISTORICAL_PRICE_TYPE|$date"
+    private fun historicalPriceCacheKey(ticker: String, date: LocalDate): String =
+        "$ticker|$HISTORICAL_PRICE_TYPE|$date"
 }
 

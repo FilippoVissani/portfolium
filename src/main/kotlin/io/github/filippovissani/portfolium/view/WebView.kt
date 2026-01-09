@@ -1,14 +1,14 @@
 package io.github.filippovissani.portfolium.view
 
+import com.google.gson.Gson
 import io.github.filippovissani.portfolium.model.Portfolio
 import io.ktor.server.engine.*
 import io.ktor.server.html.*
+import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import kotlinx.html.*
 import java.math.RoundingMode
-import com.google.gson.Gson
-import io.ktor.server.http.content.staticResources
 
 object WebView {
     private lateinit var portfolioData: Portfolio
@@ -121,7 +121,14 @@ object WebView {
                         }
                         h3 { +"Coverage" }
                     }
-                    div(classes = "value") { +"${(portfolio.planned.coverageRatio * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)}%" }
+                    div(classes = "value") {
+                        +"${
+                            (portfolio.planned.coverageRatio * java.math.BigDecimal(100)).setScale(
+                                1,
+                                RoundingMode.HALF_UP
+                            )
+                        }%"
+                    }
                 }
                 div(classes = "card") {
                     div(classes = "card-header") {
@@ -131,7 +138,10 @@ object WebView {
                         h3 { +"Invested" }
                     }
                     val investedPercentage = if (portfolio.planned.totalAccrued > java.math.BigDecimal.ZERO) {
-                        (portfolio.planned.investedAccrued / portfolio.planned.totalAccrued * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)
+                        (portfolio.planned.investedAccrued / portfolio.planned.totalAccrued * java.math.BigDecimal(100)).setScale(
+                            1,
+                            RoundingMode.HALF_UP
+                        )
                     } else {
                         java.math.BigDecimal.ZERO
                     }
@@ -145,7 +155,10 @@ object WebView {
                         h3 { +"Liquid" }
                     }
                     val liquidPercentage = if (portfolio.planned.totalAccrued > java.math.BigDecimal.ZERO) {
-                        (portfolio.planned.liquidAccrued / portfolio.planned.totalAccrued * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)
+                        (portfolio.planned.liquidAccrued / portfolio.planned.totalAccrued * java.math.BigDecimal(100)).setScale(
+                            1,
+                            RoundingMode.HALF_UP
+                        )
                     } else {
                         java.math.BigDecimal.ZERO
                     }
@@ -170,7 +183,8 @@ object WebView {
                             +"Historical Performance"
                             val hp = portfolio.planned.historicalPerformance
                             if (hp.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                val returnClass =
+                                    if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -219,7 +233,8 @@ object WebView {
                         }
                         h3 { +"Delta" }
                     }
-                    val deltaClass = if (portfolio.emergency.deltaToTarget <= java.math.BigDecimal.ZERO) "positive" else "negative"
+                    val deltaClass =
+                        if (portfolio.emergency.deltaToTarget <= java.math.BigDecimal.ZERO) "positive" else "negative"
                     div(classes = "value $deltaClass") { +"€${portfolio.emergency.deltaToTarget}" }
                 }
                 div(classes = "card") {
@@ -254,7 +269,8 @@ object WebView {
                             +"Historical Performance"
                             val hp = portfolio.emergency.historicalPerformance
                             if (hp.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                val returnClass =
+                                    if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -328,7 +344,8 @@ object WebView {
                             +"Historical Performance"
                             val hp = portfolio.historicalPerformance
                             if (hp.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                val returnClass =
+                                    if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -403,7 +420,14 @@ object WebView {
                         }
                         h3 { +"Invested" }
                     }
-                    div(classes = "value") { +"${(portfolio.percentInvested * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)}%" }
+                    div(classes = "value") {
+                        +"${
+                            (portfolio.percentInvested * java.math.BigDecimal(100)).setScale(
+                                1,
+                                RoundingMode.HALF_UP
+                            )
+                        }%"
+                    }
                 }
                 div(classes = "card") {
                     div(classes = "card-header") {
@@ -412,7 +436,14 @@ object WebView {
                         }
                         h3 { +"Liquid" }
                     }
-                    div(classes = "value") { +"${(portfolio.percentLiquid * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)}%" }
+                    div(classes = "value") {
+                        +"${
+                            (portfolio.percentLiquid * java.math.BigDecimal(100)).setScale(
+                                1,
+                                RoundingMode.HALF_UP
+                            )
+                        }%"
+                    }
                 }
             }
 
@@ -441,7 +472,8 @@ object WebView {
                             +"Overall Historical Performance"
                             val hp = portfolio.overallHistoricalPerformance
                             if (hp.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                val returnClass =
+                                    if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -469,12 +501,18 @@ object WebView {
                             meta(charset = "UTF-8")
                             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
                             script(src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js") {}
-                            link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css") {}
+                            link(
+                                rel = "stylesheet",
+                                href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+                            ) {}
                             link(rel = "preconnect", href = "https://fonts.googleapis.com")
                             link(rel = "preconnect", href = "https://fonts.gstatic.com") {
                                 attributes["crossorigin"] = ""
                             }
-                            link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap")
+                            link(
+                                rel = "stylesheet",
+                                href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+                            )
                             link(rel = "stylesheet", href = "/static/css/styles.css")
                         }
                         body {
@@ -510,27 +548,55 @@ object WebView {
                             // Initialize portfolio data for charts
                             script {
                                 unsafe {
-                                    raw("""
+                                    raw(
+                                        """
                                         const portfolioData = {
-                                            percentLiquid: ${(portfolioData.percentLiquid * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)},
-                                            percentInvested: ${(portfolioData.percentInvested * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)},
+                                            percentLiquid: ${
+                                        (portfolioData.percentLiquid * java.math.BigDecimal(100)).setScale(
+                                            2,
+                                            RoundingMode.HALF_UP
+                                        )
+                                    },
+                                            percentInvested: ${
+                                        (portfolioData.percentInvested * java.math.BigDecimal(100)).setScale(
+                                            2,
+                                            RoundingMode.HALF_UP
+                                        )
+                                    },
                                             liquidity: {
                                                 net: ${portfolioData.liquidity.net},
                                                 totalIncome: ${portfolioData.liquidity.totalIncome},
                                                 totalExpense: ${portfolioData.liquidity.totalExpense},
                                                 avgMonthlyExpense12m: ${portfolioData.liquidity.avgMonthlyExpense12m},
                                                 statistics: ${
-                                                    if (portfolioData.liquidity.statistics != null) {
-                                                        gson.toJson(mapOf(
-                                                            "monthlyTrend" to portfolioData.liquidity.statistics?.monthlyTrend?.map { 
-                                                                mapOf("yearMonth" to it.yearMonth, "income" to it.income, "expense" to it.expense, "net" to it.net)
-                                                            },
-                                                            "topExpenseCategories" to portfolioData.liquidity.statistics?.topExpenseCategories?.map { listOf(it.first, it.second) },
-                                                            "topIncomeCategories" to portfolioData.liquidity.statistics?.topIncomeCategories?.map { listOf(it.first, it.second) },
-                                                            "totalByCategory" to portfolioData.liquidity.statistics?.totalByCategory
-                                                        ))
-                                                    } else "null"
-                                                }
+                                        if (portfolioData.liquidity.statistics != null) {
+                                            gson.toJson(
+                                                mapOf(
+                                                    "monthlyTrend" to portfolioData.liquidity.statistics?.monthlyTrend?.map {
+                                                        mapOf(
+                                                            "yearMonth" to it.yearMonth,
+                                                            "income" to it.income,
+                                                            "expense" to it.expense,
+                                                            "net" to it.net
+                                                        )
+                                                    },
+                                                    "topExpenseCategories" to portfolioData.liquidity.statistics?.topExpenseCategories?.map {
+                                                        listOf(
+                                                            it.first,
+                                                            it.second
+                                                        )
+                                                    },
+                                                    "topIncomeCategories" to portfolioData.liquidity.statistics?.topIncomeCategories?.map {
+                                                        listOf(
+                                                            it.first,
+                                                            it.second
+                                                        )
+                                                    },
+                                                    "totalByCategory" to portfolioData.liquidity.statistics?.totalByCategory
+                                                )
+                                            )
+                                        } else "null"
+                                    }
                                             },
                                             emergency: {
                                                 currentCapital: ${portfolioData.emergency.currentCapital},
@@ -539,29 +605,38 @@ object WebView {
                                                 status: "${portfolioData.emergency.status}",
                                                 isLiquid: ${portfolioData.emergency.isLiquid},
                                                 historicalPerformance: ${
-                                                    if (portfolioData.emergency.historicalPerformance != null) {
-                                                        val dataPoints = portfolioData.emergency.historicalPerformance?.dataPoints?.map { dp ->
-                                                            mapOf("date" to dp.date.toString(), "value" to dp.value)
-                                                        }
-                                                        gson.toJson(mapOf(
-                                                            "dataPoints" to dataPoints,
-                                                            "totalReturn" to portfolioData.emergency.historicalPerformance?.totalReturn,
-                                                            "annualizedReturn" to portfolioData.emergency.historicalPerformance?.annualizedReturn
-                                                        ))
-                                                    } else "null"
+                                        if (portfolioData.emergency.historicalPerformance != null) {
+                                            val dataPoints =
+                                                portfolioData.emergency.historicalPerformance?.dataPoints?.map { dp ->
+                                                    mapOf("date" to dp.date.toString(), "value" to dp.value)
                                                 }
+                                            gson.toJson(
+                                                mapOf(
+                                                    "dataPoints" to dataPoints,
+                                                    "totalReturn" to portfolioData.emergency.historicalPerformance?.totalReturn,
+                                                    "annualizedReturn" to portfolioData.emergency.historicalPerformance?.annualizedReturn
+                                                )
+                                            )
+                                        } else "null"
+                                    }
                                             },
                                             investments: {
                                                 totalCurrent: ${portfolioData.investments.totalCurrent},
                                                 totalInvested: ${portfolioData.investments.totalInvested},
                                                 itemsWithWeights: ${
-                                                    if (portfolioData.investments.itemsWithWeights.isNotEmpty()) {
-                                                        val items = portfolioData.investments.itemsWithWeights.map { (inv, weight) ->
-                                                            mapOf("ticker" to inv.ticker, "etf" to inv.etf, "currentValue" to inv.currentValue, "weight" to weight)
-                                                        }
-                                                        gson.toJson(items)
-                                                    } else "[]"
+                                        if (portfolioData.investments.itemsWithWeights.isNotEmpty()) {
+                                            val items =
+                                                portfolioData.investments.itemsWithWeights.map { (inv, weight) ->
+                                                    mapOf(
+                                                        "ticker" to inv.ticker,
+                                                        "etf" to inv.etf,
+                                                        "currentValue" to inv.currentValue,
+                                                        "weight" to weight
+                                                    )
                                                 }
+                                            gson.toJson(items)
+                                        } else "[]"
+                                    }
                                             },
                                             planned: {
                                                 totalEstimated: ${portfolioData.planned.totalEstimated},
@@ -571,42 +646,51 @@ object WebView {
                                                 investedAccrued: ${portfolioData.planned.investedAccrued},
                                                 isInvested: ${portfolioData.planned.isInvested},
                                                 historicalPerformance: ${
-                                                    if (portfolioData.planned.historicalPerformance != null) {
-                                                        val dataPoints = portfolioData.planned.historicalPerformance?.dataPoints?.map { dp ->
-                                                            mapOf("date" to dp.date.toString(), "value" to dp.value)
-                                                        }
-                                                        gson.toJson(mapOf(
-                                                            "dataPoints" to dataPoints,
-                                                            "totalReturn" to portfolioData.planned.historicalPerformance?.totalReturn,
-                                                            "annualizedReturn" to portfolioData.planned.historicalPerformance?.annualizedReturn
-                                                        ))
-                                                    } else "null"
+                                        if (portfolioData.planned.historicalPerformance != null) {
+                                            val dataPoints =
+                                                portfolioData.planned.historicalPerformance?.dataPoints?.map { dp ->
+                                                    mapOf("date" to dp.date.toString(), "value" to dp.value)
                                                 }
+                                            gson.toJson(
+                                                mapOf(
+                                                    "dataPoints" to dataPoints,
+                                                    "totalReturn" to portfolioData.planned.historicalPerformance?.totalReturn,
+                                                    "annualizedReturn" to portfolioData.planned.historicalPerformance?.annualizedReturn
+                                                )
+                                            )
+                                        } else "null"
+                                    }
                                             },
                                             historicalPerformance: ${
-                                                if (portfolioData.historicalPerformance != null) {
-                                                    val dataPoints = portfolioData.historicalPerformance?.dataPoints?.map { dp ->
-                                                        mapOf("date" to dp.date.toString(), "value" to dp.value)
-                                                    }
-                                                    gson.toJson(mapOf(
-                                                        "dataPoints" to dataPoints,
-                                                        "totalReturn" to portfolioData.historicalPerformance?.totalReturn,
-                                                        "annualizedReturn" to portfolioData.historicalPerformance?.annualizedReturn
-                                                    ))
-                                                } else "null"
-                                            },
+                                        if (portfolioData.historicalPerformance != null) {
+                                            val dataPoints =
+                                                portfolioData.historicalPerformance?.dataPoints?.map { dp ->
+                                                    mapOf("date" to dp.date.toString(), "value" to dp.value)
+                                                }
+                                            gson.toJson(
+                                                mapOf(
+                                                    "dataPoints" to dataPoints,
+                                                    "totalReturn" to portfolioData.historicalPerformance?.totalReturn,
+                                                    "annualizedReturn" to portfolioData.historicalPerformance?.annualizedReturn
+                                                )
+                                            )
+                                        } else "null"
+                                    },
                                             overallHistoricalPerformance: ${
-                                                if (portfolioData.overallHistoricalPerformance != null) {
-                                                    val dataPoints = portfolioData.overallHistoricalPerformance?.dataPoints?.map { dp ->
-                                                        mapOf("date" to dp.date.toString(), "value" to dp.value)
-                                                    }
-                                                    gson.toJson(mapOf(
-                                                        "dataPoints" to dataPoints,
-                                                        "totalReturn" to portfolioData.overallHistoricalPerformance?.totalReturn,
-                                                        "annualizedReturn" to portfolioData.overallHistoricalPerformance?.annualizedReturn
-                                                    ))
-                                                } else "null"
-                                            }
+                                        if (portfolioData.overallHistoricalPerformance != null) {
+                                            val dataPoints =
+                                                portfolioData.overallHistoricalPerformance?.dataPoints?.map { dp ->
+                                                    mapOf("date" to dp.date.toString(), "value" to dp.value)
+                                                }
+                                            gson.toJson(
+                                                mapOf(
+                                                    "dataPoints" to dataPoints,
+                                                    "totalReturn" to portfolioData.overallHistoricalPerformance?.totalReturn,
+                                                    "annualizedReturn" to portfolioData.overallHistoricalPerformance?.annualizedReturn
+                                                )
+                                            )
+                                        } else "null"
+                                    }
                                         };
                                     """.trimIndent())
                                 }
@@ -615,12 +699,14 @@ object WebView {
                             script(src = "/static/js/charts.js") {}
                             script {
                                 unsafe {
-                                    raw("""
+                                    raw(
+                                        """
                                         // Initialize charts when DOM is ready
                                         document.addEventListener('DOMContentLoaded', function() {
                                             initializeCharts(portfolioData);
                                         });
-                                    """.trimIndent())
+                                    """.trimIndent()
+                                    )
                                 }
                             }
                         }

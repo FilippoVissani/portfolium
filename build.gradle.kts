@@ -1,5 +1,3 @@
-import org.gradle.api.artifacts.VersionCatalogsExtension
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     jacoco

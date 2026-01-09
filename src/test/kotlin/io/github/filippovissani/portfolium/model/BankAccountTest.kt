@@ -1,9 +1,9 @@
 package io.github.filippovissani.portfolium.model
 
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.maps.shouldHaveSize
 import java.math.BigDecimal
 import java.time.LocalDate
 
