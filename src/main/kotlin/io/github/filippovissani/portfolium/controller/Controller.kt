@@ -4,6 +4,8 @@ import io.github.filippovissani.portfolium.controller.config.ConfigLoader
 import io.github.filippovissani.portfolium.controller.csv.Loaders
 import io.github.filippovissani.portfolium.controller.datasource.CachedPriceDataSource
 import io.github.filippovissani.portfolium.controller.datasource.YahooFinancePriceDataSource
+import io.github.filippovissani.portfolium.controller.yaml.BankAccountLoader
+import io.github.filippovissani.portfolium.model.BankAccountService
 import io.github.filippovissani.portfolium.model.Calculators
 import io.github.filippovissani.portfolium.model.HistoricalPerformanceCalculator
 import io.github.filippovissani.portfolium.view.Console.printDashboard
@@ -23,6 +25,24 @@ object Controller {
         val planned = loaders.loadPlannedExpenses(config.getPlannedExpensesPath())
         val emergency = loaders.loadEmergencyFund(config.getEmergencyFundPath())
         val investments = loaders.loadInvestmentTransactions(config.getInvestmentsPath())
+
+        // Load bank account data
+        val bankAccountLoader = BankAccountLoader()
+        val bankAccount = try {
+            if (config.getBankAccountPath().exists()) {
+                bankAccountLoader.loadBankAccount(config.getBankAccountPath()).also {
+                    logger.info("Bank account loaded: ${it.name}, ${it.transactions.size} transactions")
+                    val summary = BankAccountService.getAccountSummary(it)
+                    logger.info("Bank account summary - Balance: ${summary.currentBalance}, ETF holdings: ${summary.etfHoldings.size}")
+                }
+            } else {
+                logger.info("Bank account file not found, skipping")
+                null
+            }
+        } catch (e: Exception) {
+            logger.warn("Error loading bank account", e)
+            null
+        }
 
         // Use YahooFinancePriceDataSource with caching by default
         val priceSource = CachedPriceDataSource(

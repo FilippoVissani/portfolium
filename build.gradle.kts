@@ -17,6 +17,7 @@ val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
     implementation(libs.findLibrary("kotlinCsv").get())
+    implementation(libs.findLibrary("snakeyaml").get())
     implementation(libs.findLibrary("ktor-server-core").get())
     implementation(libs.findLibrary("ktor-server-netty").get())
     implementation(libs.findLibrary("ktor-server-html").get())

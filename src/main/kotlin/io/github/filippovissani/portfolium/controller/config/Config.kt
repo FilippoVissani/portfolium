@@ -11,6 +11,7 @@ data class Config(
     val plannedExpensesFile: String,
     val emergencyFundFile: String,
     val investmentsFile: String,
+    val bankAccountFile: String,
     val priceCacheFile: String,
     val cacheDurationHours: Long,
     val historicalPerformanceIntervalDays: Long,
@@ -40,5 +41,10 @@ data class Config(
      * Get the full path for the price cache CSV file
      */
     fun getPriceCachePath(): File = File("$dataPath/$priceCacheFile")
+
+    /**
+     * Get the full path for the bank account YAML file
+     */
+    fun getBankAccountPath(): File = File("$dataPath/$bankAccountFile")
 }
 
