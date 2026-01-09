@@ -45,5 +45,4 @@ bin/
 .DS_Store
 
 .idea/
-data/
 logs/

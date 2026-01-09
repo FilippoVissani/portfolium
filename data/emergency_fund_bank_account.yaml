@@ -1,0 +1,23 @@
+name: "Emergency Fund"
+initialBalance: 1000.00
+targetMonthlyExpenses: 6
+transactions:
+  # Initial deposits
+  - type: deposit
+    date: 2024-01-15
+    amount: 2000.00
+    description: "Initial fund"
+  # Invest in conservative ETFs
+  - type: etf_buy
+    date: 2024-02-01
+    name: "iShares Core U.S. Aggregate Bond ETF"
+    ticker: "AGG"
+    area: "US"
+    quantity: 10
+    price: 100.00
+    fees: 5.00
+  - type: deposit
+    date: 2024-03-15
+    amount: 1500.00
+    description: "Additional savings"
+
