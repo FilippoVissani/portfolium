@@ -111,5 +111,4 @@ object HistoricalPerformanceCalculator {
 
         return totalValue.toMoney()
     }
-
 }
