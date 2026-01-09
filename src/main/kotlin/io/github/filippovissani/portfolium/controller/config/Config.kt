@@ -14,13 +14,12 @@ data class Config(
     val priceCacheFile: String,
     val cacheDurationHours: Long,
     val historicalPerformanceIntervalDays: Long,
-    val serverPort: Int
+    val serverPort: Int,
 ) {
     /**
      * Get the full path for the price cache CSV file
      */
     fun getPriceCachePath(): File = File("$dataPath/$priceCacheFile")
-
 
     /**
      * Get the full path for the main bank account YAML file
@@ -42,4 +41,3 @@ data class Config(
      */
     fun getInvestmentBankAccountPath(): File = File("$dataPath/$investmentBankAccountFile")
 }
-

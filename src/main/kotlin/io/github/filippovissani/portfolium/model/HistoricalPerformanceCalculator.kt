@@ -10,7 +10,6 @@ import java.time.temporal.ChronoUnit
 import kotlin.math.pow
 
 object HistoricalPerformanceCalculator {
-
     /**
      * Calculate historical performance of investments over a date range
      * @param transactions All investment transactions
@@ -24,7 +23,7 @@ object HistoricalPerformanceCalculator {
         priceSource: PriceDataSource,
         startDate: LocalDate,
         endDate: LocalDate = LocalDate.now(),
-        intervalDays: Long = 30
+        intervalDays: Long = 30,
     ): HistoricalPerformance {
         val dataPoints = mutableListOf<PerformanceDataPoint>()
 
@@ -46,34 +45,36 @@ object HistoricalPerformanceCalculator {
         val initialValue = dataPoints.firstOrNull()?.value ?: BigDecimal.ZERO
         val finalValue = dataPoints.lastOrNull()?.value ?: BigDecimal.ZERO
 
-        val totalReturn = if (initialValue.signum() == 0) {
-            BigDecimal.ZERO
-        } else {
-            ((finalValue - initialValue) / initialValue * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
-        }
+        val totalReturn =
+            if (initialValue.signum() == 0) {
+                BigDecimal.ZERO
+            } else {
+                ((finalValue - initialValue) / initialValue * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
+            }
 
         // Calculate annualized return
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate)
-        val annualizedReturn = if (daysBetween > 0 && initialValue.signum() != 0) {
-            val years = daysBetween.toBigDecimal().divide(BigDecimal(365.25), 6, RoundingMode.HALF_UP)
-            if (years > BigDecimal.ZERO) {
-                val ratio = finalValue.divide(initialValue, 6, RoundingMode.HALF_UP)
-                // Convert to double for power calculation, then back to BigDecimal
-                val ratioDouble = ratio.toDouble()
-                val yearsDouble = years.toDouble()
-                val annualized = (ratioDouble.pow(1.0 / yearsDouble) - 1.0) * 100.0
-                BigDecimal.valueOf(annualized).setScale(2, RoundingMode.HALF_UP)
+        val annualizedReturn =
+            if (daysBetween > 0 && initialValue.signum() != 0) {
+                val years = daysBetween.toBigDecimal().divide(BigDecimal(365.25), 6, RoundingMode.HALF_UP)
+                if (years > BigDecimal.ZERO) {
+                    val ratio = finalValue.divide(initialValue, 6, RoundingMode.HALF_UP)
+                    // Convert to double for power calculation, then back to BigDecimal
+                    val ratioDouble = ratio.toDouble()
+                    val yearsDouble = years.toDouble()
+                    val annualized = (ratioDouble.pow(1.0 / yearsDouble) - 1.0) * 100.0
+                    BigDecimal.valueOf(annualized).setScale(2, RoundingMode.HALF_UP)
+                } else {
+                    null
+                }
             } else {
                 null
             }
-        } else {
-            null
-        }
 
         return HistoricalPerformance(
             dataPoints = dataPoints,
             totalReturn = totalReturn,
-            annualizedReturn = annualizedReturn
+            annualizedReturn = annualizedReturn,
         )
     }
 
@@ -83,10 +84,12 @@ object HistoricalPerformanceCalculator {
     private fun calculatePortfolioValueAtDate(
         transactions: List<InvestmentTransaction>,
         priceSource: PriceDataSource,
-        date: LocalDate
+        date: LocalDate,
     ): BigDecimal {
         // Group transactions by ticker up to the given date
-        data class Position(var quantity: BigDecimal)
+        data class Position(
+            var quantity: BigDecimal,
+        )
 
         val positions = mutableMapOf<String, Position>()
 
@@ -114,7 +117,7 @@ object HistoricalPerformanceCalculator {
      */
     fun calculateYTDPerformance(
         transactions: List<InvestmentTransaction>,
-        priceSource: PriceDataSource
+        priceSource: PriceDataSource,
     ): HistoricalPerformance {
         val today = LocalDate.now()
         val yearStart = LocalDate.of(today.year, 1, 1)
@@ -123,7 +126,7 @@ object HistoricalPerformanceCalculator {
             priceSource = priceSource,
             startDate = yearStart,
             endDate = today,
-            intervalDays = 7 // Weekly data points
+            intervalDays = 7, // Weekly data points
         )
     }
 
@@ -133,7 +136,7 @@ object HistoricalPerformanceCalculator {
     fun calculatePerformanceLastNMonths(
         transactions: List<InvestmentTransaction>,
         priceSource: PriceDataSource,
-        months: Long = 12
+        months: Long = 12,
     ): HistoricalPerformance {
         val today = LocalDate.now()
         val startDate = today.minusMonths(months)
@@ -142,8 +145,7 @@ object HistoricalPerformanceCalculator {
             priceSource = priceSource,
             startDate = startDate,
             endDate = today,
-            intervalDays = 7 // Weekly data points
+            intervalDays = 7, // Weekly data points
         )
     }
 }
-

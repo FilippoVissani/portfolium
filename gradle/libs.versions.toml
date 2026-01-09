@@ -28,3 +28,5 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 [plugins]
 # Kotlin JVM plugin
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+# ktlint plugin
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.2" }

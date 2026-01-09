@@ -31,22 +31,24 @@ object BankAccountLoaders {
             return MainBankAccount()
         }
 
-        val raw = file.inputStream().use { stream ->
-            yaml.loadAs(stream, MainBankAccountYaml::class.java) ?: MainBankAccountYaml()
-        }
+        val raw =
+            file.inputStream().use { stream ->
+                yaml.loadAs(stream, MainBankAccountYaml::class.java) ?: MainBankAccountYaml()
+            }
 
         val name = raw.name ?: "Main Account"
         val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
-        val transactions = (raw.transactions ?: emptyList()).mapNotNull { tx ->
-            val date = parseDate(tx.date) ?: return@mapNotNull null
-            LiquidTransaction(
-                date = date,
-                description = tx.description.orEmpty(),
-                category = tx.category.orEmpty(),
-                amount = tx.amount ?: BigDecimal.ZERO,
-                note = tx.note
-            )
-        }
+        val transactions =
+            (raw.transactions ?: emptyList()).mapNotNull { tx ->
+                val date = parseDate(tx.date) ?: return@mapNotNull null
+                LiquidTransaction(
+                    date = date,
+                    description = tx.description.orEmpty(),
+                    category = tx.category.orEmpty(),
+                    amount = tx.amount ?: BigDecimal.ZERO,
+                    note = tx.note,
+                )
+            }
 
         return MainBankAccount(name, initialBalance, transactions)
     }
@@ -71,23 +73,25 @@ object BankAccountLoaders {
             return PlannedExpensesBankAccount()
         }
 
-        val raw = file.inputStream().use { stream ->
-            yaml.loadAs(stream, PlannedExpensesBankAccountYaml::class.java) ?: PlannedExpensesBankAccountYaml()
-        }
+        val raw =
+            file.inputStream().use { stream ->
+                yaml.loadAs(stream, PlannedExpensesBankAccountYaml::class.java) ?: PlannedExpensesBankAccountYaml()
+            }
 
         val name = raw.name ?: "Planned Expenses"
         val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
 
         val transactions = (raw.transactions ?: emptyList()).mapNotNull { parseGenericTransaction(it) }
 
-        val plannedExpenses = (raw.plannedExpenses ?: emptyList()).mapNotNull { pe ->
-            val namePe = pe.name ?: return@mapNotNull null
-            PlannedExpenseEntry(
-                name = namePe,
-                expirationDate = parseDate(pe.expirationDate),
-                estimatedAmount = pe.estimatedAmount ?: BigDecimal.ZERO
-            )
-        }
+        val plannedExpenses =
+            (raw.plannedExpenses ?: emptyList()).mapNotNull { pe ->
+                val namePe = pe.name ?: return@mapNotNull null
+                PlannedExpenseEntry(
+                    name = namePe,
+                    expirationDate = parseDate(pe.expirationDate),
+                    estimatedAmount = pe.estimatedAmount ?: BigDecimal.ZERO,
+                )
+            }
 
         return PlannedExpensesBankAccount(name, initialBalance, transactions, plannedExpenses)
     }
@@ -109,9 +113,10 @@ object BankAccountLoaders {
             return EmergencyFundBankAccount()
         }
 
-        val raw = file.inputStream().use { stream ->
-            yaml.loadAs(stream, EmergencyFundBankAccountYaml::class.java) ?: EmergencyFundBankAccountYaml()
-        }
+        val raw =
+            file.inputStream().use { stream ->
+                yaml.loadAs(stream, EmergencyFundBankAccountYaml::class.java) ?: EmergencyFundBankAccountYaml()
+            }
 
         val name = raw.name ?: "Emergency Fund"
         val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
@@ -145,9 +150,10 @@ object BankAccountLoaders {
             return InvestmentBankAccount()
         }
 
-        val raw = file.inputStream().use { stream ->
-            yaml.loadAs(stream, InvestmentBankAccountYaml::class.java) ?: InvestmentBankAccountYaml()
-        }
+        val raw =
+            file.inputStream().use { stream ->
+                yaml.loadAs(stream, InvestmentBankAccountYaml::class.java) ?: InvestmentBankAccountYaml()
+            }
 
         val name = raw.name ?: "Investments"
         val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
@@ -164,17 +170,19 @@ object BankAccountLoaders {
         val date = parseDate(tx.date) ?: return null
 
         return when (type) {
-            "deposit" -> DepositTransaction(
-                date = date,
-                amount = tx.amount ?: BigDecimal.ZERO,
-                description = tx.description
-            )
+            "deposit" ->
+                DepositTransaction(
+                    date = date,
+                    amount = tx.amount ?: BigDecimal.ZERO,
+                    description = tx.description,
+                )
 
-            "withdrawal" -> WithdrawalTransaction(
-                date = date,
-                amount = tx.amount ?: BigDecimal.ZERO,
-                description = tx.description
-            )
+            "withdrawal" ->
+                WithdrawalTransaction(
+                    date = date,
+                    amount = tx.amount ?: BigDecimal.ZERO,
+                    description = tx.description,
+                )
 
             "etf_buy" -> {
                 val ticker = tx.ticker ?: return null
@@ -186,7 +194,7 @@ object BankAccountLoaders {
                     area = tx.area,
                     quantity = tx.quantity?.toBigDecimal() ?: BigDecimal.ZERO,
                     price = tx.price ?: BigDecimal.ZERO,
-                    fees = tx.fees
+                    fees = tx.fees,
                 )
             }
 
@@ -200,7 +208,7 @@ object BankAccountLoaders {
                     area = tx.area,
                     quantity = tx.quantity?.toBigDecimal() ?: BigDecimal.ZERO,
                     price = tx.price ?: BigDecimal.ZERO,
-                    fees = tx.fees
+                    fees = tx.fees,
                 )
             }
 
@@ -213,37 +221,41 @@ object BankAccountLoaders {
         val date = parseDate(tx.date) ?: return null
 
         return when (type) {
-            "deposit" -> DepositTransaction(
-                date = date,
-                amount = tx.amount ?: BigDecimal.ZERO,
-                description = tx.description
-            )
+            "deposit" ->
+                DepositTransaction(
+                    date = date,
+                    amount = tx.amount ?: BigDecimal.ZERO,
+                    description = tx.description,
+                )
 
-            "withdrawal" -> WithdrawalTransaction(
-                date = date,
-                amount = tx.amount ?: BigDecimal.ZERO,
-                description = tx.description
-            )
+            "withdrawal" ->
+                WithdrawalTransaction(
+                    date = date,
+                    amount = tx.amount ?: BigDecimal.ZERO,
+                    description = tx.description,
+                )
 
-            "etf_buy", "buy_etf" -> EtfBuyTransaction(
-                date = date,
-                name = tx.name.orEmpty(),
-                ticker = tx.ticker.orEmpty(),
-                area = tx.area,
-                quantity = tx.quantity ?: BigDecimal.ZERO,
-                price = tx.price ?: BigDecimal.ZERO,
-                fees = tx.fees,
-            )
+            "etf_buy", "buy_etf" ->
+                EtfBuyTransaction(
+                    date = date,
+                    name = tx.name.orEmpty(),
+                    ticker = tx.ticker.orEmpty(),
+                    area = tx.area,
+                    quantity = tx.quantity ?: BigDecimal.ZERO,
+                    price = tx.price ?: BigDecimal.ZERO,
+                    fees = tx.fees,
+                )
 
-            "etf_sell", "sell_etf" -> EtfSellTransaction(
-                date = date,
-                name = tx.name.orEmpty(),
-                ticker = tx.ticker.orEmpty(),
-                area = tx.area,
-                quantity = tx.quantity ?: BigDecimal.ZERO,
-                price = tx.price ?: BigDecimal.ZERO,
-                fees = tx.fees,
-            )
+            "etf_sell", "sell_etf" ->
+                EtfSellTransaction(
+                    date = date,
+                    name = tx.name.orEmpty(),
+                    ticker = tx.ticker.orEmpty(),
+                    area = tx.area,
+                    quantity = tx.quantity ?: BigDecimal.ZERO,
+                    price = tx.price ?: BigDecimal.ZERO,
+                    fees = tx.fees,
+                )
 
             else -> null
         }

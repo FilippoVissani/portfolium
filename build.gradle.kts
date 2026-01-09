@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ktlint)
     jacoco
     application
 }
@@ -30,6 +31,18 @@ dependencies {
 
 kotlin {
     jvmToolchain(25)
+}
+
+ktlint {
+    version.set("1.5.0")
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(false)
+    filter {
+        exclude("**/generated/**")
+        exclude("**/build/**")
+    }
 }
 
 application {
@@ -66,4 +79,5 @@ tasks.jacocoTestCoverageVerification {
 
 tasks.check {
     dependsOn(tasks.jacocoTestCoverageVerification)
+    dependsOn(tasks.named("ktlintCheck"))
 }
