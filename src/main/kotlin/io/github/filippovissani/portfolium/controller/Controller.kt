@@ -91,58 +91,67 @@ object Controller {
 
         // Calculate summaries using new bank accounts
         val liquiditySummary = Calculators.summarizeLiquidity(mainBankAccount)
-        val plannedSummary = Calculators.summarizePlanned(plannedExpensesBankAccount)
-        val emergencySummary = Calculators.summarizeEmergency(emergencyFundBankAccount, liquiditySummary.avgMonthlyExpense12m)
+        var plannedSummary = Calculators.summarizePlanned(plannedExpensesBankAccount)
+        var emergencySummary = Calculators.summarizeEmergency(emergencyFundBankAccount, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestments(investmentBankAccount, currentPrices)
 
         // Calculate historical performance from investment bank account
-        val historicalPerformance = if (investmentBankAccount.transactions.isNotEmpty()) {
-            logger.info("Calculating historical performance...")
+        val investmentHistoricalPerformance = if (investmentBankAccount.transactions.isNotEmpty()) {
+            logger.info("Calculating investment historical performance...")
             try {
-                // Extract ETF transactions for historical calculation
-                val etfTransactions = investmentBankAccount.transactions.mapNotNull { tx ->
-                    when (tx) {
-                        is EtfBuyTransaction ->
-                            InvestmentTransaction(
-                                date = tx.date,
-                                etf = tx.name,
-                                ticker = tx.ticker,
-                                area = tx.area,
-                                quantity = tx.quantity,
-                                price = tx.price,
-                                fees = tx.fees
-                            )
-                        is EtfSellTransaction ->
-                            InvestmentTransaction(
-                                date = tx.date,
-                                etf = tx.name,
-                                ticker = tx.ticker,
-                                area = tx.area,
-                                quantity = -tx.quantity,
-                                price = tx.price,
-                                fees = tx.fees
-                            )
-                        else -> null
-                    }
-                }
-
-                if (etfTransactions.isNotEmpty()) {
-                    val earliestDate = etfTransactions.minOfOrNull { it.date } ?: java.time.LocalDate.now()
-                    HistoricalPerformanceCalculator.calculateHistoricalPerformance(
-                        transactions = etfTransactions,
-                        priceSource = priceSource,
-                        startDate = earliestDate,
-                        endDate = java.time.LocalDate.now(),
-                        intervalDays = config.historicalPerformanceIntervalDays
-                    )
-                } else {
-                    null
-                }
+                calculateHistoricalPerformanceForAccount(investmentBankAccount, priceSource, config)
             } catch (e: Exception) {
-                logger.warn("Could not calculate historical performance", e)
+                logger.warn("Could not calculate investment historical performance", e)
                 null
             }
         } else {
+            null
+        }
+
+        // Calculate historical performance for planned expenses if invested
+        val plannedHistoricalPerformance = if (plannedSummary.isInvested && plannedExpensesBankAccount.transactions.isNotEmpty()) {
+            logger.info("Calculating planned expenses historical performance...")
+            try {
+                calculateHistoricalPerformanceForAccount(plannedExpensesBankAccount, priceSource, config)
+            } catch (e: Exception) {
+                logger.warn("Could not calculate planned expenses historical performance", e)
+                null
+            }
+        } else {
+            null
+        }
+        plannedSummary = plannedSummary.copy(historicalPerformance = plannedHistoricalPerformance)
+
+        // Calculate historical performance for emergency fund if invested
+        val emergencyHistoricalPerformance = if (!emergencySummary.isLiquid && emergencyFundBankAccount.transactions.isNotEmpty()) {
+            logger.info("Calculating emergency fund historical performance...")
+            try {
+                calculateHistoricalPerformanceForAccount(emergencyFundBankAccount, priceSource, config)
+            } catch (e: Exception) {
+                logger.warn("Could not calculate emergency fund historical performance", e)
+                null
+            }
+        } else {
+            null
+        }
+        emergencySummary = emergencySummary.copy(historicalPerformance = emergencyHistoricalPerformance)
+
+        // Calculate overall historical performance combining all invested accounts
+        val overallHistoricalPerformance = try {
+            logger.info("Calculating overall historical performance...")
+            val allAccounts = listOfNotNull(
+                if (investmentBankAccount.transactions.isNotEmpty()) investmentBankAccount else null,
+                if (plannedSummary.isInvested && plannedExpensesBankAccount.transactions.isNotEmpty()) plannedExpensesBankAccount else null,
+                if (!emergencySummary.isLiquid && emergencyFundBankAccount.transactions.isNotEmpty()) emergencyFundBankAccount else null
+            )
+
+            if (allAccounts.isNotEmpty()) {
+                calculateCombinedHistoricalPerformance(allAccounts, priceSource, config)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            logger.warn("Could not calculate overall historical performance", e)
             null
         }
 
@@ -152,10 +161,117 @@ object Controller {
             plannedSummary,
             emergencySummary,
             investmentSummary,
-            historicalPerformance
+            investmentHistoricalPerformance,
+            overallHistoricalPerformance
         )
 
         printDashboard(portfolio)
         WebView.startServer(portfolio, config.serverPort)
+    }
+
+    private fun calculateHistoricalPerformanceForAccount(
+        account: Any,
+        priceSource: io.github.filippovissani.portfolium.controller.datasource.PriceDataSource,
+        config: io.github.filippovissani.portfolium.controller.config.Config
+    ): HistoricalPerformance? {
+        val transactions = when (account) {
+            is InvestmentBankAccount -> account.transactions
+            is PlannedExpensesBankAccount -> account.transactions
+            is EmergencyFundBankAccount -> account.transactions
+            else -> emptyList()
+        }
+
+        val etfTransactions = transactions.mapNotNull { tx ->
+            when (tx) {
+                is EtfBuyTransaction ->
+                    InvestmentTransaction(
+                        date = tx.date,
+                        etf = tx.name,
+                        ticker = tx.ticker,
+                        area = tx.area,
+                        quantity = tx.quantity,
+                        price = tx.price,
+                        fees = tx.fees
+                    )
+                is EtfSellTransaction ->
+                    InvestmentTransaction(
+                        date = tx.date,
+                        etf = tx.name,
+                        ticker = tx.ticker,
+                        area = tx.area,
+                        quantity = -tx.quantity,
+                        price = tx.price,
+                        fees = tx.fees
+                    )
+                else -> null
+            }
+        }
+
+        return if (etfTransactions.isNotEmpty()) {
+            val earliestDate = etfTransactions.minOfOrNull { it.date } ?: java.time.LocalDate.now()
+            HistoricalPerformanceCalculator.calculateHistoricalPerformance(
+                transactions = etfTransactions,
+                priceSource = priceSource,
+                startDate = earliestDate,
+                endDate = java.time.LocalDate.now(),
+                intervalDays = config.historicalPerformanceIntervalDays
+            )
+        } else {
+            null
+        }
+    }
+
+    private fun calculateCombinedHistoricalPerformance(
+        accounts: List<Any>,
+        priceSource: io.github.filippovissani.portfolium.controller.datasource.PriceDataSource,
+        config: io.github.filippovissani.portfolium.controller.config.Config
+    ): HistoricalPerformance? {
+        val allEtfTransactions = accounts.flatMap { account ->
+            val transactions = when (account) {
+                is InvestmentBankAccount -> account.transactions
+                is PlannedExpensesBankAccount -> account.transactions
+                is EmergencyFundBankAccount -> account.transactions
+                else -> emptyList()
+            }
+
+            transactions.mapNotNull { tx ->
+                when (tx) {
+                    is EtfBuyTransaction ->
+                        InvestmentTransaction(
+                            date = tx.date,
+                            etf = tx.name,
+                            ticker = tx.ticker,
+                            area = tx.area,
+                            quantity = tx.quantity,
+                            price = tx.price,
+                            fees = tx.fees
+                        )
+                    is EtfSellTransaction ->
+                        InvestmentTransaction(
+                            date = tx.date,
+                            etf = tx.name,
+                            ticker = tx.ticker,
+                            area = tx.area,
+                            quantity = -tx.quantity,
+                            price = tx.price,
+                            fees = tx.fees
+                        )
+                    else -> null
+                }
+            }
+        }
+
+        return if (allEtfTransactions.isNotEmpty()) {
+            val earliestDate = allEtfTransactions.minOfOrNull { it.date } ?: java.time.LocalDate.now()
+            HistoricalPerformanceCalculator.calculateHistoricalPerformance(
+                transactions = allEtfTransactions,
+                priceSource = priceSource,
+                startDate = earliestDate,
+                endDate = java.time.LocalDate.now(),
+                intervalDays = config.historicalPerformanceIntervalDays
+            )
+        } else {
+            null
+        }
     }
 }

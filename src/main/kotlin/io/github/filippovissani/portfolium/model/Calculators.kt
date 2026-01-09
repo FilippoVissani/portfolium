@@ -21,11 +21,61 @@ object Calculators {
         val avgMonthly12 =
             if (spent12 == BigDecimal.ZERO) BigDecimal.ZERO else spent12.divide(BigDecimal(12), 2, RoundingMode.HALF_UP)
 
+        // Calculate transaction statistics
+        val statistics = calculateTransactionStatistics(account.transactions)
+
         return LiquiditySummary(
             totalIncome = totalIncome.toMoney(),
             totalExpense = totalExpense.toMoney(),
             net = net.toMoney(),
-            avgMonthlyExpense12m = avgMonthly12.toMoney()
+            avgMonthlyExpense12m = avgMonthly12.toMoney(),
+            statistics = statistics
+        )
+    }
+
+    private fun calculateTransactionStatistics(transactions: List<LiquidTransaction>): TransactionStatistics {
+        // Total by category
+        val totalByCategory = transactions.groupBy { it.category }
+            .mapValues { (_, txs) -> txs.sumOf { it.amount.abs() }.toMoney() }
+
+        // Monthly trend
+        val monthlyTrend = transactions
+            .groupBy { "${it.date.year}-${String.format("%02d", it.date.monthValue)}" }
+            .map { (yearMonth, txs) ->
+                val income = txs.filter { it.amount > BigDecimal.ZERO }.sumOf { it.amount }
+                val expense = txs.filter { it.amount < BigDecimal.ZERO }.sumOf { it.amount.abs() }
+                MonthlyDataPoint(
+                    yearMonth = yearMonth,
+                    income = income.toMoney(),
+                    expense = expense.toMoney(),
+                    net = (income - expense).toMoney()
+                )
+            }
+            .sortedBy { it.yearMonth }
+
+        // Top expense categories (excluding income)
+        val topExpenseCategories = transactions
+            .filter { it.amount < BigDecimal.ZERO }
+            .groupBy { it.category }
+            .mapValues { (_, txs) -> txs.sumOf { it.amount.abs() }.toMoney() }
+            .toList()
+            .sortedByDescending { it.second }
+            .take(5)
+
+        // Top income categories
+        val topIncomeCategories = transactions
+            .filter { it.amount > BigDecimal.ZERO }
+            .groupBy { it.category }
+            .mapValues { (_, txs) -> txs.sumOf { it.amount }.toMoney() }
+            .toList()
+            .sortedByDescending { it.second }
+            .take(5)
+
+        return TransactionStatistics(
+            totalByCategory = totalByCategory,
+            monthlyTrend = monthlyTrend,
+            topExpenseCategories = topExpenseCategories,
+            topIncomeCategories = topIncomeCategories
         )
     }
 
@@ -33,9 +83,15 @@ object Calculators {
     fun summarizePlanned(account: PlannedExpensesBankAccount): PlannedExpensesSummary {
         val totalEstimated = account.plannedExpenses.sumOf { it.estimatedAmount }
         val totalAccrued = account.currentBalance
-        // For now, all accrued in planned expenses account is considered liquid
-        val liquidAccrued = totalAccrued
-        val investedAccrued = BigDecimal.ZERO
+
+        // Check if account has ETF transactions (invested)
+        val hasEtfTransactions = account.transactions.any { it is EtfBuyTransaction || it is EtfSellTransaction }
+        val isInvested = hasEtfTransactions
+
+        // Distribute accrued based on investment status
+        val liquidAccrued = if (isInvested) BigDecimal.ZERO else totalAccrued
+        val investedAccrued = if (isInvested) totalAccrued else BigDecimal.ZERO
+
         val coverage = if (totalEstimated.signum() == 0) BigDecimal.ZERO else totalAccrued.divide(
             totalEstimated,
             4,
@@ -46,7 +102,9 @@ object Calculators {
             totalAccrued = totalAccrued.toMoney(),
             coverageRatio = coverage,
             liquidAccrued = liquidAccrued.toMoney(),
-            investedAccrued = investedAccrued.toMoney()
+            investedAccrued = investedAccrued.toMoney(),
+            isInvested = isInvested,
+            historicalPerformance = null // Will be set by Controller if needed
         )
     }
 
@@ -56,12 +114,18 @@ object Calculators {
         val currentCapital = account.currentBalance
         val delta = targetCapital - currentCapital
         val status = if (currentCapital >= targetCapital) "OK" else "BELOW TARGET"
+
+        // Check if account has ETF transactions (invested)
+        val hasEtfTransactions = account.transactions.any { it is EtfBuyTransaction || it is EtfSellTransaction }
+        val isLiquid = !hasEtfTransactions
+
         return EmergencyFundSummary(
             targetCapital = targetCapital.toMoney(),
             currentCapital = currentCapital.toMoney(),
             deltaToTarget = delta.toMoney(),
             status = status,
-            isLiquid = true // Emergency fund account is considered liquid
+            isLiquid = isLiquid,
+            historicalPerformance = null // Will be set by Controller if needed
         )
     }
 
@@ -106,7 +170,8 @@ object Calculators {
         planned: PlannedExpensesSummary,
         emergency: EmergencyFundSummary,
         investments: InvestmentsSummary,
-        historicalPerformance: HistoricalPerformance? = null
+        historicalPerformance: HistoricalPerformance? = null,
+        overallHistoricalPerformance: HistoricalPerformance? = null
     ): Portfolio {
         // Liquid capital includes: net liquidity, liquid planned accrued, and emergency fund if liquid
         val liquidCapital = liquidity.net + planned.liquidAccrued +
@@ -132,7 +197,8 @@ object Calculators {
             totalNetWorth = totalNetWorth,
             percentInvested = percentInvested,
             percentLiquid = percentLiquid,
-            historicalPerformance = historicalPerformance
+            historicalPerformance = historicalPerformance,
+            overallHistoricalPerformance = overallHistoricalPerformance
         )
     }
 }

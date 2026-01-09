@@ -14,6 +14,427 @@ object WebView {
     private lateinit var portfolioData: Portfolio
     private val gson = Gson()
 
+    // SECTION 1: Main Bank Account
+    private fun DIV.renderMainBankAccountSection(portfolio: Portfolio) {
+        div(classes = "section") {
+            div(classes = "section-header") {
+                h2 {
+                    unsafe { raw("""<i class="fas fa-university"></i>""") }
+                    +" Main Bank Account"
+                }
+            }
+
+            div(classes = "section-cards") {
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon info") {
+                            unsafe { raw("""<i class="fas fa-coins"></i>""") }
+                        }
+                        h3 { +"Balance" }
+                    }
+                    div(classes = "value") { +"€${portfolio.liquidity.net}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon success") {
+                            unsafe { raw("""<i class="fas fa-arrow-up"></i>""") }
+                        }
+                        h3 { +"Total Income" }
+                    }
+                    div(classes = "value positive") { +"€${portfolio.liquidity.totalIncome}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon danger") {
+                            unsafe { raw("""<i class="fas fa-arrow-down"></i>""") }
+                        }
+                        h3 { +"Total Expense" }
+                    }
+                    div(classes = "value negative") { +"€${portfolio.liquidity.totalExpense}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon warning") {
+                            unsafe { raw("""<i class="fas fa-calendar-alt"></i>""") }
+                        }
+                        h3 { +"Avg Monthly (12m)" }
+                    }
+                    div(classes = "value") { +"€${portfolio.liquidity.avgMonthlyExpense12m}" }
+                }
+            }
+
+            // Statistics charts
+            if (portfolio.liquidity.statistics != null) {
+                div(classes = "charts-grid") {
+                    div(classes = "chart-container") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-line"></i>""") }
+                            +"Monthly Trend"
+                        }
+                        canvas { id = "mainBankMonthlyTrendChart" }
+                    }
+                    div(classes = "chart-container") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-pie"></i>""") }
+                            +"Expense by Category"
+                        }
+                        canvas { id = "mainBankExpenseCategoryChart" }
+                    }
+                }
+            }
+        }
+    }
+
+    // SECTION 2: Planned Expenses
+    private fun DIV.renderPlannedExpensesSection(portfolio: Portfolio) {
+        div(classes = "section") {
+            div(classes = "section-header") {
+                h2 {
+                    unsafe { raw("""<i class="fas fa-calendar-check"></i>""") }
+                    +" Planned Expenses"
+                }
+            }
+
+            div(classes = "section-cards") {
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon primary") {
+                            unsafe { raw("""<i class="fas fa-piggy-bank"></i>""") }
+                        }
+                        h3 { +"Accrued Capital" }
+                    }
+                    div(classes = "value") { +"€${portfolio.planned.totalAccrued}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon warning") {
+                            unsafe { raw("""<i class="fas fa-target"></i>""") }
+                        }
+                        h3 { +"Target Capital" }
+                    }
+                    div(classes = "value") { +"€${portfolio.planned.totalEstimated}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon info") {
+                            unsafe { raw("""<i class="fas fa-percentage"></i>""") }
+                        }
+                        h3 { +"Coverage" }
+                    }
+                    div(classes = "value") { +"${(portfolio.planned.coverageRatio * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)}%" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon success") {
+                            unsafe { raw("""<i class="fas fa-info-circle"></i>""") }
+                        }
+                        h3 { +"Type" }
+                    }
+                    div(classes = "value small-value") { +if (portfolio.planned.isInvested) "Invested" else "Liquid" }
+                }
+            }
+
+            // Charts
+            div(classes = "charts-grid") {
+                div(classes = "chart-container") {
+                    div(classes = "chart-title") {
+                        unsafe { raw("""<i class="fas fa-chart-bar"></i>""") }
+                        +"Coverage Progress"
+                    }
+                    canvas { id = "plannedExpensesCoverageChart" }
+                }
+
+                if (portfolio.planned.isInvested && portfolio.planned.historicalPerformance != null) {
+                    div(classes = "chart-container") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
+                            +"Historical Performance"
+                            val hp = portfolio.planned.historicalPerformance
+                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                span(classes = "return-badge $returnClass") {
+                                    +"${hp.totalReturn}%"
+                                }
+                            }
+                        }
+                        canvas { id = "plannedExpensesHistoricalChart" }
+                    }
+                }
+            }
+        }
+    }
+
+    // SECTION 3: Emergency Fund
+    private fun DIV.renderEmergencyFundSection(portfolio: Portfolio) {
+        div(classes = "section") {
+            div(classes = "section-header") {
+                h2 {
+                    unsafe { raw("""<i class="fas fa-shield-alt"></i>""") }
+                    +" Emergency Fund"
+                }
+            }
+
+            div(classes = "section-cards") {
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon success") {
+                            unsafe { raw("""<i class="fas fa-wallet"></i>""") }
+                        }
+                        h3 { +"Current Capital" }
+                    }
+                    div(classes = "value") { +"€${portfolio.emergency.currentCapital}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon warning") {
+                            unsafe { raw("""<i class="fas fa-bullseye"></i>""") }
+                        }
+                        h3 { +"Target Capital" }
+                    }
+                    div(classes = "value") { +"€${portfolio.emergency.targetCapital}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon info") {
+                            unsafe { raw("""<i class="fas fa-chart-line"></i>""") }
+                        }
+                        h3 { +"Delta" }
+                    }
+                    val deltaClass = if (portfolio.emergency.deltaToTarget <= java.math.BigDecimal.ZERO) "positive" else "negative"
+                    div(classes = "value $deltaClass") { +"€${portfolio.emergency.deltaToTarget}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon primary") {
+                            unsafe { raw("""<i class="fas fa-info-circle"></i>""") }
+                        }
+                        h3 { +"Status" }
+                    }
+                    val statusClass = when {
+                        portfolio.emergency.status.contains("OK", ignoreCase = true) -> "status-good"
+                        else -> "status-warning"
+                    }
+                    div(classes = "value small-value $statusClass") { +portfolio.emergency.status }
+                }
+            }
+
+            // Charts
+            div(classes = "charts-grid") {
+                div(classes = "chart-container") {
+                    div(classes = "chart-title") {
+                        unsafe { raw("""<i class="fas fa-chart-bar"></i>""") }
+                        +"Target Progress"
+                    }
+                    canvas { id = "emergencyFundProgressChart" }
+                }
+
+                if (!portfolio.emergency.isLiquid && portfolio.emergency.historicalPerformance != null) {
+                    div(classes = "chart-container") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
+                            +"Historical Performance"
+                            val hp = portfolio.emergency.historicalPerformance
+                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                span(classes = "return-badge $returnClass") {
+                                    +"${hp.totalReturn}%"
+                                }
+                            }
+                        }
+                        canvas { id = "emergencyFundHistoricalChart" }
+                    }
+                }
+            }
+        }
+    }
+
+    // SECTION 4: Investments
+    private fun DIV.renderInvestmentsSection(portfolio: Portfolio) {
+        div(classes = "section") {
+            div(classes = "section-header") {
+                h2 {
+                    unsafe { raw("""<i class="fas fa-chart-line"></i>""") }
+                    +" Investments"
+                }
+            }
+
+            div(classes = "section-cards") {
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon success") {
+                            unsafe { raw("""<i class="fas fa-coins"></i>""") }
+                        }
+                        h3 { +"Current Value" }
+                    }
+                    div(classes = "value") { +"€${portfolio.investments.totalCurrent}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon primary") {
+                            unsafe { raw("""<i class="fas fa-hand-holding-usd"></i>""") }
+                        }
+                        h3 { +"Invested" }
+                    }
+                    div(classes = "value") { +"€${portfolio.investments.totalInvested}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon warning") {
+                            unsafe { raw("""<i class="fas fa-chart-bar"></i>""") }
+                        }
+                        h3 { +"P&L" }
+                    }
+                    val pnl = portfolio.investments.totalCurrent - portfolio.investments.totalInvested
+                    val pnlClass = if (pnl >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                    div(classes = "value $pnlClass") { +"€$pnl" }
+                }
+            }
+
+            // Charts
+            div(classes = "charts-grid") {
+                if (portfolio.investments.itemsWithWeights.isNotEmpty()) {
+                    div(classes = "chart-container") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-pie"></i>""") }
+                            +"Portfolio Breakdown"
+                        }
+                        canvas { id = "investmentsBreakdownChart" }
+                    }
+                }
+
+                if (portfolio.historicalPerformance != null) {
+                    div(classes = "chart-container") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
+                            +"Historical Performance"
+                            val hp = portfolio.historicalPerformance
+                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                span(classes = "return-badge $returnClass") {
+                                    +"${hp.totalReturn}%"
+                                }
+                            }
+                        }
+                        canvas { id = "investmentsHistoricalChart" }
+                    }
+                }
+            }
+
+            // Investment Details Table
+            if (portfolio.investments.itemsWithWeights.isNotEmpty()) {
+                div(classes = "card") {
+                    div(classes = "chart-title") {
+                        unsafe { raw("""<i class="fas fa-table"></i>""") }
+                        +"Investment Details"
+                    }
+                    table(classes = "investments-table") {
+                        thead {
+                            tr {
+                                th { +"ETF" }
+                                th { +"Ticker" }
+                                th { +"Current Value" }
+                                th { +"P&L" }
+                                th { +"Weight" }
+                            }
+                        }
+                        tbody {
+                            portfolio.investments.itemsWithWeights.forEach { (inv, weight) ->
+                                tr {
+                                    td { +inv.etf }
+                                    td { +inv.ticker }
+                                    td { +"€${inv.currentValue}" }
+                                    val pnlClass = if (inv.pnl >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                    td(classes = pnlClass) { +"€${inv.pnl}" }
+                                    td {
+                                        +"${(weight * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // SECTION 5: Overall Performance
+    private fun DIV.renderOverallPerformanceSection(portfolio: Portfolio) {
+        div(classes = "section") {
+            div(classes = "section-header") {
+                h2 {
+                    unsafe { raw("""<i class="fas fa-globe"></i>""") }
+                    +" Overall Performance"
+                }
+            }
+
+            div(classes = "section-cards") {
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon primary") {
+                            unsafe { raw("""<i class="fas fa-wallet"></i>""") }
+                        }
+                        h3 { +"Total Net Worth" }
+                    }
+                    div(classes = "value") { +"€${portfolio.totalNetWorth}" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon success") {
+                            unsafe { raw("""<i class="fas fa-chart-line"></i>""") }
+                        }
+                        h3 { +"Invested" }
+                    }
+                    div(classes = "value") { +"${(portfolio.percentInvested * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)}%" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon info") {
+                            unsafe { raw("""<i class="fas fa-water"></i>""") }
+                        }
+                        h3 { +"Liquid" }
+                    }
+                    div(classes = "value") { +"${(portfolio.percentLiquid * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)}%" }
+                }
+            }
+
+            // Charts
+            div(classes = "charts-grid") {
+                div(classes = "chart-container") {
+                    div(classes = "chart-title") {
+                        unsafe { raw("""<i class="fas fa-chart-pie"></i>""") }
+                        +"Asset Allocation"
+                    }
+                    canvas { id = "overallAssetAllocationChart" }
+                }
+
+                div(classes = "chart-container") {
+                    div(classes = "chart-title") {
+                        unsafe { raw("""<i class="fas fa-layer-group"></i>""") }
+                        +"Net Worth Distribution"
+                    }
+                    canvas { id = "overallNetWorthChart" }
+                }
+
+                if (portfolio.overallHistoricalPerformance != null) {
+                    div(classes = "chart-container full-width") {
+                        div(classes = "chart-title") {
+                            unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
+                            +"Overall Historical Performance"
+                            val hp = portfolio.overallHistoricalPerformance
+                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                                span(classes = "return-badge $returnClass") {
+                                    +"${hp.totalReturn}%"
+                                }
+                            }
+                        }
+                        canvas { id = "overallHistoricalPerformanceChart" }
+                    }
+                }
+            }
+        }
+    }
+
     fun startServer(portfolio: Portfolio, port: Int = 8080) {
         portfolioData = portfolio
 
@@ -46,7 +467,7 @@ object WebView {
                             }
 
                             div(classes = "container") {
-                                // Summary Cards
+                                // Overview Summary Cards
                                 div(classes = "summary-cards") {
                                     div(classes = "card") {
                                         div(classes = "card-header") {
@@ -65,14 +486,6 @@ object WebView {
                                             h2 { +"Liquidity" }
                                         }
                                         div(classes = "value") { +"€${portfolioData.liquidity.net}" }
-                                        div(classes = "label") {
-                                            span(classes = "label-icon") {}
-                                            +"Income: €${portfolioData.liquidity.totalIncome}"
-                                        }
-                                        div(classes = "label") {
-                                            span(classes = "label-icon") {}
-                                            +"Expense: €${portfolioData.liquidity.totalExpense}"
-                                        }
                                     }
                                     div(classes = "card") {
                                         div(classes = "card-header") {
@@ -82,161 +495,23 @@ object WebView {
                                             h2 { +"Investments" }
                                         }
                                         div(classes = "value") { +"€${portfolioData.investments.totalCurrent}" }
-                                        div(classes = "label") {
-                                            span(classes = "label-icon") {}
-                                            +"Invested: €${portfolioData.investments.totalInvested}"
-                                        }
-                                        val pnl = portfolioData.investments.totalCurrent - portfolioData.investments.totalInvested
-                                        div(classes = if (pnl >= java.math.BigDecimal.ZERO) "label positive" else "label negative") {
-                                            span(classes = "label-icon") {}
-                                            +"P&L: €$pnl"
-                                        }
-                                    }
-                                    div(classes = "card") {
-                                        div(classes = "card-header") {
-                                            div(classes = "card-icon warning") {
-                                                unsafe { raw("""<i class="fas fa-shield-alt"></i>""") }
-                                            }
-                                            h2 { +"Emergency Fund" }
-                                        }
-                                        div(classes = "value") { +"€${portfolioData.emergency.currentCapital}" }
-                                        div(classes = "label") {
-                                            span(classes = "label-icon") {}
-                                            +"Target: €${portfolioData.emergency.targetCapital}"
-                                        }
-                                        div(classes = "label") {
-                                            span(classes = "label-icon") {}
-                                            +"Type: ${if (portfolioData.emergency.isLiquid) "Liquid" else "Invested"}"
-                                        }
-                                        val statusClass = when {
-                                            portfolioData.emergency.status.contains("OK", ignoreCase = true) -> "status-good"
-                                            portfolioData.emergency.status.contains("below", ignoreCase = true) -> "status-warning"
-                                            else -> "status-bad"
-                                        }
-                                        div(classes = "label $statusClass") {
-                                            span(classes = "label-icon") {}
-                                            +portfolioData.emergency.status
-                                        }
                                     }
                                 }
 
-                                // Charts
-                                div(classes = "charts-grid") {
-                                    // Asset Allocation Chart
-                                    div(classes = "chart-container") {
-                                        div(classes = "chart-title") {
-                                            unsafe { raw("""<i class="fas fa-chart-pie"></i>""") }
-                                            +"Asset Allocation"
-                                        }
-                                        canvas { id = "assetAllocationChart" }
-                                    }
+                                // SECTION 1: Main Bank Account
+                                renderMainBankAccountSection(portfolioData)
 
-                                    // Net Worth Distribution Chart
-                                    div(classes = "chart-container") {
-                                        div(classes = "chart-title") {
-                                            unsafe { raw("""<i class="fas fa-layer-group"></i>""") }
-                                            +"Net Worth Distribution"
-                                        }
-                                        canvas { id = "netWorthChart" }
-                                    }
+                                // SECTION 2: Planned Expenses
+                                renderPlannedExpensesSection(portfolioData)
 
-                                    // Investments Breakdown Chart
-                                    if (portfolioData.investments.itemsWithWeights.isNotEmpty()) {
-                                        div(classes = "chart-container") {
-                                            div(classes = "chart-title") {
-                                                unsafe { raw("""<i class="fas fa-briefcase"></i>""") }
-                                                +"Investment Portfolio Breakdown"
-                                            }
-                                            canvas { id = "investmentsChart" }
-                                        }
-                                    }
+                                // SECTION 3: Emergency Fund
+                                renderEmergencyFundSection(portfolioData)
 
-                                    // Planned Expenses Chart
-                                    div(classes = "chart-container") {
-                                        div(classes = "chart-title") {
-                                            unsafe { raw("""<i class="fas fa-calendar-check"></i>""") }
-                                            +"Planned Expenses Coverage"
-                                        }
-                                        canvas { id = "plannedExpensesChart" }
-                                    }
+                                // SECTION 4: Investments
+                                renderInvestmentsSection(portfolioData)
 
-                                    // Historical Performance Chart (if available)
-                                    if (portfolioData.historicalPerformance != null) {
-                                        div(classes = "chart-container full-width") {
-                                            div(classes = "chart-header-with-controls") {
-                                                div(classes = "chart-title") {
-                                                    unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
-                                                    +"Historical Performance"
-                                                    if (portfolioData.historicalPerformance?.totalReturn != java.math.BigDecimal.ZERO) {
-                                                        val returnClass = portfolioData.historicalPerformance?.totalReturn?.let { if (it >= java.math.BigDecimal.ZERO) "positive" else "negative" }
-                                                        span(classes = "return-badge $returnClass") {
-                                                            attributes["id"] = "returnBadge"
-                                                            +"${portfolioData.historicalPerformance?.totalReturn}%"
-                                                        }
-                                                    }
-                                                }
-                                                div(classes = "time-period-selector") {
-                                                    button(classes = "period-btn") {
-                                                        attributes["data-period"] = "1M"
-                                                        +"1M"
-                                                    }
-                                                    button(classes = "period-btn") {
-                                                        attributes["data-period"] = "6M"
-                                                        +"6M"
-                                                    }
-                                                    button(classes = "period-btn") {
-                                                        attributes["data-period"] = "YTD"
-                                                        +"YTD"
-                                                    }
-                                                    button(classes = "period-btn") {
-                                                        attributes["data-period"] = "5Y"
-                                                        +"5Y"
-                                                    }
-                                                    button(classes = "period-btn active") {
-                                                        attributes["data-period"] = "ALL"
-                                                        +"ALL"
-                                                    }
-                                                }
-                                            }
-                                            canvas { id = "historicalPerformanceChart" }
-                                        }
-                                    }
-                                }
-
-                                // Investments Detail Table
-                                if (portfolioData.investments.itemsWithWeights.isNotEmpty()) {
-                                    div(classes = "card") {
-                                        div(classes = "chart-title") {
-                                            unsafe { raw("""<i class="fas fa-table"></i>""") }
-                                            +"Investment Details"
-                                        }
-                                        table(classes = "investments-table") {
-                                            thead {
-                                                tr {
-                                                    th { +"ETF" }
-                                                    th { +"Ticker" }
-                                                    th { +"Current Value" }
-                                                    th { +"P&L" }
-                                                    th { +"Weight" }
-                                                }
-                                            }
-                                            tbody {
-                                                portfolioData.investments.itemsWithWeights.forEach { (inv, weight) ->
-                                                    tr {
-                                                        td { +inv.etf }
-                                                        td { +inv.ticker }
-                                                        td { +"€${inv.currentValue}" }
-                                                        val pnlClass = if (inv.pnl >= java.math.BigDecimal.ZERO) "positive" else "negative"
-                                                        td(classes = pnlClass) { +"€${inv.pnl}" }
-                                                        td {
-                                                            +"${(weight * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                // SECTION 5: Overall Performance
+                                renderOverallPerformanceSection(portfolioData)
 
                                 footer {
                                     +"Portfolium - Personal Finance Dashboard | Server running on port $port"
@@ -250,28 +525,74 @@ object WebView {
                                         const portfolioData = {
                                             percentLiquid: ${(portfolioData.percentLiquid * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)},
                                             percentInvested: ${(portfolioData.percentInvested * java.math.BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)},
+                                            liquidity: {
+                                                net: ${portfolioData.liquidity.net},
+                                                totalIncome: ${portfolioData.liquidity.totalIncome},
+                                                totalExpense: ${portfolioData.liquidity.totalExpense},
+                                                avgMonthlyExpense12m: ${portfolioData.liquidity.avgMonthlyExpense12m},
+                                                statistics: ${
+                                                    if (portfolioData.liquidity.statistics != null) {
+                                                        gson.toJson(mapOf(
+                                                            "monthlyTrend" to portfolioData.liquidity.statistics?.monthlyTrend?.map { 
+                                                                mapOf("yearMonth" to it.yearMonth, "income" to it.income, "expense" to it.expense, "net" to it.net)
+                                                            },
+                                                            "topExpenseCategories" to portfolioData.liquidity.statistics?.topExpenseCategories,
+                                                            "topIncomeCategories" to portfolioData.liquidity.statistics?.topIncomeCategories,
+                                                            "totalByCategory" to portfolioData.liquidity.statistics?.totalByCategory
+                                                        ))
+                                                    } else "null"
+                                                }
+                                            },
                                             emergency: {
-                                                currentCapital: ${portfolioData.emergency.currentCapital}
+                                                currentCapital: ${portfolioData.emergency.currentCapital},
+                                                targetCapital: ${portfolioData.emergency.targetCapital},
+                                                deltaToTarget: ${portfolioData.emergency.deltaToTarget},
+                                                status: "${portfolioData.emergency.status}",
+                                                isLiquid: ${portfolioData.emergency.isLiquid},
+                                                historicalPerformance: ${
+                                                    if (portfolioData.emergency.historicalPerformance != null) {
+                                                        val dataPoints = portfolioData.emergency.historicalPerformance?.dataPoints?.map { dp ->
+                                                            mapOf("date" to dp.date.toString(), "value" to dp.value)
+                                                        }
+                                                        gson.toJson(mapOf(
+                                                            "dataPoints" to dataPoints,
+                                                            "totalReturn" to portfolioData.emergency.historicalPerformance?.totalReturn,
+                                                            "annualizedReturn" to portfolioData.emergency.historicalPerformance?.annualizedReturn
+                                                        ))
+                                                    } else "null"
+                                                }
                                             },
                                             investments: {
                                                 totalCurrent: ${portfolioData.investments.totalCurrent},
+                                                totalInvested: ${portfolioData.investments.totalInvested},
                                                 itemsWithWeights: ${
                                                     if (portfolioData.investments.itemsWithWeights.isNotEmpty()) {
-                                                        val items = portfolioData.investments.itemsWithWeights.map { (inv, _) ->
-                                                            mapOf("ticker" to inv.ticker, "currentValue" to inv.currentValue)
+                                                        val items = portfolioData.investments.itemsWithWeights.map { (inv, weight) ->
+                                                            mapOf("ticker" to inv.ticker, "etf" to inv.etf, "currentValue" to inv.currentValue, "weight" to weight)
                                                         }
                                                         gson.toJson(items)
                                                     } else "[]"
                                                 }
                                             },
-                                            liquidity: {
-                                                net: ${portfolioData.liquidity.net}
-                                            },
                                             planned: {
                                                 totalEstimated: ${portfolioData.planned.totalEstimated},
                                                 totalAccrued: ${portfolioData.planned.totalAccrued},
+                                                coverageRatio: ${portfolioData.planned.coverageRatio},
                                                 liquidAccrued: ${portfolioData.planned.liquidAccrued},
-                                                investedAccrued: ${portfolioData.planned.investedAccrued}
+                                                investedAccrued: ${portfolioData.planned.investedAccrued},
+                                                isInvested: ${portfolioData.planned.isInvested},
+                                                historicalPerformance: ${
+                                                    if (portfolioData.planned.historicalPerformance != null) {
+                                                        val dataPoints = portfolioData.planned.historicalPerformance?.dataPoints?.map { dp ->
+                                                            mapOf("date" to dp.date.toString(), "value" to dp.value)
+                                                        }
+                                                        gson.toJson(mapOf(
+                                                            "dataPoints" to dataPoints,
+                                                            "totalReturn" to portfolioData.planned.historicalPerformance?.totalReturn,
+                                                            "annualizedReturn" to portfolioData.planned.historicalPerformance?.annualizedReturn
+                                                        ))
+                                                    } else "null"
+                                                }
                                             },
                                             historicalPerformance: ${
                                                 if (portfolioData.historicalPerformance != null) {
@@ -282,6 +603,18 @@ object WebView {
                                                         "dataPoints" to dataPoints,
                                                         "totalReturn" to portfolioData.historicalPerformance?.totalReturn,
                                                         "annualizedReturn" to portfolioData.historicalPerformance?.annualizedReturn
+                                                    ))
+                                                } else "null"
+                                            },
+                                            overallHistoricalPerformance: ${
+                                                if (portfolioData.overallHistoricalPerformance != null) {
+                                                    val dataPoints = portfolioData.overallHistoricalPerformance?.dataPoints?.map { dp ->
+                                                        mapOf("date" to dp.date.toString(), "value" to dp.value)
+                                                    }
+                                                    gson.toJson(mapOf(
+                                                        "dataPoints" to dataPoints,
+                                                        "totalReturn" to portfolioData.overallHistoricalPerformance?.totalReturn,
+                                                        "annualizedReturn" to portfolioData.overallHistoricalPerformance?.annualizedReturn
                                                     ))
                                                 } else "null"
                                             }

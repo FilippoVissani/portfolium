@@ -34,11 +34,26 @@ data class Investment(
 
 // Dashboard aggregates
 
+data class TransactionStatistics(
+    val totalByCategory: Map<String, BigDecimal>,
+    val monthlyTrend: List<MonthlyDataPoint>,
+    val topExpenseCategories: List<Pair<String, BigDecimal>>,
+    val topIncomeCategories: List<Pair<String, BigDecimal>>
+)
+
+data class MonthlyDataPoint(
+    val yearMonth: String, // Format: YYYY-MM
+    val income: BigDecimal,
+    val expense: BigDecimal,
+    val net: BigDecimal
+)
+
 data class LiquiditySummary(
     val totalIncome: BigDecimal,
     val totalExpense: BigDecimal,
     val net: BigDecimal,
     val avgMonthlyExpense12m: BigDecimal,
+    val statistics: TransactionStatistics? = null
 )
 
 
@@ -47,7 +62,9 @@ data class PlannedExpensesSummary(
     val totalAccrued: BigDecimal,
     val coverageRatio: BigDecimal,
     val liquidAccrued: BigDecimal,
-    val investedAccrued: BigDecimal
+    val investedAccrued: BigDecimal,
+    val isInvested: Boolean,
+    val historicalPerformance: HistoricalPerformance? = null
 )
 
 
@@ -56,7 +73,8 @@ data class EmergencyFundSummary(
     val currentCapital: BigDecimal,
     val deltaToTarget: BigDecimal,
     val status: String,
-    val isLiquid: Boolean
+    val isLiquid: Boolean,
+    val historicalPerformance: HistoricalPerformance? = null
 )
 
 
@@ -75,7 +93,8 @@ data class Portfolio(
     val totalNetWorth: BigDecimal,
     val percentInvested: BigDecimal,
     val percentLiquid: BigDecimal,
-    val historicalPerformance: HistoricalPerformance? = null
+    val historicalPerformance: HistoricalPerformance? = null,
+    val overallHistoricalPerformance: HistoricalPerformance? = null
 )
 
 // Historical performance data

@@ -44,6 +44,7 @@ class CalculatorsTest : StringSpec({
         s.totalEstimated shouldBe bd2("1500.00")
         s.totalAccrued shouldBe bd2("900.00")
         s.coverageRatio shouldBe bd4("0.6000")
+        s.isInvested shouldBe false
     }
 
     "summarizeEmergency basic" {
@@ -59,6 +60,7 @@ class CalculatorsTest : StringSpec({
         s.currentCapital shouldBe bd2("5000.00")
         s.deltaToTarget shouldBe bd2("1000.00")
         s.status shouldBe "BELOW TARGET"
+        s.isLiquid shouldBe true
     }
 
     "summarizeInvestments basic" {
@@ -161,6 +163,7 @@ class CalculatorsTest : StringSpec({
         s.totalAccrued shouldBe bd2("10.00")
         // coverageRatio is computed as BigDecimal.ZERO when totalEstimated is zero; compare numerically to avoid scale sensitivity
         s.coverageRatio.compareTo(BigDecimal.ZERO) shouldBe 0
+        s.isInvested shouldBe false
     }
 
     "summarizeEmergency aboveTarget" {
@@ -175,6 +178,7 @@ class CalculatorsTest : StringSpec({
         s.currentCapital shouldBe bd2("5000.00")
         s.deltaToTarget shouldBe bd2("-2000.00")
         s.status shouldBe "OK"
+        s.isLiquid shouldBe true
     }
 
     "summarizeInvestments empty" {
@@ -186,10 +190,12 @@ class CalculatorsTest : StringSpec({
 
     "buildDashboard zeroes" {
         val d = Calculators.buildPortfolio(
-            LiquiditySummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), bd2("0.00")),
-            PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000"), bd2("0.00"), bd2("0.00")),
-            EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK", true),
-            InvestmentsSummary(bd2("0.00"), bd2("0.00"), emptyList())
+            LiquiditySummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), bd2("0.00"), null),
+            PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000"), bd2("0.00"), bd2("0.00"), false, null),
+            EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK", true, null),
+            InvestmentsSummary(bd2("0.00"), bd2("0.00"), emptyList()),
+            null,
+            null
         )
         d.totalNetWorth shouldBe bd2("0.00")
         // compare numerically to avoid scale sensitivity
