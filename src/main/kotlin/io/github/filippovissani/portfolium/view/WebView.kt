@@ -108,7 +108,7 @@ object WebView {
                 div(classes = "card") {
                     div(classes = "card-header") {
                         div(classes = "card-icon warning") {
-                            unsafe { raw("""<i class="fas fa-target"></i>""") }
+                            unsafe { raw("""<i class="fas fa-bullseye"></i>""") }
                         }
                         h3 { +"Target Capital" }
                     }
