@@ -48,7 +48,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("10"),
                     price = BigDecimal("450.00"),
-                    fees = BigDecimal("5.00")
+                    fees = BigDecimal("5.00"),
                 )
             )
         )
@@ -69,7 +69,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("10"),
                     price = BigDecimal("450.00"),
-                    fees = BigDecimal("5.00")
+                    fees = BigDecimal("5.00"),
                 ),
                 EtfSellTransaction(
                     date = LocalDate.of(2025, 1, 20),
@@ -78,7 +78,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("5"),
                     price = BigDecimal("455.00"),
-                    fees = BigDecimal("2.50")
+                    fees = BigDecimal("2.50"),
                 )
             )
         )
@@ -100,7 +100,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("10"),
                     price = BigDecimal("450.00"),
-                    fees = BigDecimal("5.00")
+                    fees = BigDecimal("5.00"),
                 ),
                 EtfBuyTransaction(
                     date = LocalDate.of(2025, 1, 15),
@@ -109,7 +109,7 @@ class BankAccountTest : FunSpec({
                     area = "World",
                     quantity = BigDecimal("20"),
                     price = BigDecimal("80.00"),
-                    fees = BigDecimal("3.00")
+                    fees = BigDecimal("3.00"),
                 ),
                 EtfSellTransaction(
                     date = LocalDate.of(2025, 1, 20),
@@ -118,7 +118,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("5"),
                     price = BigDecimal("455.00"),
-                    fees = BigDecimal("2.50")
+                    fees = BigDecimal("2.50"),
                 )
             )
         )
@@ -149,7 +149,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("10"),
                     price = BigDecimal("450.00"),
-                    fees = BigDecimal("10.00")
+                    fees = BigDecimal("10.00"),
                 ),
                 EtfBuyTransaction(
                     date = LocalDate.of(2025, 1, 15),
@@ -158,7 +158,7 @@ class BankAccountTest : FunSpec({
                     area = "US",
                     quantity = BigDecimal("10"),
                     price = BigDecimal("460.00"),
-                    fees = BigDecimal("10.00")
+                    fees = BigDecimal("10.00"),
                 )
             )
         )

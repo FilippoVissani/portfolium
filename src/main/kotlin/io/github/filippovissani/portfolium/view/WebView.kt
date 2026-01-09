@@ -126,11 +126,30 @@ object WebView {
                 div(classes = "card") {
                     div(classes = "card-header") {
                         div(classes = "card-icon success") {
-                            unsafe { raw("""<i class="fas fa-info-circle"></i>""") }
+                            unsafe { raw("""<i class="fas fa-chart-line"></i>""") }
                         }
-                        h3 { +"Type" }
+                        h3 { +"Invested" }
                     }
-                    div(classes = "value small-value") { +if (portfolio.planned.isInvested) "Invested" else "Liquid" }
+                    val investedPercentage = if (portfolio.planned.totalAccrued > java.math.BigDecimal.ZERO) {
+                        (portfolio.planned.investedAccrued / portfolio.planned.totalAccrued * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)
+                    } else {
+                        java.math.BigDecimal.ZERO
+                    }
+                    div(classes = "value") { +"${investedPercentage}%" }
+                }
+                div(classes = "card") {
+                    div(classes = "card-header") {
+                        div(classes = "card-icon primary") {
+                            unsafe { raw("""<i class="fas fa-water"></i>""") }
+                        }
+                        h3 { +"Liquid" }
+                    }
+                    val liquidPercentage = if (portfolio.planned.totalAccrued > java.math.BigDecimal.ZERO) {
+                        (portfolio.planned.liquidAccrued / portfolio.planned.totalAccrued * java.math.BigDecimal(100)).setScale(1, RoundingMode.HALF_UP)
+                    } else {
+                        java.math.BigDecimal.ZERO
+                    }
+                    div(classes = "value") { +"${liquidPercentage}%" }
                 }
             }
 

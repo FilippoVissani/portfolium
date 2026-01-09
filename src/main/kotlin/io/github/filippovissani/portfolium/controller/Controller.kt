@@ -81,8 +81,8 @@ object Controller {
             cacheDurationHours = config.cacheDurationHours
         )
 
-        // Get current prices for all unique tickers from investment account
-        val tickers = investmentBankAccount.etfHoldings.keys.toList()
+        // Get current prices for all unique tickers from investment account and planned expenses account
+        val tickers = (investmentBankAccount.etfHoldings.keys + plannedExpensesBankAccount.etfHoldings.keys).distinct()
         val currentPrices = if (tickers.isNotEmpty()) {
             priceSource.getCurrentPrices(tickers)
         } else {
@@ -91,7 +91,7 @@ object Controller {
 
         // Calculate summaries using new bank accounts
         val liquiditySummary = Calculators.summarizeLiquidity(mainBankAccount)
-        var plannedSummary = Calculators.summarizePlanned(plannedExpensesBankAccount)
+        var plannedSummary = Calculators.summarizePlanned(plannedExpensesBankAccount, currentPrices)
         var emergencySummary = Calculators.summarizeEmergency(emergencyFundBankAccount, liquiditySummary.avgMonthlyExpense12m)
         val investmentSummary = Calculators.summarizeInvestments(investmentBankAccount, currentPrices)
 

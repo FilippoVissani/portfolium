@@ -174,6 +174,32 @@ object BankAccountLoaders {
                 amount = tx.amount ?: BigDecimal.ZERO,
                 description = tx.description
             )
+            "etf_buy" -> {
+                val ticker = tx.ticker ?: return null
+                EtfBuyTransaction(
+                    date = date,
+                    description = tx.description ?: "",
+                    ticker = ticker,
+                    name = tx.name ?: ticker,
+                    area = tx.area,
+                    quantity = tx.quantity?.toBigDecimal() ?: BigDecimal.ZERO,
+                    price = tx.price ?: BigDecimal.ZERO,
+                    fees = tx.fees
+                )
+            }
+            "etf_sell" -> {
+                val ticker = tx.ticker ?: return null
+                EtfSellTransaction(
+                    date = date,
+                    description = tx.description ?: "",
+                    ticker = ticker,
+                    name = tx.name ?: ticker,
+                    area = tx.area,
+                    quantity = tx.quantity?.toBigDecimal() ?: BigDecimal.ZERO,
+                    price = tx.price ?: BigDecimal.ZERO,
+                    fees = tx.fees
+                )
+            }
             else -> null
         }
     }
@@ -200,7 +226,7 @@ object BankAccountLoaders {
                 area = tx.area,
                 quantity = tx.quantity ?: BigDecimal.ZERO,
                 price = tx.price ?: BigDecimal.ZERO,
-                fees = tx.fees
+                fees = tx.fees,
             )
             "etf_sell", "sell_etf" -> EtfSellTransaction(
                 date = date,
@@ -209,7 +235,7 @@ object BankAccountLoaders {
                 area = tx.area,
                 quantity = tx.quantity ?: BigDecimal.ZERO,
                 price = tx.price ?: BigDecimal.ZERO,
-                fees = tx.fees
+                fees = tx.fees,
             )
             else -> null
         }

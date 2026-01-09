@@ -80,17 +80,25 @@ object Calculators {
     }
 
     // Planned expenses summary from PlannedExpensesBankAccount
-    fun summarizePlanned(account: PlannedExpensesBankAccount): PlannedExpensesSummary {
+    fun summarizePlanned(account: PlannedExpensesBankAccount, currentPrices: Map<String, BigDecimal> = emptyMap()): PlannedExpensesSummary {
         val totalEstimated = account.plannedExpenses.sumOf { it.estimatedAmount }
-        val totalAccrued = account.currentBalance
+
+        // Calculate the current value of ETF holdings
+        val investedAccrued = account.etfHoldings.entries.sumOf { (ticker, holding) ->
+            val currentPrice = currentPrices[ticker] ?: holding.averagePrice
+            holding.quantity * currentPrice
+        }
+
+        // Liquid is the cash balance
+        val liquidAccrued = account.currentBalance
+
+        // Total accrued is the sum of invested and liquid
+        val totalAccrued = investedAccrued + liquidAccrued
 
         // Check if account has ETF transactions (invested)
         val hasEtfTransactions = account.transactions.any { it is EtfBuyTransaction || it is EtfSellTransaction }
         val isInvested = hasEtfTransactions
 
-        // Distribute accrued based on investment status
-        val liquidAccrued = if (isInvested) BigDecimal.ZERO else totalAccrued
-        val investedAccrued = if (isInvested) totalAccrued else BigDecimal.ZERO
 
         val coverage = if (totalEstimated.signum() == 0) BigDecimal.ZERO else totalAccrued.divide(
             totalEstimated,
