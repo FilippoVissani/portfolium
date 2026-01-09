@@ -8,13 +8,14 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 object CsvUtils {
-    private val dateFormatters = listOf(
-        DateTimeFormatter.ISO_LOCAL_DATE,               // 2025-12-31
-        DateTimeFormatter.ofPattern("dd/MM/yyyy"),     // 31/12/2025
-        DateTimeFormatter.ofPattern("d/M/yyyy"),       // 1/2/2025
-        DateTimeFormatter.ofPattern("MM/dd/yyyy"),     // 12/31/2025
-        DateTimeFormatter.ofPattern("M/d/yyyy")        // 1/2/2025
-    )
+    private val dateFormatters =
+        listOf(
+            DateTimeFormatter.ISO_LOCAL_DATE, // 2025-12-31
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"), // 31/12/2025
+            DateTimeFormatter.ofPattern("d/M/yyyy"), // 1/2/2025
+            DateTimeFormatter.ofPattern("MM/dd/yyyy"), // 12/31/2025
+            DateTimeFormatter.ofPattern("M/d/yyyy"), // 1/2/2025
+        )
 
     fun parseDate(value: String?): LocalDate? {
         val v = value?.trim()?.ifEmpty { return null } ?: return null
@@ -27,7 +28,10 @@ object CsvUtils {
         throw IllegalArgumentException("Cannot parse date: '$v'")
     }
 
-    fun parseBigDecimal(value: String?, default: BigDecimal = BigDecimal.ZERO): BigDecimal {
+    fun parseBigDecimal(
+        value: String?,
+        default: BigDecimal = BigDecimal.ZERO,
+    ): BigDecimal {
         val v = value?.trim() ?: return default
         if (v.isEmpty()) return default
         // Support both comma and dot decimals

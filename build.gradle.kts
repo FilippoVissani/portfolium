@@ -1,7 +1,6 @@
-import org.gradle.api.artifacts.VersionCatalogsExtension
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ktlint)
     jacoco
     application
 }
@@ -17,6 +16,7 @@ val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
     implementation(libs.findLibrary("kotlinCsv").get())
+    implementation(libs.findLibrary("snakeyaml").get())
     implementation(libs.findLibrary("ktor-server-core").get())
     implementation(libs.findLibrary("ktor-server-netty").get())
     implementation(libs.findLibrary("ktor-server-html").get())
@@ -31,6 +31,20 @@ dependencies {
 
 kotlin {
     jvmToolchain(25)
+}
+
+ktlint {
+    version.set("1.5.0")
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(false)
+    filter {
+        exclude("**/generated/**")
+        exclude("**/build/**")
+        exclude("**/WebView.kt")
+        exclude { it.file.path.contains("/view/") }
+    }
 }
 
 application {
@@ -67,4 +81,5 @@ tasks.jacocoTestCoverageVerification {
 
 tasks.check {
     dependsOn(tasks.jacocoTestCoverageVerification)
+    dependsOn(tasks.named("ktlintCheck"))
 }

@@ -1,0 +1,57 @@
+name: "Main Bank Account"
+initialBalance: 2000.00
+transactions:
+  # January 2025
+  - date: 2025-01-15
+    description: "January Salary"
+    category: "Salary"
+    amount: 3500.00
+    note: "Monthly salary"
+  - date: 2025-01-20
+    description: "Rent Payment"
+    category: "Housing"
+    amount: -1200.00
+  - date: 2025-01-22
+    description: "Grocery Shopping"
+    category: "Food"
+    amount: -250.00
+  - date: 2025-01-25
+    description: "Utilities"
+    category: "Bills"
+    amount: -150.00
+  # February 2025
+  - date: 2025-02-15
+    description: "February Salary"
+    category: "Salary"
+    amount: 3500.00
+  - date: 2025-02-20
+    description: "Rent Payment"
+    category: "Housing"
+    amount: -1200.00
+  - date: 2025-02-22
+    description: "Grocery Shopping"
+    category: "Food"
+    amount: -280.00
+  - date: 2025-02-28
+    description: "Dining Out"
+    category: "Food"
+    amount: -80.00
+  # March 2025
+  - date: 2025-03-15
+    description: "March Salary"
+    category: "Salary"
+    amount: 3500.00
+  - date: 2025-03-18
+    description: "Freelance Income"
+    category: "Freelance"
+    amount: 800.00
+    note: "Side project"
+  - date: 2025-03-20
+    description: "Rent Payment"
+    category: "Housing"
+    amount: -1200.00
+  - date: 2025-03-22
+    description: "Grocery Shopping"
+    category: "Food"
+    amount: -260.00
+

@@ -1,0 +1,37 @@
+name: "Planned Expenses"
+initialBalance: 3000.00
+plannedExpenses:
+  - name: "House Down Payment"
+    expirationDate: 2027-12-31
+    estimatedAmount: 50000.00
+  - name: "New Car"
+    expirationDate: 2026-06-30
+    estimatedAmount: 25000.00
+transactions:
+  # Initial deposit
+  - type: deposit
+    date: 2024-01-15
+    amount: 3000.00
+    description: "Initial planned expenses fund"
+  # Invest in ETFs
+  - type: etf_buy
+    date: 2024-02-01
+    description: "Vanguard Total World Stock ETF"
+    ticker: "VT"
+    area: "Global"
+    quantity: 20
+    price: 95.00
+    fees: 5.00
+  - type: etf_buy
+    date: 2024-02-01
+    description: "Vanguard Total Bond Market ETF"
+    ticker: "BND"
+    area: "US"
+    quantity: 50
+    price: 72.00
+    fees: 5.00
+  # Additional contribution
+  - type: deposit
+    date: 2024-03-15
+    amount: 2000.00
+    description: "Quarterly savings"

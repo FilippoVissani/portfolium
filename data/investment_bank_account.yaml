@@ -1,0 +1,43 @@
+name: "Investments"
+initialBalance: 5000.00
+transactions:
+  # Initial investment
+  - type: deposit
+    date: 2024-01-01
+    amount: 5000.00
+    description: "Initial capital"
+  - type: etf_buy
+    date: 2024-01-15
+    name: "Vanguard S&P 500 ETF"
+    ticker: "VOO"
+    area: "US"
+    quantity: 10
+    price: 400.00
+    fees: 5.00
+  # Second investment
+  - type: deposit
+    date: 2024-02-15
+    amount: 2000.00
+    description: "Monthly investment"
+  - type: etf_buy
+    date: 2024-02-20
+    name: "iShares MSCI ACWI ETF"
+    ticker: "ACWI"
+    area: "Global"
+    quantity: 20
+    price: 95.00
+    fees: 5.00
+  # Third investment
+  - type: deposit
+    date: 2024-03-15
+    amount: 1500.00
+    description: "Monthly investment"
+  - type: etf_buy
+    date: 2024-03-20
+    name: "Vanguard FTSE Developed Markets ETF"
+    ticker: "VEA"
+    area: "Developed"
+    quantity: 30
+    price: 42.00
+    fees: 3.00
+

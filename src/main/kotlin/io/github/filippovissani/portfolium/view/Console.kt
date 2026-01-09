@@ -38,7 +38,7 @@ object Console {
             println("Breakdown:")
             d.investments.itemsWithWeights.forEach { (inv, w) ->
                 val pct = (w * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
-                println("  - ${inv.etf} (${inv.ticker}): current=${inv.currentValue}, pnl=${inv.pnl}, weight=${pct}%")
+                println("  - ${inv.etf} (${inv.ticker}): current=${inv.currentValue}, pnl=${inv.pnl}, weight=$pct%")
             }
         }
         println()
