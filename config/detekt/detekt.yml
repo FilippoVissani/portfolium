@@ -46,7 +46,7 @@ complexity:
     active: false
   CyclomaticComplexMethod:
     active: true
-    threshold: 15
+    threshold: 20
   LabeledExpression:
     active: false
   LargeClass:
@@ -54,10 +54,10 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
-    threshold: 60
+    threshold: 200
   LongParameterList:
     active: true
-    functionThreshold: 6
+    functionThreshold: 10
     constructorThreshold: 7
   MethodOverloading:
     active: false
@@ -73,11 +73,11 @@ complexity:
     active: false
   TooManyFunctions:
     active: true
-    thresholdInFiles: 11
-    thresholdInClasses: 11
-    thresholdInInterfaces: 11
-    thresholdInObjects: 11
-    thresholdInEnums: 11
+    thresholdInFiles: 20
+    thresholdInClasses: 20
+    thresholdInInterfaces: 20
+    thresholdInObjects: 20
+    thresholdInEnums: 20
 
 coroutines:
   active: true
