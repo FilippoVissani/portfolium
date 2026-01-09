@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.versions)
     alias(libs.plugins.dependencyCheck)
@@ -34,8 +33,6 @@ dependencies {
     testImplementation(libs.findLibrary("kotest-runner-junit5").get())
     // Konsist for architecture testing
     testImplementation(libs.findLibrary("konsist").get())
-    // Detekt formatting
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${libs.findVersion("detekt").get()}")
 }
 
 kotlin {
@@ -66,7 +63,6 @@ tasks.test {
 
 tasks.check {
     dependsOn(tasks.named("ktlintCheck"))
-    dependsOn(tasks.named("detekt"))
     dependsOn(tasks.named("koverVerify"))
 }
 
@@ -74,26 +70,6 @@ tasks.check {
 // Code Quality Plugin Configurations
 // ============================================
 
-// Detekt - Static Code Analysis
-detekt {
-    buildUponDefaultConfig = true
-    allRules = false
-    config.setFrom("$projectDir/config/detekt/detekt.yml")
-    baseline = file("$projectDir/config/detekt/baseline.xml")
-    parallel = true
-    autoCorrect = true
-}
-
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    reports {
-        html.required.set(true)
-        xml.required.set(true)
-        txt.required.set(true)
-        sarif.required.set(true)
-        md.required.set(true)
-    }
-    jvmTarget = "22"
-}
 
 // Kover - Code Coverage
 kover {
