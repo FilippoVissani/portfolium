@@ -192,7 +192,10 @@ object WebView {
                                 }
                             }
                         }
-                        canvas { id = "plannedExpensesHistoricalChart" }
+                        div {
+                            id = "plannedExpensesHistoricalChartContainer"
+                            canvas { id = "plannedExpensesHistoricalChart" }
+                        }
                     }
                 }
             }
@@ -279,7 +282,10 @@ object WebView {
                                 }
                             }
                         }
-                        canvas { id = "emergencyFundHistoricalChart" }
+                        div {
+                            id = "emergencyFundHistoricalChartContainer"
+                            canvas { id = "emergencyFundHistoricalChart" }
+                        }
                     }
                 }
             }
@@ -354,7 +360,10 @@ object WebView {
                                 }
                             }
                         }
-                        canvas { id = "investmentsHistoricalChart" }
+                        div {
+                            id = "investmentsHistoricalChartContainer"
+                            canvas { id = "investmentsHistoricalChart" }
+                        }
                     }
                 }
             }
@@ -482,7 +491,10 @@ object WebView {
                                 }
                             }
                         }
-                        canvas { id = "overallHistoricalPerformanceChart" }
+                        div {
+                            id = "overallHistoricalPerformanceChartContainer"
+                            canvas { id = "overallHistoricalPerformanceChart" }
+                        }
                     }
                 }
             }

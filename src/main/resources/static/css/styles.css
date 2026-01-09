@@ -21,6 +21,45 @@
     --radius-xl: 1rem;
 }
 
+/* Time window selector buttons */
+.time-window-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.time-window-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.time-window-btn:hover {
+    background: var(--color-bg-main);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.time-window-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.time-window-btn:active {
+    transform: scale(0.98);
+}
+
 * {
     margin: 0;
     padding: 0;

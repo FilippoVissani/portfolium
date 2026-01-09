@@ -226,6 +226,104 @@ function initOverallNetWorthChart(portfolioData) {
     });
 }
 
+// Store chart instances for updates
+const chartInstances = {};
+
+// Filter data based on time window
+function filterDataByTimeWindow(dataPoints, timeWindow) {
+    if (!dataPoints || dataPoints.length === 0) return dataPoints;
+
+    const now = new Date();
+    let cutoffDate;
+
+    switch(timeWindow) {
+        case '1M':
+            cutoffDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            break;
+        case '3M':
+            cutoffDate = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+            break;
+        case '6M':
+            cutoffDate = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+            break;
+        case 'YTD':
+            cutoffDate = new Date(now.getFullYear(), 0, 1);
+            break;
+        case '1Y':
+            cutoffDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+            break;
+        case '3Y':
+            cutoffDate = new Date(now.getFullYear() - 3, now.getMonth(), now.getDate());
+            break;
+        case '5Y':
+            cutoffDate = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
+            break;
+        case 'ALL':
+        default:
+            return dataPoints;
+    }
+
+    return dataPoints.filter(dp => new Date(dp.date) >= cutoffDate);
+}
+
+// Update chart with filtered data
+function updateHistoricalChart(chartId, fullData, timeWindow) {
+    const chart = chartInstances[chartId];
+    if (!chart || !fullData) return;
+
+    const filteredData = filterDataByTimeWindow(fullData.dataPoints, timeWindow);
+    const labels = filteredData.map(dp => dp.date);
+    const values = filteredData.map(dp => parseFloat(dp.value));
+
+    // Determine if overall trend is positive or negative for color
+    const firstValue = values[0] || 0;
+    const lastValue = values[values.length - 1] || 0;
+    const isPositive = lastValue >= firstValue;
+    const lineColor = isPositive ? '#10b981' : '#ef4444';
+    const gradientColor = isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = values;
+    chart.data.datasets[0].borderColor = lineColor;
+    chart.data.datasets[0].backgroundColor = gradientColor;
+    chart.data.datasets[0].pointBackgroundColor = lineColor;
+    chart.update('none');
+}
+
+// Create time window selector for a chart
+function createTimeWindowSelector(containerId, chartId, historicalData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const selector = document.createElement('div');
+    selector.className = 'time-window-selector';
+
+    const timeWindows = ['1M', '3M', '6M', 'YTD', '1Y', '3Y', '5Y', 'ALL'];
+    const defaultWindow = 'ALL';
+
+    timeWindows.forEach(window => {
+        const btn = document.createElement('button');
+        btn.className = 'time-window-btn' + (window === defaultWindow ? ' active' : '');
+        btn.textContent = window;
+        btn.dataset.window = window;
+        btn.onclick = function() {
+            // Update active state
+            selector.querySelectorAll('.time-window-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // Update chart
+            updateHistoricalChart(chartId, historicalData, window);
+        };
+        selector.appendChild(btn);
+    });
+
+    // Insert selector before the canvas
+    const canvas = document.getElementById(chartId);
+    if (canvas) {
+        canvas.parentElement.insertBefore(selector, canvas);
+    }
+}
+
 // Generic Historical Performance Chart
 function initHistoricalChart(canvasId, historicalData) {
     const ctx = document.getElementById(canvasId);
@@ -241,7 +339,7 @@ function initHistoricalChart(canvasId, historicalData) {
     const lineColor = isPositive ? '#10b981' : '#ef4444';
     const gradientColor = isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -262,6 +360,13 @@ function initHistoricalChart(canvasId, historicalData) {
         },
         options: getStandardLineChartOptions()
     });
+
+    // Store chart instance
+    chartInstances[canvasId] = chart;
+
+    // Create time window selector
+    const containerId = canvasId + 'Container';
+    createTimeWindowSelector(containerId, canvasId, historicalData);
 }
 
 // Standard chart options
