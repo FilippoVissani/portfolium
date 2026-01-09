@@ -1,47 +1,77 @@
 package io.github.filippovissani.portfolium.controller
 
 import io.github.filippovissani.portfolium.controller.config.ConfigLoader
-import io.github.filippovissani.portfolium.controller.csv.Loaders
 import io.github.filippovissani.portfolium.controller.datasource.CachedPriceDataSource
 import io.github.filippovissani.portfolium.controller.datasource.YahooFinancePriceDataSource
-import io.github.filippovissani.portfolium.controller.yaml.BankAccountLoader
-import io.github.filippovissani.portfolium.model.BankAccountService
-import io.github.filippovissani.portfolium.model.Calculators
-import io.github.filippovissani.portfolium.model.HistoricalPerformanceCalculator
+import io.github.filippovissani.portfolium.controller.yaml.SpecializedBankAccountLoaders
+import io.github.filippovissani.portfolium.model.*
 import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.WebView
 import org.slf4j.LoggerFactory
 
 object Controller {
     private val logger = LoggerFactory.getLogger(Controller::class.java)
+
     fun computePortfolioSummary() {
         // Load configuration
         val config = ConfigLoader.loadConfig()
         logger.info("Configuration loaded: data path = ${config.dataPath}")
 
-        // Load data files
-        val loaders = Loaders()
-        val transactions = loaders.loadTransactions(config.getTransactionsPath())
-        val planned = loaders.loadPlannedExpenses(config.getPlannedExpensesPath())
-        val emergency = loaders.loadEmergencyFund(config.getEmergencyFundPath())
-        val investments = loaders.loadInvestmentTransactions(config.getInvestmentsPath())
-
-        // Load bank account data
-        val bankAccountLoader = BankAccountLoader()
-        val bankAccount = try {
-            if (config.getBankAccountPath().exists()) {
-                bankAccountLoader.loadBankAccount(config.getBankAccountPath()).also {
-                    logger.info("Bank account loaded: ${it.name}, ${it.transactions.size} transactions")
-                    val summary = BankAccountService.getAccountSummary(it)
-                    logger.info("Bank account summary - Balance: ${summary.currentBalance}, ETF holdings: ${summary.etfHoldings.size}")
+        // Load specialized bank accounts from YAML files
+        val mainBankAccount = try {
+            if (config.getMainBankAccountPath().exists()) {
+                SpecializedBankAccountLoaders.loadMainBankAccount(config.getMainBankAccountPath()).also {
+                    logger.info("Main bank account loaded: ${it.name}, ${it.transactions.size} transactions")
                 }
             } else {
-                logger.info("Bank account file not found, skipping")
-                null
+                logger.info("Main bank account file not found, using empty account")
+                MainBankAccount()
             }
         } catch (e: Exception) {
-            logger.warn("Error loading bank account", e)
-            null
+            logger.warn("Error loading main bank account", e)
+            MainBankAccount()
+        }
+
+        val plannedExpensesBankAccount = try {
+            if (config.getPlannedExpensesBankAccountPath().exists()) {
+                SpecializedBankAccountLoaders.loadPlannedExpensesBankAccount(config.getPlannedExpensesBankAccountPath()).also {
+                    logger.info("Planned expenses bank account loaded: ${it.name}, ${it.transactions.size} transactions, ${it.plannedExpenses.size} planned expenses")
+                }
+            } else {
+                logger.info("Planned expenses bank account file not found, using empty account")
+                PlannedExpensesBankAccount()
+            }
+        } catch (e: Exception) {
+            logger.warn("Error loading planned expenses bank account", e)
+            PlannedExpensesBankAccount()
+        }
+
+        val emergencyFundBankAccount = try {
+            if (config.getEmergencyFundBankAccountPath().exists()) {
+                SpecializedBankAccountLoaders.loadEmergencyFundBankAccount(config.getEmergencyFundBankAccountPath()).also {
+                    logger.info("Emergency fund bank account loaded: ${it.name}, ${it.transactions.size} transactions, target: ${it.targetMonthlyExpenses} months")
+                }
+            } else {
+                logger.info("Emergency fund bank account file not found, using empty account")
+                EmergencyFundBankAccount()
+            }
+        } catch (e: Exception) {
+            logger.warn("Error loading emergency fund bank account", e)
+            EmergencyFundBankAccount()
+        }
+
+        val investmentBankAccount = try {
+            if (config.getInvestmentBankAccountPath().exists()) {
+                SpecializedBankAccountLoaders.loadInvestmentBankAccount(config.getInvestmentBankAccountPath()).also {
+                    logger.info("Investment bank account loaded: ${it.name}, ${it.transactions.size} transactions")
+                }
+            } else {
+                logger.info("Investment bank account file not found, using empty account")
+                InvestmentBankAccount()
+            }
+        } catch (e: Exception) {
+            logger.warn("Error loading investment bank account", e)
+            InvestmentBankAccount()
         }
 
         // Use YahooFinancePriceDataSource with caching by default
@@ -51,29 +81,63 @@ object Controller {
             cacheDurationHours = config.cacheDurationHours
         )
 
-        // Get current prices for all unique tickers
-        val tickers = investments.map { it.ticker }.distinct()
-        val currentPrices = priceSource.getCurrentPrices(tickers)
+        // Get current prices for all unique tickers from investment account
+        val tickers = investmentBankAccount.etfHoldings.keys.toList()
+        val currentPrices = if (tickers.isNotEmpty()) {
+            priceSource.getCurrentPrices(tickers)
+        } else {
+            emptyMap()
+        }
 
-        // Calculate summaries
-        val liquiditySummary = Calculators.summarizeLiquidity(transactions)
-        val plannedSummary = Calculators.summarizePlanned(planned)
-        val emergencySummary = Calculators.summarizeEmergency(emergency, liquiditySummary.avgMonthlyExpense12m)
-        val investmentSummary = Calculators.summarizeInvestmentsFromTransactions(investments, currentPrices)
+        // Calculate summaries using new bank accounts
+        val liquiditySummary = Calculators.summarizeLiquidity(mainBankAccount)
+        val plannedSummary = Calculators.summarizePlanned(plannedExpensesBankAccount)
+        val emergencySummary = Calculators.summarizeEmergency(emergencyFundBankAccount, liquiditySummary.avgMonthlyExpense12m)
+        val investmentSummary = Calculators.summarizeInvestments(investmentBankAccount, currentPrices)
 
-        // Calculate historical performance
-        val historicalPerformance = if (investments.isNotEmpty()) {
+        // Calculate historical performance from investment bank account
+        val historicalPerformance = if (investmentBankAccount.transactions.isNotEmpty()) {
             logger.info("Calculating historical performance...")
             try {
-                // Calculate from the earliest transaction date to today to support all time period views
-                val earliestDate = investments.minOfOrNull { it.date } ?: java.time.LocalDate.now()
-                HistoricalPerformanceCalculator.calculateHistoricalPerformance(
-                    transactions = investments,
-                    priceSource = priceSource,
-                    startDate = earliestDate,
-                    endDate = java.time.LocalDate.now(),
-                    intervalDays = config.historicalPerformanceIntervalDays
-                )
+                // Extract ETF transactions for historical calculation
+                val etfTransactions = investmentBankAccount.transactions.mapNotNull { tx ->
+                    when (tx) {
+                        is EtfBuyTransaction ->
+                            InvestmentTransaction(
+                                date = tx.date,
+                                etf = tx.name,
+                                ticker = tx.ticker,
+                                area = tx.area,
+                                quantity = tx.quantity,
+                                price = tx.price,
+                                fees = tx.fees
+                            )
+                        is EtfSellTransaction ->
+                            InvestmentTransaction(
+                                date = tx.date,
+                                etf = tx.name,
+                                ticker = tx.ticker,
+                                area = tx.area,
+                                quantity = -tx.quantity,
+                                price = tx.price,
+                                fees = tx.fees
+                            )
+                        else -> null
+                    }
+                }
+
+                if (etfTransactions.isNotEmpty()) {
+                    val earliestDate = etfTransactions.minOfOrNull { it.date } ?: java.time.LocalDate.now()
+                    HistoricalPerformanceCalculator.calculateHistoricalPerformance(
+                        transactions = etfTransactions,
+                        priceSource = priceSource,
+                        startDate = earliestDate,
+                        endDate = java.time.LocalDate.now(),
+                        intervalDays = config.historicalPerformanceIntervalDays
+                    )
+                } else {
+                    null
+                }
             } catch (e: Exception) {
                 logger.warn("Could not calculate historical performance", e)
                 null

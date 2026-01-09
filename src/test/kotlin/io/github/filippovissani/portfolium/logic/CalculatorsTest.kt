@@ -14,13 +14,14 @@ class CalculatorsTest : StringSpec({
     "summarizeLiquidity basic" {
         val today = LocalDate.of(2026, 1, 1)
         val txs = listOf(
-            Transaction(LocalDate.of(2025, 1, 15), "Salary", TransactionType.Income, "Job", "Bank", BigDecimal("1000"), null),
-            Transaction(LocalDate.of(2025, 2, 1), "Groceries", TransactionType.Expense, "Food", "Card", BigDecimal("-200"), null),
-            Transaction(LocalDate.of(2025, 12, 15), "Rent", TransactionType.Expense, "Housing", "Bank", BigDecimal("-300"), null),
-            Transaction(LocalDate.of(2024, 12, 31), "Bonus", TransactionType.Income, "Job", "Bank", BigDecimal("500"), null)
+            LiquidTransaction(LocalDate.of(2025, 1, 15), "Salary", "Job", BigDecimal("1000"), null),
+            LiquidTransaction(LocalDate.of(2025, 2, 1), "Groceries", "Food", BigDecimal("-200"), null),
+            LiquidTransaction(LocalDate.of(2025, 12, 15), "Rent", "Housing", BigDecimal("-300"), null),
+            LiquidTransaction(LocalDate.of(2024, 12, 31), "Bonus", "Job", BigDecimal("500"), null)
         )
+        val account = MainBankAccount("Test", BigDecimal.ZERO, txs)
 
-        val s = Calculators.summarizeLiquidity(txs, today)
+        val s = Calculators.summarizeLiquidity(account, today)
 
         s.totalIncome shouldBe bd2("1500.00")
         s.totalExpense shouldBe bd2("500.00")
@@ -30,11 +31,15 @@ class CalculatorsTest : StringSpec({
 
     "summarizePlanned basic" {
         val items = listOf(
-            PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400")),
-            PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"))
+            PlannedExpenseEntry("New Laptop", null, BigDecimal("1000")),
+            PlannedExpenseEntry("Trip", null, BigDecimal("500"))
         )
+        val txs = listOf(
+            DepositTransaction(LocalDate.of(2025, 1, 1), BigDecimal("900"), "Initial")
+        )
+        val account = PlannedExpensesBankAccount("Test", BigDecimal.ZERO, txs, items)
 
-        val s = Calculators.summarizePlanned(items)
+        val s = Calculators.summarizePlanned(account)
 
         s.totalEstimated shouldBe bd2("1500.00")
         s.totalAccrued shouldBe bd2("900.00")
@@ -42,10 +47,13 @@ class CalculatorsTest : StringSpec({
     }
 
     "summarizeEmergency basic" {
-        val config = EmergencyFundConfig(targetMonths = 6, currentCapital = BigDecimal("5000"))
+        val txs = listOf(
+            DepositTransaction(LocalDate.of(2025, 1, 1), BigDecimal("5000"), "Initial")
+        )
+        val account = EmergencyFundBankAccount("Test", BigDecimal.ZERO, txs, targetMonthlyExpenses = 6)
         val avgMonthlyExpense = BigDecimal("1000")
 
-        val s = Calculators.summarizeEmergency(config, avgMonthlyExpense)
+        val s = Calculators.summarizeEmergency(account, avgMonthlyExpense)
 
         s.targetCapital shouldBe bd2("6000.00")
         s.currentCapital shouldBe bd2("5000.00")
@@ -84,26 +92,39 @@ class CalculatorsTest : StringSpec({
     "buildDashboard basic" {
         val today = LocalDate.of(2026, 1, 1)
         // Liquidity (from first test)
-        val liquidity = Calculators.summarizeLiquidity(
+        val mainAccount = MainBankAccount(
+            "Test",
+            BigDecimal.ZERO,
             listOf(
-                Transaction(LocalDate.of(2025, 1, 15), "Salary", TransactionType.Income, "Job", "Bank", BigDecimal("1000"), null),
-                Transaction(LocalDate.of(2025, 2, 1), "Groceries", TransactionType.Expense, "Food", "Card", BigDecimal("-200"), null),
-                Transaction(LocalDate.of(2025, 12, 15), "Rent", TransactionType.Expense, "Housing", "Bank", BigDecimal("-300"), null),
-                Transaction(LocalDate.of(2024, 12, 31), "Bonus", TransactionType.Income, "Job", "Bank", BigDecimal("500"), null)
-            ), today
-        )
-        // Planned
-        val planned = Calculators.summarizePlanned(
-            listOf(
-                PlannedExpense("New Laptop", BigDecimal("1000"), null, null, BigDecimal("400")),
-                PlannedExpense("Trip", BigDecimal("500"), null, null, BigDecimal("500"))
+                LiquidTransaction(LocalDate.of(2025, 1, 15), "Salary", "Job", BigDecimal("1000"), null),
+                LiquidTransaction(LocalDate.of(2025, 2, 1), "Groceries", "Food", BigDecimal("-200"), null),
+                LiquidTransaction(LocalDate.of(2025, 12, 15), "Rent", "Housing", BigDecimal("-300"), null),
+                LiquidTransaction(LocalDate.of(2024, 12, 31), "Bonus", "Job", BigDecimal("500"), null)
             )
         )
-        // Emergency
-        val emergency = Calculators.summarizeEmergency(
-            EmergencyFundConfig(targetMonths = 6, currentCapital = BigDecimal("5000")),
-            avgMonthlyExpense = BigDecimal("1000")
+        val liquidity = Calculators.summarizeLiquidity(mainAccount, today)
+
+        // Planned
+        val plannedAccount = PlannedExpensesBankAccount(
+            "Test",
+            BigDecimal.ZERO,
+            listOf(DepositTransaction(LocalDate.of(2025, 1, 1), BigDecimal("900"), "Initial")),
+            listOf(
+                PlannedExpenseEntry("New Laptop", null, BigDecimal("1000")),
+                PlannedExpenseEntry("Trip", null, BigDecimal("500"))
+            )
         )
+        val planned = Calculators.summarizePlanned(plannedAccount)
+
+        // Emergency
+        val emergencyAccount = EmergencyFundBankAccount(
+            "Test",
+            BigDecimal.ZERO,
+            listOf(DepositTransaction(LocalDate.of(2025, 1, 1), BigDecimal("5000"), "Initial")),
+            targetMonthlyExpenses = 6
+        )
+        val emergency = Calculators.summarizeEmergency(emergencyAccount, avgMonthlyExpense = BigDecimal("1000"))
+
         // Investments
         val inv = Calculators.summarizeInvestments(
             listOf(
@@ -120,7 +141,8 @@ class CalculatorsTest : StringSpec({
     }
 
     "summarizeLiquidity empty" {
-        val s = Calculators.summarizeLiquidity(emptyList(), LocalDate.of(2026, 1, 1))
+        val account = MainBankAccount("Test", BigDecimal.ZERO, emptyList())
+        val s = Calculators.summarizeLiquidity(account, LocalDate.of(2026, 1, 1))
         s.totalIncome shouldBe bd2("0.00")
         s.totalExpense shouldBe bd2("0.00")
         s.net shouldBe bd2("0.00")
@@ -128,10 +150,13 @@ class CalculatorsTest : StringSpec({
     }
 
     "summarizePlanned zeroEstimated" {
-        val items = listOf(
-            PlannedExpense("Zero", BigDecimal.ZERO, null, null, BigDecimal("10"))
+        val account = PlannedExpensesBankAccount(
+            "Test",
+            BigDecimal.ZERO,
+            listOf(DepositTransaction(LocalDate.of(2025, 1, 1), BigDecimal("10"), "Test")),
+            listOf(PlannedExpenseEntry("Zero", null, BigDecimal.ZERO))
         )
-        val s = Calculators.summarizePlanned(items)
+        val s = Calculators.summarizePlanned(account)
         s.totalEstimated shouldBe bd2("0.00")
         s.totalAccrued shouldBe bd2("10.00")
         // coverageRatio is computed as BigDecimal.ZERO when totalEstimated is zero; compare numerically to avoid scale sensitivity
@@ -139,10 +164,13 @@ class CalculatorsTest : StringSpec({
     }
 
     "summarizeEmergency aboveTarget" {
-        val s = Calculators.summarizeEmergency(
-            EmergencyFundConfig(targetMonths = 3, currentCapital = BigDecimal("5000")),
-            avgMonthlyExpense = BigDecimal("1000")
+        val account = EmergencyFundBankAccount(
+            "Test",
+            BigDecimal.ZERO,
+            listOf(DepositTransaction(LocalDate.of(2025, 1, 1), BigDecimal("5000"), "Initial")),
+            targetMonthlyExpenses = 3
         )
+        val s = Calculators.summarizeEmergency(account, avgMonthlyExpense = BigDecimal("1000"))
         s.targetCapital shouldBe bd2("3000.00")
         s.currentCapital shouldBe bd2("5000.00")
         s.deltaToTarget shouldBe bd2("-2000.00")
@@ -167,33 +195,5 @@ class CalculatorsTest : StringSpec({
         // compare numerically to avoid scale sensitivity
         d.percentInvested.compareTo(BigDecimal.ZERO) shouldBe 0
         d.percentLiquid.compareTo(BigDecimal.ONE) shouldBe 0
-    }
-
-    "summarizeInvestmentsFromTransactions basic" {
-        val txs = listOf(
-            InvestmentTransaction(LocalDate.of(2025,1,10), "ETF A", "A", null, BigDecimal("10"), BigDecimal("100"), BigDecimal("2.50")),
-            InvestmentTransaction(LocalDate.of(2025,2,10), "ETF A", "A", null, BigDecimal("5"), BigDecimal("120"), null),
-            // partial sell: negative quantity; include fee which reduces total cost
-            InvestmentTransaction(LocalDate.of(2025,3,15), "ETF A", "A", null, BigDecimal("-3"), BigDecimal("130"), BigDecimal("1.00")),
-            // another instrument fully sold -> should be omitted in summary
-            InvestmentTransaction(LocalDate.of(2025,1,5), "ETF B", "B", null, BigDecimal("2"), BigDecimal("50"), null),
-            InvestmentTransaction(LocalDate.of(2025,2,5), "ETF B", "B", null, BigDecimal("-2"), BigDecimal("55"), BigDecimal("0.50")),
-        )
-        val prices = mapOf(
-            "A" to BigDecimal("110"),
-            "B" to BigDecimal("60")
-        )
-        val summary = Calculators.summarizeInvestmentsFromTransactions(txs, prices)
-        // Only A remains with qty 12 (10 + 5 - 3)
-        summary.totalCurrent shouldBe bd2("1320.00")
-        // invested value uses computed average price
-        // cost: A -> (10*100 + 2.50) + (5*120) + (-3*130 + 1.00) = 1000 + 2.50 + 600 - 390 + 1.00 = 1213.50
-        // qty: 12 -> avg price = 1213.50 / 12 = 101.125 -> round to 6 decimals in model
-        val item = summary.itemsWithWeights.first().first
-        item.averagePrice.setScale(6) shouldBe bd6("101.125000")
-        // compare numerically to avoid scale sensitivity
-        item.investedValue.compareTo(bd2("1213.50")) shouldBe 0
-        // weight should be 1 since only one item
-        summary.itemsWithWeights.first().second.setScale(6) shouldBe BigDecimal.ONE.setScale(6)
     }
 })

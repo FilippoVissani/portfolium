@@ -9,30 +9,36 @@ import java.time.LocalDate
 
 class BankAccountTest : FunSpec({
 
-    test("BankAccount should calculate current balance correctly with deposits and withdrawals") {
-        val account = BankAccount(
-            name = "Test Account",
+    test("MainBankAccount should calculate current balance correctly") {
+        val account = MainBankAccount(
+            name = "Test Main Account",
             initialBalance = BigDecimal("1000.00"),
             transactions = listOf(
-                DepositTransaction(
+                LiquidTransaction(
                     date = LocalDate.of(2025, 1, 1),
+                    description = "Salary",
+                    category = "Income",
                     amount = BigDecimal("500.00"),
-                    description = "Deposit"
+                    note = "Monthly salary"
                 ),
-                WithdrawalTransaction(
+                LiquidTransaction(
                     date = LocalDate.of(2025, 1, 2),
-                    amount = BigDecimal("200.00"),
-                    description = "Withdrawal"
+                    description = "Groceries",
+                    category = "Food",
+                    amount = BigDecimal("-200.00"),
+                    note = null
                 )
             )
         )
 
         account.currentBalance.compareTo(BigDecimal("1300.00")) shouldBe 0
+        account.totalIncome.compareTo(BigDecimal("500.00")) shouldBe 0
+        account.totalExpenses.compareTo(BigDecimal("200.00")) shouldBe 0
     }
 
-    test("BankAccount should calculate balance with ETF buy transactions") {
-        val account = BankAccount(
-            name = "Test Account",
+    test("InvestmentBankAccount should calculate balance with ETF buy transactions") {
+        val account = InvestmentBankAccount(
+            name = "Test Investment Account",
             initialBalance = BigDecimal("10000.00"),
             transactions = listOf(
                 EtfBuyTransaction(
@@ -51,9 +57,9 @@ class BankAccountTest : FunSpec({
         account.currentBalance.compareTo(BigDecimal("5495.00")) shouldBe 0
     }
 
-    test("BankAccount should calculate balance with ETF sell transactions") {
-        val account = BankAccount(
-            name = "Test Account",
+    test("InvestmentBankAccount should calculate balance with ETF sell transactions") {
+        val account = InvestmentBankAccount(
+            name = "Test Investment Account",
             initialBalance = BigDecimal("10000.00"),
             transactions = listOf(
                 EtfBuyTransaction(
@@ -82,9 +88,9 @@ class BankAccountTest : FunSpec({
         account.currentBalance.compareTo(BigDecimal("7767.50")) shouldBe 0
     }
 
-    test("BankAccount should track ETF holdings correctly") {
-        val account = BankAccount(
-            name = "Test Account",
+    test("InvestmentBankAccount should track ETF holdings correctly") {
+        val account = InvestmentBankAccount(
+            name = "Test Investment Account",
             initialBalance = BigDecimal("10000.00"),
             transactions = listOf(
                 EtfBuyTransaction(
@@ -131,9 +137,9 @@ class BankAccountTest : FunSpec({
         iwdaHolding.ticker shouldBe "IWDA"
     }
 
-    test("BankAccount should calculate average price for ETF holdings") {
-        val account = BankAccount(
-            name = "Test Account",
+    test("InvestmentBankAccount should calculate average price for ETF holdings") {
+        val account = InvestmentBankAccount(
+            name = "Test Investment Account",
             initialBalance = BigDecimal("10000.00"),
             transactions = listOf(
                 EtfBuyTransaction(
@@ -167,84 +173,53 @@ class BankAccountTest : FunSpec({
         vooHolding.averagePrice.compareTo(BigDecimal("456.00")) shouldBe 0
     }
 
-    test("BankAccountService should calculate total deposits") {
-        val account = BankAccount(
-            name = "Test Account",
-            initialBalance = BigDecimal("1000.00"),
+    test("PlannedExpensesBankAccount should track transactions and planned expenses") {
+        val account = PlannedExpensesBankAccount(
+            name = "Planned Expenses",
+            initialBalance = BigDecimal.ZERO,
             transactions = listOf(
                 DepositTransaction(
                     date = LocalDate.of(2025, 1, 1),
-                    amount = BigDecimal("500.00")
+                    amount = BigDecimal("500.00"),
+                    description = "Initial"
                 ),
                 DepositTransaction(
-                    date = LocalDate.of(2025, 1, 5),
-                    amount = BigDecimal("300.00")
-                ),
-                WithdrawalTransaction(
-                    date = LocalDate.of(2025, 1, 10),
-                    amount = BigDecimal("100.00")
+                    date = LocalDate.of(2025, 2, 1),
+                    amount = BigDecimal("300.00"),
+                    description = "Monthly"
                 )
+            ),
+            plannedExpenses = listOf(
+                PlannedExpenseEntry("Car", LocalDate.of(2026, 12, 31), BigDecimal("15000.00")),
+                PlannedExpenseEntry("Vacation", LocalDate.of(2025, 8, 1), BigDecimal("3000.00"))
             )
         )
 
-        BankAccountService.getTotalDeposits(account).compareTo(BigDecimal("800.00")) shouldBe 0
+        account.currentBalance.compareTo(BigDecimal("800.00")) shouldBe 0
+        account.plannedExpenses.size shouldBe 2
     }
 
-    test("BankAccountService should calculate total withdrawals") {
-        val account = BankAccount(
-            name = "Test Account",
-            initialBalance = BigDecimal("1000.00"),
-            transactions = listOf(
-                WithdrawalTransaction(
-                    date = LocalDate.of(2025, 1, 1),
-                    amount = BigDecimal("200.00")
-                ),
-                WithdrawalTransaction(
-                    date = LocalDate.of(2025, 1, 5),
-                    amount = BigDecimal("150.00")
-                ),
-                DepositTransaction(
-                    date = LocalDate.of(2025, 1, 10),
-                    amount = BigDecimal("500.00")
-                )
-            )
-        )
-
-        BankAccountService.getTotalWithdrawals(account).compareTo(BigDecimal("350.00")) shouldBe 0
-    }
-
-    test("BankAccountService should provide account summary") {
-        val account = BankAccount(
-            name = "Test Account",
-            initialBalance = BigDecimal("1000.00"),
+    test("EmergencyFundBankAccount should track target and balance") {
+        val account = EmergencyFundBankAccount(
+            name = "Emergency Fund",
+            initialBalance = BigDecimal.ZERO,
             transactions = listOf(
                 DepositTransaction(
                     date = LocalDate.of(2025, 1, 1),
-                    amount = BigDecimal("500.00")
+                    amount = BigDecimal("5000.00"),
+                    description = "Initial"
                 ),
                 WithdrawalTransaction(
-                    date = LocalDate.of(2025, 1, 2),
-                    amount = BigDecimal("200.00")
-                ),
-                EtfBuyTransaction(
-                    date = LocalDate.of(2025, 1, 10),
-                    name = "S&P 500",
-                    ticker = "VOO",
-                    area = "US",
-                    quantity = BigDecimal("5"),
-                    price = BigDecimal("450.00"),
-                    fees = BigDecimal("5.00")
+                    date = LocalDate.of(2025, 3, 1),
+                    amount = BigDecimal("500.00"),
+                    description = "Emergency"
                 )
-            )
+            ),
+            targetMonthlyExpenses = 6
         )
 
-        val summary = BankAccountService.getAccountSummary(account)
-        summary.name shouldBe "Test Account"
-        summary.initialBalance.compareTo(BigDecimal("1000.00")) shouldBe 0
-        summary.totalDeposits.compareTo(BigDecimal("500.00")) shouldBe 0
-        summary.totalWithdrawals.compareTo(BigDecimal("200.00")) shouldBe 0
-        summary.numberOfTransactions shouldBe 3
-        summary.etfHoldings shouldHaveSize 1
+        account.currentBalance.compareTo(BigDecimal("4500.00")) shouldBe 0
+        account.targetMonthlyExpenses shouldBe 6
     }
 })
 

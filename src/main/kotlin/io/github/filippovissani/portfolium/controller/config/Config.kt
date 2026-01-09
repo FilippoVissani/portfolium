@@ -7,44 +7,39 @@ import java.io.File
  */
 data class Config(
     val dataPath: String,
-    val transactionsFile: String,
-    val plannedExpensesFile: String,
-    val emergencyFundFile: String,
-    val investmentsFile: String,
-    val bankAccountFile: String,
+    val mainBankAccountFile: String,
+    val plannedExpensesBankAccountFile: String,
+    val emergencyFundBankAccountFile: String,
+    val investmentBankAccountFile: String,
     val priceCacheFile: String,
     val cacheDurationHours: Long,
     val historicalPerformanceIntervalDays: Long,
     val serverPort: Int
 ) {
     /**
-     * Get the full path for the transactions CSV file
-     */
-    fun getTransactionsPath(): File = File("$dataPath/$transactionsFile")
-
-    /**
-     * Get the full path for the planned expenses CSV file
-     */
-    fun getPlannedExpensesPath(): File = File("$dataPath/$plannedExpensesFile")
-
-    /**
-     * Get the full path for the emergency fund CSV file
-     */
-    fun getEmergencyFundPath(): File = File("$dataPath/$emergencyFundFile")
-
-    /**
-     * Get the full path for the investments CSV file
-     */
-    fun getInvestmentsPath(): File = File("$dataPath/$investmentsFile")
-
-    /**
      * Get the full path for the price cache CSV file
      */
     fun getPriceCachePath(): File = File("$dataPath/$priceCacheFile")
 
+
     /**
-     * Get the full path for the bank account YAML file
+     * Get the full path for the main bank account YAML file
      */
-    fun getBankAccountPath(): File = File("$dataPath/$bankAccountFile")
+    fun getMainBankAccountPath(): File = File("$dataPath/$mainBankAccountFile")
+
+    /**
+     * Get the full path for the planned expenses bank account YAML file
+     */
+    fun getPlannedExpensesBankAccountPath(): File = File("$dataPath/$plannedExpensesBankAccountFile")
+
+    /**
+     * Get the full path for the emergency fund bank account YAML file
+     */
+    fun getEmergencyFundBankAccountPath(): File = File("$dataPath/$emergencyFundBankAccountFile")
+
+    /**
+     * Get the full path for the investment bank account YAML file
+     */
+    fun getInvestmentBankAccountPath(): File = File("$dataPath/$investmentBankAccountFile")
 }
 

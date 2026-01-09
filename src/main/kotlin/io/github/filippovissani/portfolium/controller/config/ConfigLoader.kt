@@ -35,11 +35,10 @@ object ConfigLoader {
 
         return Config(
             dataPath = properties.getProperty("data.path", "data"),
-            transactionsFile = properties.getProperty("data.transactions", "transactions.csv"),
-            plannedExpensesFile = properties.getProperty("data.planned.expenses", "planned_expenses.csv"),
-            emergencyFundFile = properties.getProperty("data.emergency.fund", "emergency_fund.csv"),
-            investmentsFile = properties.getProperty("data.investments", "investments.csv"),
-            bankAccountFile = properties.getProperty("data.bank.account", "bank_account.yaml"),
+            mainBankAccountFile = properties.getProperty("data.main.bank.account", "main_bank_account.yaml"),
+            plannedExpensesBankAccountFile = properties.getProperty("data.planned.expenses.bank.account", "planned_expenses_bank_account.yaml"),
+            emergencyFundBankAccountFile = properties.getProperty("data.emergency.fund.bank.account", "emergency_fund_bank_account.yaml"),
+            investmentBankAccountFile = properties.getProperty("data.investment.bank.account", "investment_bank_account.yaml"),
             priceCacheFile = properties.getProperty("data.price.cache", "price_cache.csv"),
             cacheDurationHours = properties.getProperty("cache.duration.hours", "24").toLongOrNull() ?: 24L,
             historicalPerformanceIntervalDays = properties.getProperty("historical.performance.interval.days", "7").toLongOrNull() ?: 7L,
@@ -53,11 +52,10 @@ object ConfigLoader {
     private fun getDefaultConfig(): Config {
         return Config(
             dataPath = "data",
-            transactionsFile = "transactions.csv",
-            plannedExpensesFile = "planned_expenses.csv",
-            emergencyFundFile = "emergency_fund.csv",
-            investmentsFile = "investments.csv",
-            bankAccountFile = "bank_account.yaml",
+            mainBankAccountFile = "main_bank_account.yaml",
+            plannedExpensesBankAccountFile = "planned_expenses_bank_account.yaml",
+            emergencyFundBankAccountFile = "emergency_fund_bank_account.yaml",
+            investmentBankAccountFile = "investment_bank_account.yaml",
             priceCacheFile = "price_cache.csv",
             cacheDurationHours = 24L,
             historicalPerformanceIntervalDays = 7L,

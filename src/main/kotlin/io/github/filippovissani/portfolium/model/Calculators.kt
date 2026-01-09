@@ -8,33 +8,34 @@ import java.math.RoundingMode
 import java.time.LocalDate
 
 object Calculators {
-    fun summarizeLiquidity(transactions: List<Transaction>, today: LocalDate = LocalDate.now()): LiquiditySummary {
-        val totalIncome = transactions.filter { it.type == TransactionType.Income }
-            .fold(BigDecimal.ZERO) { acc, t -> acc + t.amount }
-        val totalExpenseAbs = transactions.filter { it.type == TransactionType.Expense }
-            .fold(BigDecimal.ZERO) { acc, t -> acc + t.amount.abs() }
-        val net = transactions.fold(BigDecimal.ZERO) { acc, t -> acc + t.amount }
+    // Liquidity summary from MainBankAccount
+    fun summarizeLiquidity(account: MainBankAccount, today: LocalDate = LocalDate.now()): LiquiditySummary {
+        val totalIncome = account.totalIncome
+        val totalExpense = account.totalExpenses
+        val net = account.currentBalance
 
         // Average monthly expense over last 12 months (absolute)
         val start = today.minusMonths(12)
-        val last12 = transactions.filter { it.type == TransactionType.Expense && it.date.isAfter(start.minusDays(1)) }
+        val last12 = account.transactions.filter { it.amount < BigDecimal.ZERO && it.date.isAfter(start.minusDays(1)) }
         val spent12 = last12.fold(BigDecimal.ZERO) { acc, t -> acc + t.amount.abs() }
         val avgMonthly12 =
             if (spent12 == BigDecimal.ZERO) BigDecimal.ZERO else spent12.divide(BigDecimal(12), 2, RoundingMode.HALF_UP)
 
         return LiquiditySummary(
             totalIncome = totalIncome.toMoney(),
-            totalExpense = totalExpenseAbs.toMoney(),
+            totalExpense = totalExpense.toMoney(),
             net = net.toMoney(),
             avgMonthlyExpense12m = avgMonthly12.toMoney()
         )
     }
 
-    fun summarizePlanned(items: List<PlannedExpense>): PlannedExpensesSummary {
-        val totalEstimated = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.estimatedAmount }
-        val totalAccrued = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
-        val liquidAccrued = items.filter { it.isLiquid }.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
-        val investedAccrued = items.filter { !it.isLiquid }.fold(BigDecimal.ZERO) { acc, i -> acc + i.accrued }
+    // Planned expenses summary from PlannedExpensesBankAccount
+    fun summarizePlanned(account: PlannedExpensesBankAccount): PlannedExpensesSummary {
+        val totalEstimated = account.plannedExpenses.sumOf { it.estimatedAmount }
+        val totalAccrued = account.currentBalance
+        // For now, all accrued in planned expenses account is considered liquid
+        val liquidAccrued = totalAccrued
+        val investedAccrued = BigDecimal.ZERO
         val coverage = if (totalEstimated.signum() == 0) BigDecimal.ZERO else totalAccrued.divide(
             totalEstimated,
             4,
@@ -49,19 +50,22 @@ object Calculators {
         )
     }
 
-    fun summarizeEmergency(config: EmergencyFundConfig, avgMonthlyExpense: BigDecimal): EmergencyFundSummary {
-        val targetCapital = avgMonthlyExpense.multiply(BigDecimal(config.targetMonths))
-        val delta = targetCapital - config.currentCapital
-        val status = if (config.currentCapital >= targetCapital) "OK" else "BELOW TARGET"
+    // Emergency fund summary from EmergencyFundBankAccount
+    fun summarizeEmergency(account: EmergencyFundBankAccount, avgMonthlyExpense: BigDecimal): EmergencyFundSummary {
+        val targetCapital = avgMonthlyExpense.multiply(BigDecimal(account.targetMonthlyExpenses))
+        val currentCapital = account.currentBalance
+        val delta = targetCapital - currentCapital
+        val status = if (currentCapital >= targetCapital) "OK" else "BELOW TARGET"
         return EmergencyFundSummary(
             targetCapital = targetCapital.toMoney(),
-            currentCapital = config.currentCapital.toMoney(),
+            currentCapital = currentCapital.toMoney(),
             deltaToTarget = delta.toMoney(),
             status = status,
-            isLiquid = config.isLiquid
+            isLiquid = true // Emergency fund account is considered liquid
         )
     }
 
+    // Investment summary from list of Investment objects
     fun summarizeInvestments(items: List<Investment>): InvestmentsSummary {
         val totalCurrent = items.fold(BigDecimal.ZERO) { acc, i -> acc + i.currentValue }
         val weights = items.map { i ->
@@ -80,37 +84,23 @@ object Calculators {
         )
     }
 
-    // summarize investments from individual transactions and a map of current prices per ticker
-    fun summarizeInvestmentsFromTransactions(
-        txs: List<InvestmentTransaction>,
-        currentPricesByTicker: Map<String, BigDecimal>
-    ): InvestmentsSummary {
-        // Aggregate by (ticker) while preserving etf and area from latest or first occurrence
-        data class Agg(var etf: String, var area: String?, var qty: BigDecimal, var cost: BigDecimal)
-        val byTicker = mutableMapOf<String, Agg>()
-        txs.forEach { t ->
-            val fees = t.fees ?: BigDecimal.ZERO
-            val cost = t.price.multiply(t.quantity).plus(fees) // cost increases with buys; if quantity negative, reduces
-            val agg = byTicker.getOrPut(t.ticker) { Agg(t.etf, t.area, BigDecimal.ZERO, BigDecimal.ZERO) }
-            agg.qty += t.quantity
-            agg.cost += cost
-            // prefer last seen metadata
-            agg.etf = t.etf
-            agg.area = t.area
-        }
-        val items = byTicker.mapNotNull { (ticker, a) ->
-            if (a.qty.signum() == 0) {
-                // fully sold position; skip
-                null
-            } else {
-                val avgPrice = if (a.qty.signum() == 0) BigDecimal.ZERO else a.cost.divide(a.qty, 6, RoundingMode.HALF_UP)
-                val currentPrice = currentPricesByTicker[ticker] ?: BigDecimal.ZERO
-                Investment(etf = a.etf, ticker = ticker, area = a.area, quantity = a.qty, averagePrice = avgPrice, currentPrice = currentPrice)
-            }
+    // Investment summary from InvestmentBankAccount
+    fun summarizeInvestments(account: InvestmentBankAccount, currentPricesByTicker: Map<String, BigDecimal>): InvestmentsSummary {
+        val items = account.etfHoldings.values.map { holding ->
+            val currentPrice = currentPricesByTicker[holding.ticker] ?: BigDecimal.ZERO
+            Investment(
+                etf = holding.name,
+                ticker = holding.ticker,
+                area = holding.area,
+                quantity = holding.quantity,
+                averagePrice = holding.averagePrice,
+                currentPrice = currentPrice
+            )
         }
         return summarizeInvestments(items)
     }
 
+    // Build complete portfolio from all summaries
     fun buildPortfolio(
         liquidity: LiquiditySummary,
         planned: PlannedExpensesSummary,

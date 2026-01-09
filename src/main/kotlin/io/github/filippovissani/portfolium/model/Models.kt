@@ -5,44 +5,8 @@ import io.github.filippovissani.portfolium.model.util.times
 import java.math.BigDecimal
 import java.time.LocalDate
 
-data class Transaction(
-    val date: LocalDate,
-    val description: String,
-    val type: TransactionType,
-    val category: String,
-    val method: String,
-    val amount: BigDecimal,
-    val note: String?
-)
-
-enum class TransactionType { Income, Expense }
-
-
-data class PlannedExpense(
-    val name: String,
-    val estimatedAmount: BigDecimal,
-    val horizon: String?,
-    val dueDate: LocalDate?,
-    val accrued: BigDecimal,
-    val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
-) {
-    val delta: BigDecimal get() = estimatedAmount - accrued
-    val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
-}
-
-
-data class EmergencyFundConfig(
-    val targetMonths: Int,
-    val currentCapital: BigDecimal,
-    val instrument: String? = null // "liquid", "etf", "bond", etc. - null/empty means liquid
-) {
-    val isLiquid: Boolean get() = instrument.isNullOrBlank() || instrument.equals("liquid", ignoreCase = true)
-}
-
-
-// individual investment transaction (e.g., buy/sell)
-// quantity can be negative for sells; price is per unit; fees are optional per transaction cost
-// instrument identifiers: etf/ticker plus optional area
+// Investment transaction for historical performance calculations
+// This is used internally to track investment transactions over time
 data class InvestmentTransaction(
     val date: LocalDate,
     val etf: String,
@@ -52,6 +16,7 @@ data class InvestmentTransaction(
     val price: BigDecimal,
     val fees: BigDecimal?
 )
+
 
 
 data class Investment(
@@ -131,6 +96,16 @@ sealed class BankAccountTransaction {
     abstract val date: LocalDate
 }
 
+// Liquid money transaction for main bank account
+data class LiquidTransaction(
+    override val date: LocalDate,
+    val description: String,
+    val category: String,
+    val amount: BigDecimal,
+    val note: String? = null
+) : BankAccountTransaction()
+
+// Generic deposit/withdrawal for specialized accounts
 data class DepositTransaction(
     override val date: LocalDate,
     val amount: BigDecimal,
@@ -143,6 +118,7 @@ data class WithdrawalTransaction(
     val description: String? = null
 ) : BankAccountTransaction()
 
+// ETF transactions for investment account
 data class EtfBuyTransaction(
     override val date: LocalDate,
     val name: String,
@@ -163,8 +139,71 @@ data class EtfSellTransaction(
     val fees: BigDecimal?
 ) : BankAccountTransaction()
 
-data class BankAccount(
+// Specialized bank account types
+
+data class MainBankAccount(
+    val name: String = "Main Account",
+    val initialBalance: BigDecimal = BigDecimal.ZERO,
+    val transactions: List<LiquidTransaction> = emptyList()
+) {
+    val currentBalance: BigDecimal
+        get() = initialBalance + transactions.sumOf { it.amount }
+
+    val totalIncome: BigDecimal
+        get() = transactions.filter { it.amount > BigDecimal.ZERO }.sumOf { it.amount }
+
+    val totalExpenses: BigDecimal
+        get() = transactions.filter { it.amount < BigDecimal.ZERO }.sumOf { it.amount.abs() }
+}
+
+data class PlannedExpenseEntry(
     val name: String,
+    val expirationDate: LocalDate?,
+    val estimatedAmount: BigDecimal
+)
+
+data class PlannedExpensesBankAccount(
+    val name: String = "Planned Expenses",
+    val initialBalance: BigDecimal = BigDecimal.ZERO,
+    val transactions: List<BankAccountTransaction> = emptyList(),
+    val plannedExpenses: List<PlannedExpenseEntry> = emptyList()
+) {
+    val currentBalance: BigDecimal
+        get() {
+            var balance = initialBalance
+            transactions.forEach { transaction ->
+                when (transaction) {
+                    is DepositTransaction -> balance += transaction.amount
+                    is WithdrawalTransaction -> balance -= transaction.amount
+                    else -> {}
+                }
+            }
+            return balance
+        }
+}
+
+data class EmergencyFundBankAccount(
+    val name: String = "Emergency Fund",
+    val initialBalance: BigDecimal = BigDecimal.ZERO,
+    val transactions: List<BankAccountTransaction> = emptyList(),
+    val targetMonthlyExpenses: Int = 6
+) {
+    val currentBalance: BigDecimal
+        get() {
+            var balance = initialBalance
+            transactions.forEach { transaction ->
+                when (transaction) {
+                    is DepositTransaction -> balance += transaction.amount
+                    is WithdrawalTransaction -> balance -= transaction.amount
+                    else -> {}
+                }
+            }
+            return balance
+        }
+}
+
+data class InvestmentBankAccount(
+    val name: String = "Investments",
     val initialBalance: BigDecimal = BigDecimal.ZERO,
     val transactions: List<BankAccountTransaction> = emptyList()
 ) {
@@ -183,6 +222,7 @@ data class BankAccount(
                         val totalProceeds = (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
                         balance += totalProceeds
                     }
+                    else -> {}
                 }
             }
             return balance
@@ -247,4 +287,84 @@ data class EtfHolding(
     val quantity: BigDecimal,
     val averagePrice: BigDecimal
 )
+
+// Legacy BankAccount for backward compatibility (deprecated)
+@Deprecated("Use specialized bank account types instead")
+data class BankAccount(
+    val name: String,
+    val initialBalance: BigDecimal = BigDecimal.ZERO,
+    val transactions: List<BankAccountTransaction> = emptyList()
+) {
+    val currentBalance: BigDecimal
+        get() {
+            var balance = initialBalance
+            transactions.forEach { transaction ->
+                when (transaction) {
+                    is DepositTransaction -> balance += transaction.amount
+                    is WithdrawalTransaction -> balance -= transaction.amount
+                    is EtfBuyTransaction -> {
+                        val totalCost = (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
+                        balance -= totalCost
+                    }
+                    is EtfSellTransaction -> {
+                        val totalProceeds = (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
+                        balance += totalProceeds
+                    }
+                    else -> {}
+                }
+            }
+            return balance
+        }
+
+    val etfHoldings: Map<String, EtfHolding>
+        get() {
+            val holdings = mutableMapOf<String, MutableList<EtfTransaction>>()
+
+            transactions.forEach { transaction ->
+                when (transaction) {
+                    is EtfBuyTransaction -> {
+                        val key = transaction.ticker
+                        holdings.getOrPut(key) { mutableListOf() }
+                            .add(EtfTransaction(transaction.date, transaction.quantity, transaction.price, transaction.fees, transaction.name, transaction.area))
+                    }
+                    is EtfSellTransaction -> {
+                        val key = transaction.ticker
+                        holdings.getOrPut(key) { mutableListOf() }
+                            .add(EtfTransaction(transaction.date, -transaction.quantity, transaction.price, transaction.fees, transaction.name, transaction.area))
+                    }
+                    else -> {}
+                }
+            }
+
+            return holdings.mapValues { (ticker, txs) ->
+                val totalQuantity = txs.sumOf { it.quantity }
+                val totalCost = txs.filter { it.quantity > BigDecimal.ZERO }
+                    .sumOf { (it.quantity * it.price) + (it.fees ?: BigDecimal.ZERO) }
+                val averagePrice = if (totalQuantity > BigDecimal.ZERO) {
+                    totalCost / totalQuantity
+                } else {
+                    BigDecimal.ZERO
+                }
+                val name = txs.firstOrNull()?.name ?: ticker
+                val area = txs.firstOrNull()?.area
+
+                EtfHolding(
+                    name = name,
+                    ticker = ticker,
+                    area = area,
+                    quantity = totalQuantity,
+                    averagePrice = averagePrice
+                )
+            }.filterValues { it.quantity > BigDecimal.ZERO }
+        }
+
+    private data class EtfTransaction(
+        val date: LocalDate,
+        val quantity: BigDecimal,
+        val price: BigDecimal,
+        val fees: BigDecimal?,
+        val name: String,
+        val area: String?
+    )
+}
 
