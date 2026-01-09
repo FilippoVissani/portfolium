@@ -1,3 +1,13 @@
+## [5.0.0](https://github.com/FilippoVissani/portfolium/compare/4.0.2...5.0.0) (2026-01-09)
+
+### ⚠ BREAKING CHANGES
+
+* re-implement everything using YAML files and providing new view
+
+### Features
+
+* re-implement everything using YAML files and providing new view ([615fcc8](https://github.com/FilippoVissani/portfolium/commit/615fcc85561edc45d2fb0f535494d220e38ea5e1))
+
 ## [4.0.2](https://github.com/FilippoVissani/portfolium/compare/4.0.1...4.0.2) (2026-01-08)
 
 ### Documentation
