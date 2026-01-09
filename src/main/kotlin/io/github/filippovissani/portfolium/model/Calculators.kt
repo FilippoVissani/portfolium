@@ -97,8 +97,6 @@ object Calculators {
 
         // Check if account has ETF transactions (invested)
         val hasEtfTransactions = account.transactions.any { it is EtfBuyTransaction || it is EtfSellTransaction }
-        val isInvested = hasEtfTransactions
-
 
         val coverage = if (totalEstimated.signum() == 0) BigDecimal.ZERO else totalAccrued.divide(
             totalEstimated,
@@ -111,7 +109,7 @@ object Calculators {
             coverageRatio = coverage,
             liquidAccrued = liquidAccrued.toMoney(),
             investedAccrued = investedAccrued.toMoney(),
-            isInvested = isInvested,
+            isInvested = hasEtfTransactions,
             historicalPerformance = null // Will be set by Controller if needed
         )
     }
