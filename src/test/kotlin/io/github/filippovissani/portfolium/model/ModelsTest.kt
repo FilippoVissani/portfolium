@@ -2,7 +2,6 @@ package io.github.filippovissani.portfolium.model
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import java.time.LocalDate
 
 class ModelsTest : StringSpec({
     fun bd(s: String) = s.toBigDecimal()
