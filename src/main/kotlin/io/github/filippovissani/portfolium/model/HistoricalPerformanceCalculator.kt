@@ -112,40 +112,4 @@ object HistoricalPerformanceCalculator {
         return totalValue.toMoney()
     }
 
-    /**
-     * Calculate year-to-date performance
-     */
-    fun calculateYTDPerformance(
-        transactions: List<InvestmentTransaction>,
-        priceSource: PriceDataSource,
-    ): HistoricalPerformance {
-        val today = LocalDate.now()
-        val yearStart = LocalDate.of(today.year, 1, 1)
-        return calculateHistoricalPerformance(
-            transactions = transactions,
-            priceSource = priceSource,
-            startDate = yearStart,
-            endDate = today,
-            intervalDays = 7, // Weekly data points
-        )
-    }
-
-    /**
-     * Calculate performance over the last N months
-     */
-    fun calculatePerformanceLastNMonths(
-        transactions: List<InvestmentTransaction>,
-        priceSource: PriceDataSource,
-        months: Long = 12,
-    ): HistoricalPerformance {
-        val today = LocalDate.now()
-        val startDate = today.minusMonths(months)
-        return calculateHistoricalPerformance(
-            transactions = transactions,
-            priceSource = priceSource,
-            startDate = startDate,
-            endDate = today,
-            intervalDays = 7, // Weekly data points
-        )
-    }
 }
