@@ -4,7 +4,16 @@ import io.github.filippovissani.portfolium.controller.config.ConfigLoader
 import io.github.filippovissani.portfolium.controller.datasource.CachedPriceDataSource
 import io.github.filippovissani.portfolium.controller.datasource.YahooFinancePriceDataSource
 import io.github.filippovissani.portfolium.controller.yaml.BankAccountLoaders
-import io.github.filippovissani.portfolium.model.*
+import io.github.filippovissani.portfolium.model.Calculators
+import io.github.filippovissani.portfolium.model.EmergencyFundBankAccount
+import io.github.filippovissani.portfolium.model.EtfBuyTransaction
+import io.github.filippovissani.portfolium.model.EtfSellTransaction
+import io.github.filippovissani.portfolium.model.HistoricalPerformance
+import io.github.filippovissani.portfolium.model.HistoricalPerformanceCalculator
+import io.github.filippovissani.portfolium.model.InvestmentBankAccount
+import io.github.filippovissani.portfolium.model.InvestmentTransaction
+import io.github.filippovissani.portfolium.model.MainBankAccount
+import io.github.filippovissani.portfolium.model.PlannedExpensesBankAccount
 import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.WebView
 import org.slf4j.LoggerFactory

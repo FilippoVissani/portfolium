@@ -1,7 +1,7 @@
 package io.github.filippovissani.portfolium.controller.config
 
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.Properties
 
 /**
  * Loads configuration from application.properties file in resources

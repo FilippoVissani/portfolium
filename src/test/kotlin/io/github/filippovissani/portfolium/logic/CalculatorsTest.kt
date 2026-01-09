@@ -1,6 +1,17 @@
 package io.github.filippovissani.portfolium.logic
 
-import io.github.filippovissani.portfolium.model.*
+import io.github.filippovissani.portfolium.model.Calculators
+import io.github.filippovissani.portfolium.model.DepositTransaction
+import io.github.filippovissani.portfolium.model.EmergencyFundBankAccount
+import io.github.filippovissani.portfolium.model.EmergencyFundSummary
+import io.github.filippovissani.portfolium.model.Investment
+import io.github.filippovissani.portfolium.model.InvestmentsSummary
+import io.github.filippovissani.portfolium.model.LiquidTransaction
+import io.github.filippovissani.portfolium.model.LiquiditySummary
+import io.github.filippovissani.portfolium.model.MainBankAccount
+import io.github.filippovissani.portfolium.model.PlannedExpenseEntry
+import io.github.filippovissani.portfolium.model.PlannedExpensesBankAccount
+import io.github.filippovissani.portfolium.model.PlannedExpensesSummary
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.math.BigDecimal
@@ -207,7 +218,15 @@ class CalculatorsTest :
             val d =
                 Calculators.buildPortfolio(
                     LiquiditySummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), bd2("0.00"), null),
-                    PlannedExpensesSummary(bd2("0.00"), bd2("0.00"), bd4("0.0000"), bd2("0.00"), bd2("0.00"), false, null),
+                    PlannedExpensesSummary(
+                        bd2("0.00"),
+                        bd2("0.00"),
+                        bd4("0.0000"),
+                        bd2("0.00"),
+                        bd2("0.00"),
+                        false,
+                        null,
+                    ),
                     EmergencyFundSummary(bd2("0.00"), bd2("0.00"), bd2("0.00"), "OK", true, null),
                     InvestmentsSummary(bd2("0.00"), bd2("0.00"), emptyList()),
                     null,

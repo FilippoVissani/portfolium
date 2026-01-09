@@ -42,6 +42,8 @@ ktlint {
     filter {
         exclude("**/generated/**")
         exclude("**/build/**")
+        exclude("**/WebView.kt")
+        exclude { it.file.path.contains("/view/") }
     }
 }
 

@@ -1,11 +1,16 @@
 package io.github.filippovissani.portfolium.controller.yaml
 
-import io.github.filippovissani.portfolium.model.*
+import io.github.filippovissani.portfolium.model.DepositTransaction
+import io.github.filippovissani.portfolium.model.EtfBuyTransaction
+import io.github.filippovissani.portfolium.model.LiquidTransaction
+import io.github.filippovissani.portfolium.model.PlannedExpenseEntry
+import io.github.filippovissani.portfolium.model.WithdrawalTransaction
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.io.File
 import java.math.BigDecimal
+import java.time.LocalDate
 
 class BankAccountLoadersTest :
     FunSpec({
@@ -35,7 +40,7 @@ class BankAccountLoadersTest :
             account.transactions.size shouldBe 2
             account.transactions[0] shouldBe
                 LiquidTransaction(
-                    date = java.time.LocalDate.of(2025, 1, 1),
+                    date = LocalDate.of(2025, 1, 1),
                     description = "Salary",
                     category = "Income",
                     amount = BigDecimal("500.00"),
@@ -75,13 +80,13 @@ class BankAccountLoadersTest :
             account.transactions.size shouldBe 2
             account.transactions[0] shouldBe
                 DepositTransaction(
-                    date = java.time.LocalDate.of(2025, 1, 1),
+                    date = LocalDate.of(2025, 1, 1),
                     amount = BigDecimal("500.00"),
                     description = "Initial deposit",
                 )
             account.transactions[1] shouldBe
                 WithdrawalTransaction(
-                    date = java.time.LocalDate.of(2025, 2, 1),
+                    date = LocalDate.of(2025, 2, 1),
                     amount = BigDecimal("100.00"),
                     description = "Use funds",
                 )
@@ -89,7 +94,7 @@ class BankAccountLoadersTest :
             account.plannedExpenses[0] shouldBe
                 PlannedExpenseEntry(
                     name = "Car",
-                    expirationDate = java.time.LocalDate.of(2026, 12, 31),
+                    expirationDate = LocalDate.of(2026, 12, 31),
                     estimatedAmount = BigDecimal("15000.00"),
                 )
             account.currentBalance.compareTo(BigDecimal("400.00")) shouldBe 0
