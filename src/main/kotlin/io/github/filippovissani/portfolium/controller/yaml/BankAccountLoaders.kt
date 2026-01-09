@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Loaders for specialized bank account types
  */
-object SpecializedBankAccountLoaders {
+object BankAccountLoaders {
     private val yaml = Yaml()
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 

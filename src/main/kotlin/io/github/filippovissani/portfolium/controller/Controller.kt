@@ -3,7 +3,7 @@ package io.github.filippovissani.portfolium.controller
 import io.github.filippovissani.portfolium.controller.config.ConfigLoader
 import io.github.filippovissani.portfolium.controller.datasource.CachedPriceDataSource
 import io.github.filippovissani.portfolium.controller.datasource.YahooFinancePriceDataSource
-import io.github.filippovissani.portfolium.controller.yaml.SpecializedBankAccountLoaders
+import io.github.filippovissani.portfolium.controller.yaml.BankAccountLoaders
 import io.github.filippovissani.portfolium.model.*
 import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.WebView
@@ -20,7 +20,7 @@ object Controller {
         // Load specialized bank accounts from YAML files
         val mainBankAccount = try {
             if (config.getMainBankAccountPath().exists()) {
-                SpecializedBankAccountLoaders.loadMainBankAccount(config.getMainBankAccountPath()).also {
+                BankAccountLoaders.loadMainBankAccount(config.getMainBankAccountPath()).also {
                     logger.info("Main bank account loaded: ${it.name}, ${it.transactions.size} transactions")
                 }
             } else {
@@ -34,7 +34,7 @@ object Controller {
 
         val plannedExpensesBankAccount = try {
             if (config.getPlannedExpensesBankAccountPath().exists()) {
-                SpecializedBankAccountLoaders.loadPlannedExpensesBankAccount(config.getPlannedExpensesBankAccountPath()).also {
+                BankAccountLoaders.loadPlannedExpensesBankAccount(config.getPlannedExpensesBankAccountPath()).also {
                     logger.info("Planned expenses bank account loaded: ${it.name}, ${it.transactions.size} transactions, ${it.plannedExpenses.size} planned expenses")
                 }
             } else {
@@ -48,7 +48,7 @@ object Controller {
 
         val emergencyFundBankAccount = try {
             if (config.getEmergencyFundBankAccountPath().exists()) {
-                SpecializedBankAccountLoaders.loadEmergencyFundBankAccount(config.getEmergencyFundBankAccountPath()).also {
+                BankAccountLoaders.loadEmergencyFundBankAccount(config.getEmergencyFundBankAccountPath()).also {
                     logger.info("Emergency fund bank account loaded: ${it.name}, ${it.transactions.size} transactions, target: ${it.targetMonthlyExpenses} months")
                 }
             } else {
@@ -62,7 +62,7 @@ object Controller {
 
         val investmentBankAccount = try {
             if (config.getInvestmentBankAccountPath().exists()) {
-                SpecializedBankAccountLoaders.loadInvestmentBankAccount(config.getInvestmentBankAccountPath()).also {
+                BankAccountLoaders.loadInvestmentBankAccount(config.getInvestmentBankAccountPath()).also {
                     logger.info("Investment bank account loaded: ${it.name}, ${it.transactions.size} transactions")
                 }
             } else {
