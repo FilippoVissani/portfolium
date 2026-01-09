@@ -4,8 +4,14 @@ kotlinCsv = "1.10.0"
 kotest = "6.0.7"
 ktor = "3.3.3"
 logback = "1.5.24"
-jacoco = "0.8.14"
 snakeyaml = "2.5"
+detekt = "1.23.7"
+kover = "0.8.3"
+versions = "0.51.0"
+dependencyCheck = "10.0.4"
+spotless = "6.25.0"
+diktat = "2.0.0"
+konsist = "0.16.1"
 
 [libraries]
 # CSV utilities
@@ -17,6 +23,8 @@ kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotli
 # Kotest
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+# Konsist for architecture testing
+konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 # Ktor for web server
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
@@ -30,3 +38,15 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 # ktlint plugin
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.3.0" }
+# Detekt - Static code analysis
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+# Kover - JetBrains code coverage
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+# Gradle Versions Plugin - Dependency updates checker
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+# OWASP Dependency Check - Security vulnerability scanner
+dependencyCheck = { id = "org.owasp.dependencycheck", version.ref = "dependencyCheck" }
+# Spotless - Code formatter
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+# Diktat - Strict Kotlin code style checker
+diktat = { id = "com.saveourtool.diktat", version.ref = "diktat" }

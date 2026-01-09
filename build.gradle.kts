@@ -1,7 +1,12 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktlint)
-    jacoco
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.versions)
+    alias(libs.plugins.dependencyCheck)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.diktat)
     application
 }
 
@@ -27,6 +32,10 @@ dependencies {
     // Kotest
     testImplementation(libs.findLibrary("kotest-assertions-core").get())
     testImplementation(libs.findLibrary("kotest-runner-junit5").get())
+    // Konsist for architecture testing
+    testImplementation(libs.findLibrary("konsist").get())
+    // Detekt formatting
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${libs.findVersion("detekt").get()}")
 }
 
 kotlin {
@@ -53,33 +62,125 @@ application {
 
 tasks.test {
     useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport) // Generate coverage report after tests
 }
 
-jacoco {
-    toolVersion = libs.findVersion("jacoco").get().toString()
+tasks.check {
+    dependsOn(tasks.named("ktlintCheck"))
+    dependsOn(tasks.named("detekt"))
+    dependsOn(tasks.named("koverVerify"))
 }
 
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // Tests are required to run before generating the report
+// ============================================
+// Code Quality Plugin Configurations
+// ============================================
+
+// Detekt - Static Code Analysis
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
+    baseline = file("$projectDir/config/detekt/baseline.xml")
+    parallel = true
+    autoCorrect = true
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     reports {
-        xml.required.set(true)
         html.required.set(true)
-        csv.required.set(false)
+        xml.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(true)
+        md.required.set(true)
     }
+    jvmTarget = "22"
 }
 
-tasks.jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = "0.0".toBigDecimal() // Set minimum coverage threshold
+// Kover - Code Coverage
+kover {
+    reports {
+        total {
+            html {
+                onCheck = true
+            }
+            xml {
+                onCheck = true
+            }
+            verify {
+                onCheck = true
+                rule {
+                    minBound(0) // Minimum coverage threshold (0% to start)
+                }
             }
         }
     }
 }
 
-tasks.check {
-    dependsOn(tasks.jacocoTestCoverageVerification)
-    dependsOn(tasks.named("ktlintCheck"))
+// Gradle Versions Plugin - Dependency Updates
+tasks.named("dependencyUpdates").configure {
+    this as com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+    rejectVersionIf {
+        isNonStable(candidate.version) && !isNonStable(currentVersion)
+    }
+    checkForGradleUpdate = true
+    outputFormatter = "html"
+    outputDir = "build/reports/dependencyUpdates"
+    reportfileName = "report"
+}
+
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
+}
+
+// OWASP Dependency Check - Security Scanning
+dependencyCheck {
+    formats = listOf("HTML", "JSON", "XML")
+    outputDirectory = "${layout.buildDirectory.get()}/reports/dependency-check"
+    scanConfigurations = listOf("runtimeClasspath")
+    suppressionFile = "$projectDir/config/owasp/suppressions.xml"
+    failBuildOnCVSS = 7.0f // Fail build if CVSS score >= 7
+    analyzers.assemblyEnabled = false
+    analyzers.nuspecEnabled = false
+}
+
+// Spotless - Code Formatting
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("**/build/**/*.kt")
+        ktlint("1.5.0")
+            .editorConfigOverride(
+                mapOf(
+                    "indent_size" to "4",
+                    "max_line_length" to "120",
+                    "ktlint_standard_no-wildcard-imports" to "disabled"
+                )
+            )
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+    }
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint("1.5.0")
+    }
+    format("misc") {
+        target("**/*.md", "**/*.yml", "**/*.yaml", "**/.gitignore")
+        targetExclude("**/build/**")
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+}
+
+// Diktat - Strict Kotlin Style Checker
+diktat {
+    inputs {
+        include("src/**/*.kt")
+        exclude("**/build/**")
+    }
+    debug = false
+    ignoreFailures = true // Set to false to enforce strict rules
 }
