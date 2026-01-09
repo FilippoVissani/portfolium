@@ -3,8 +3,6 @@ package io.github.filippovissani.portfolium.view.html
 import io.github.filippovissani.portfolium.model.Portfolio
 import io.github.filippovissani.portfolium.view.data.DataSerializer
 import io.github.filippovissani.portfolium.view.utils.FormattingUtils.formatPercentage
-import kotlinx.html.*
-import java.math.RoundingMode
 
 /**
  * Generates JavaScript data initialization for charts

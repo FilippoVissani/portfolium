@@ -34,12 +34,6 @@ object Calculators {
     // Investment summary from list of Investment objects
     fun summarizeInvestments(items: List<Investment>): InvestmentsSummary = InvestmentService.calculateInvestmentsSummary(items)
 
-    // Investment summary from InvestmentBankAccount
-    fun summarizeInvestments(
-        account: InvestmentBankAccount,
-        currentPricesByTicker: Map<String, BigDecimal>,
-    ): InvestmentsSummary = InvestmentService.calculateInvestmentsSummary(account, currentPricesByTicker)
-
     // Build complete portfolio from all summaries
     fun buildPortfolio(
         liquidity: LiquiditySummary,
