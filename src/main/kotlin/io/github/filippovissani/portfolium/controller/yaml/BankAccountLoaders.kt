@@ -1,16 +1,16 @@
 package io.github.filippovissani.portfolium.controller.yaml
 
-import io.github.filippovissani.portfolium.model.BankAccountTransaction
-import io.github.filippovissani.portfolium.model.DepositTransaction
-import io.github.filippovissani.portfolium.model.EmergencyFundBankAccount
-import io.github.filippovissani.portfolium.model.EtfBuyTransaction
-import io.github.filippovissani.portfolium.model.EtfSellTransaction
-import io.github.filippovissani.portfolium.model.InvestmentBankAccount
-import io.github.filippovissani.portfolium.model.LiquidTransaction
-import io.github.filippovissani.portfolium.model.MainBankAccount
-import io.github.filippovissani.portfolium.model.PlannedExpenseEntry
-import io.github.filippovissani.portfolium.model.PlannedExpensesBankAccount
-import io.github.filippovissani.portfolium.model.WithdrawalTransaction
+import io.github.filippovissani.portfolium.model.domain.BankAccountTransaction
+import io.github.filippovissani.portfolium.model.domain.DepositTransaction
+import io.github.filippovissani.portfolium.model.domain.EmergencyFundBankAccount
+import io.github.filippovissani.portfolium.model.domain.EtfBuyTransaction
+import io.github.filippovissani.portfolium.model.domain.EtfSellTransaction
+import io.github.filippovissani.portfolium.model.domain.InvestmentBankAccount
+import io.github.filippovissani.portfolium.model.domain.LiquidTransaction
+import io.github.filippovissani.portfolium.model.domain.MainBankAccount
+import io.github.filippovissani.portfolium.model.domain.PlannedExpenseEntry
+import io.github.filippovissani.portfolium.model.domain.PlannedExpensesBankAccount
+import io.github.filippovissani.portfolium.model.domain.WithdrawalTransaction
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.math.BigDecimal

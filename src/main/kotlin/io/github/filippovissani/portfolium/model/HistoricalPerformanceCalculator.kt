@@ -1,14 +1,13 @@
 package io.github.filippovissani.portfolium.model
 
-import io.github.filippovissani.portfolium.controller.csv.CsvUtils.toMoney
 import io.github.filippovissani.portfolium.controller.datasource.PriceDataSource
-import io.github.filippovissani.portfolium.model.util.times
-import java.math.BigDecimal
-import java.math.RoundingMode
+import io.github.filippovissani.portfolium.model.service.HistoricalPerformanceService
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import kotlin.math.pow
 
+/**
+ * Backward compatibility wrapper - delegates to new service class
+ * @deprecated Use HistoricalPerformanceService instead
+ */
 object HistoricalPerformanceCalculator {
     /**
      * Calculate historical performance of investments over a date range
@@ -24,91 +23,12 @@ object HistoricalPerformanceCalculator {
         startDate: LocalDate,
         endDate: LocalDate = LocalDate.now(),
         intervalDays: Long = 30,
-    ): HistoricalPerformance {
-        val dataPoints = mutableListOf<PerformanceDataPoint>()
-
-        // Generate dates at regular intervals
-        var currentDate = startDate
-        while (!currentDate.isAfter(endDate)) {
-            val portfolioValue = calculatePortfolioValueAtDate(transactions, priceSource, currentDate)
-            dataPoints.add(PerformanceDataPoint(currentDate, portfolioValue))
-            currentDate = currentDate.plusDays(intervalDays)
-        }
-
-        // Add final date if not already included
-        if (dataPoints.isEmpty() || dataPoints.last().date != endDate) {
-            val finalValue = calculatePortfolioValueAtDate(transactions, priceSource, endDate)
-            dataPoints.add(PerformanceDataPoint(endDate, finalValue))
-        }
-
-        // Calculate returns
-        val initialValue = dataPoints.firstOrNull()?.value ?: BigDecimal.ZERO
-        val finalValue = dataPoints.lastOrNull()?.value ?: BigDecimal.ZERO
-
-        val totalReturn =
-            if (initialValue.signum() == 0) {
-                BigDecimal.ZERO
-            } else {
-                ((finalValue - initialValue) / initialValue * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
-            }
-
-        // Calculate annualized return
-        val daysBetween = ChronoUnit.DAYS.between(startDate, endDate)
-        val annualizedReturn =
-            if (daysBetween > 0 && initialValue.signum() != 0) {
-                val years = daysBetween.toBigDecimal().divide(BigDecimal(365.25), 6, RoundingMode.HALF_UP)
-                if (years > BigDecimal.ZERO) {
-                    val ratio = finalValue.divide(initialValue, 6, RoundingMode.HALF_UP)
-                    // Convert to double for power calculation, then back to BigDecimal
-                    val ratioDouble = ratio.toDouble()
-                    val yearsDouble = years.toDouble()
-                    val annualized = (ratioDouble.pow(1.0 / yearsDouble) - 1.0) * 100.0
-                    BigDecimal.valueOf(annualized).setScale(2, RoundingMode.HALF_UP)
-                } else {
-                    null
-                }
-            } else {
-                null
-            }
-
-        return HistoricalPerformance(
-            dataPoints = dataPoints,
-            totalReturn = totalReturn,
-            annualizedReturn = annualizedReturn,
+    ): HistoricalPerformance =
+        HistoricalPerformanceService.calculateHistoricalPerformance(
+            transactions,
+            priceSource,
+            startDate,
+            endDate,
+            intervalDays,
         )
-    }
-
-    /**
-     * Calculate portfolio value at a specific date
-     */
-    private fun calculatePortfolioValueAtDate(
-        transactions: List<InvestmentTransaction>,
-        priceSource: PriceDataSource,
-        date: LocalDate,
-    ): BigDecimal {
-        // Group transactions by ticker up to the given date
-        data class Position(
-            var quantity: BigDecimal,
-        )
-
-        val positions = mutableMapOf<String, Position>()
-
-        transactions
-            .filter { !it.date.isAfter(date) }
-            .forEach { tx ->
-                val position = positions.getOrPut(tx.ticker) { Position(BigDecimal.ZERO) }
-                position.quantity += tx.quantity
-            }
-
-        // Calculate total value using historical prices
-        var totalValue = BigDecimal.ZERO
-        positions.forEach { (ticker, position) ->
-            if (position.quantity.signum() != 0) {
-                val price = priceSource.getHistoricalPrice(ticker, date) ?: BigDecimal.ZERO
-                totalValue += position.quantity * price
-            }
-        }
-
-        return totalValue.toMoney()
-    }
 }
