@@ -212,44 +212,67 @@ object Controller {
         priceSource: io.github.filippovissani.portfolium.controller.datasource.PriceDataSource,
         config: io.github.filippovissani.portfolium.controller.config.Config,
     ): HistoricalPerformance? {
-        val transactions =
-            when (account) {
-                is InvestmentBankAccount -> account.transactions
-                is PlannedExpensesBankAccount -> account.transactions
-                is EmergencyFundBankAccount -> account.transactions
-                else -> emptyList()
+        val transactions = extractTransactionsFromAccount(account)
+        val etfTransactions = convertToInvestmentTransactions(transactions)
+        return calculateHistoricalPerformanceFromTransactions(etfTransactions, priceSource, config)
+    }
+
+    private fun calculateCombinedHistoricalPerformance(
+        accounts: List<Any>,
+        priceSource: io.github.filippovissani.portfolium.controller.datasource.PriceDataSource,
+        config: io.github.filippovissani.portfolium.controller.config.Config,
+    ): HistoricalPerformance? {
+        val allEtfTransactions =
+            accounts.flatMap { account ->
+                val transactions = extractTransactionsFromAccount(account)
+                convertToInvestmentTransactions(transactions)
             }
+        return calculateHistoricalPerformanceFromTransactions(allEtfTransactions, priceSource, config)
+    }
 
-        val etfTransactions =
-            transactions.mapNotNull { tx ->
-                when (tx) {
-                    is EtfBuyTransaction ->
-                        InvestmentTransaction(
-                            date = tx.date,
-                            etf = tx.name,
-                            ticker = tx.ticker,
-                            area = tx.area,
-                            quantity = tx.quantity,
-                            price = tx.price,
-                            fees = tx.fees,
-                        )
+    private fun extractTransactionsFromAccount(account: Any): List<Any> =
+        when (account) {
+            is InvestmentBankAccount -> account.transactions
+            is PlannedExpensesBankAccount -> account.transactions
+            is EmergencyFundBankAccount -> account.transactions
+            else -> emptyList()
+        }
 
-                    is EtfSellTransaction ->
-                        InvestmentTransaction(
-                            date = tx.date,
-                            etf = tx.name,
-                            ticker = tx.ticker,
-                            area = tx.area,
-                            quantity = -tx.quantity,
-                            price = tx.price,
-                            fees = tx.fees,
-                        )
+    private fun convertToInvestmentTransactions(transactions: List<Any>): List<InvestmentTransaction> =
+        transactions.mapNotNull { tx ->
+            when (tx) {
+                is EtfBuyTransaction ->
+                    InvestmentTransaction(
+                        date = tx.date,
+                        etf = tx.name,
+                        ticker = tx.ticker,
+                        area = tx.area,
+                        quantity = tx.quantity,
+                        price = tx.price,
+                        fees = tx.fees,
+                    )
 
-                    else -> null
-                }
+                is EtfSellTransaction ->
+                    InvestmentTransaction(
+                        date = tx.date,
+                        etf = tx.name,
+                        ticker = tx.ticker,
+                        area = tx.area,
+                        quantity = -tx.quantity,
+                        price = tx.price,
+                        fees = tx.fees,
+                    )
+
+                else -> null
             }
+        }
 
-        return if (etfTransactions.isNotEmpty()) {
+    private fun calculateHistoricalPerformanceFromTransactions(
+        etfTransactions: List<InvestmentTransaction>,
+        priceSource: io.github.filippovissani.portfolium.controller.datasource.PriceDataSource,
+        config: io.github.filippovissani.portfolium.controller.config.Config,
+    ): HistoricalPerformance? =
+        if (etfTransactions.isNotEmpty()) {
             val earliestDate = etfTransactions.minOfOrNull { it.date } ?: java.time.LocalDate.now()
             HistoricalPerformanceCalculator.calculateHistoricalPerformance(
                 transactions = etfTransactions,
@@ -261,63 +284,4 @@ object Controller {
         } else {
             null
         }
-    }
-
-    private fun calculateCombinedHistoricalPerformance(
-        accounts: List<Any>,
-        priceSource: io.github.filippovissani.portfolium.controller.datasource.PriceDataSource,
-        config: io.github.filippovissani.portfolium.controller.config.Config,
-    ): HistoricalPerformance? {
-        val allEtfTransactions =
-            accounts.flatMap { account ->
-                val transactions =
-                    when (account) {
-                        is InvestmentBankAccount -> account.transactions
-                        is PlannedExpensesBankAccount -> account.transactions
-                        is EmergencyFundBankAccount -> account.transactions
-                        else -> emptyList()
-                    }
-
-                transactions.mapNotNull { tx ->
-                    when (tx) {
-                        is EtfBuyTransaction ->
-                            InvestmentTransaction(
-                                date = tx.date,
-                                etf = tx.name,
-                                ticker = tx.ticker,
-                                area = tx.area,
-                                quantity = tx.quantity,
-                                price = tx.price,
-                                fees = tx.fees,
-                            )
-
-                        is EtfSellTransaction ->
-                            InvestmentTransaction(
-                                date = tx.date,
-                                etf = tx.name,
-                                ticker = tx.ticker,
-                                area = tx.area,
-                                quantity = -tx.quantity,
-                                price = tx.price,
-                                fees = tx.fees,
-                            )
-
-                        else -> null
-                    }
-                }
-            }
-
-        return if (allEtfTransactions.isNotEmpty()) {
-            val earliestDate = allEtfTransactions.minOfOrNull { it.date } ?: java.time.LocalDate.now()
-            HistoricalPerformanceCalculator.calculateHistoricalPerformance(
-                transactions = allEtfTransactions,
-                priceSource = priceSource,
-                startDate = earliestDate,
-                endDate = java.time.LocalDate.now(),
-                intervalDays = config.historicalPerformanceIntervalDays,
-            )
-        } else {
-            null
-        }
-    }
 }
