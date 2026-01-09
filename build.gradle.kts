@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.dependencyCheck)
     alias(libs.plugins.spotless)
     alias(libs.plugins.diktat)
+    alias(libs.plugins.detekt)
     application
 }
 
@@ -64,6 +65,7 @@ tasks.test {
 tasks.check {
     dependsOn(tasks.named("ktlintCheck"))
     dependsOn(tasks.named("koverVerify"))
+    dependsOn(tasks.named("detekt"))
 }
 
 // ============================================
@@ -159,3 +161,27 @@ diktat {
     debug = false
     ignoreFailures = true // Set to false to enforce strict rules
 }
+
+// Detekt - Static Code Analysis
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
+    baseline = file("$projectDir/config/detekt/baseline.xml")
+    parallel = true
+    ignoreFailures = false
+    autoCorrect = false
+    basePath = projectDir.absolutePath
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    jvmTarget = "22"
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        txt.required.set(false)
+        sarif.required.set(true)
+        md.required.set(false)
+    }
+}
+
