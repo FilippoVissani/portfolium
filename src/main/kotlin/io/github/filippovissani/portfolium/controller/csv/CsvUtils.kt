@@ -28,10 +28,7 @@ object CsvUtils {
         throw IllegalArgumentException("Cannot parse date: '$v'")
     }
 
-    fun parseBigDecimal(
-        value: String?,
-        default: BigDecimal = BigDecimal.ZERO,
-    ): BigDecimal {
+    fun parseBigDecimal(value: String?, default: BigDecimal = BigDecimal.ZERO): BigDecimal {
         val v = value?.trim() ?: return default
         if (v.isEmpty()) return default
         // Support both comma and dot decimals

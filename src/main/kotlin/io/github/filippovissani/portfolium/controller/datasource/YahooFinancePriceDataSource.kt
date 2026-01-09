@@ -27,54 +27,48 @@ class YahooFinancePriceDataSource(
         private val logger = LoggerFactory.getLogger(YahooFinancePriceDataSource::class.java)
     }
 
-    override fun getCurrentPrice(ticker: String): BigDecimal? =
-        try {
-            val url = "$BASE_URL/$ticker?interval=1d&range=1d"
-            val response = makeRequest(url)
-            parseCurrentPrice(response)
-        } catch (e: Exception) {
-            logger.error("Error fetching current price for ticker: {}", ticker, e)
-            null
-        }
+    override fun getCurrentPrice(ticker: String): BigDecimal? = try {
+        val url = "$BASE_URL/$ticker?interval=1d&range=1d"
+        val response = makeRequest(url)
+        parseCurrentPrice(response)
+    } catch (e: Exception) {
+        logger.error("Error fetching current price for ticker: {}", ticker, e)
+        null
+    }
 
-    override fun getHistoricalPrice(
-        ticker: String,
-        date: LocalDate,
-    ): BigDecimal? =
-        try {
-            // Get prices for the day and a few days before/after to handle weekends/holidays
-            val startDate = date.minusDays(5)
-            val endDate = date.plusDays(5)
-            val prices = getHistoricalPrices(ticker, startDate, endDate)
+    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = try {
+        // Get prices for the day and a few days before/after to handle weekends/holidays
+        val startDate = date.minusDays(5)
+        val endDate = date.plusDays(5)
+        val prices = getHistoricalPrices(ticker, startDate, endDate)
 
-            // Try to find the exact date first
-            prices[date]
-                ?: // If not found, get the closest date before the target date
-                prices
-                    .filter { it.key <= date }
-                    .maxByOrNull { it.key }
-                    ?.value
-        } catch (e: Exception) {
-            logger.error("Error fetching historical price for ticker: {} on date: {}", ticker, date, e)
-            null
-        }
+        // Try to find the exact date first
+        prices[date]
+            ?: // If not found, get the closest date before the target date
+            prices
+                .filter { it.key <= date }
+                .maxByOrNull { it.key }
+                ?.value
+    } catch (e: Exception) {
+        logger.error("Error fetching historical price for ticker: {} on date: {}", ticker, date, e)
+        null
+    }
 
     override fun getHistoricalPrices(
         ticker: String,
         startDate: LocalDate,
         endDate: LocalDate,
-    ): Map<LocalDate, BigDecimal> =
-        try {
-            val period1 = startDate.atStartOfDay(ZoneId.of("UTC")).toEpochSecond()
-            val period2 = endDate.atStartOfDay(ZoneId.of("UTC")).toEpochSecond()
-            val url = "$BASE_URL/$ticker?period1=$period1&period2=$period2&interval=1d"
+    ): Map<LocalDate, BigDecimal> = try {
+        val period1 = startDate.atStartOfDay(ZoneId.of("UTC")).toEpochSecond()
+        val period2 = endDate.atStartOfDay(ZoneId.of("UTC")).toEpochSecond()
+        val url = "$BASE_URL/$ticker?period1=$period1&period2=$period2&interval=1d"
 
-            val response = makeRequest(url)
-            parseHistoricalPrices(response)
-        } catch (e: Exception) {
-            logger.error("Error fetching historical prices for ticker: {}", ticker, e)
-            emptyMap()
-        }
+        val response = makeRequest(url)
+        parseHistoricalPrices(response)
+    } catch (e: Exception) {
+        logger.error("Error fetching historical prices for ticker: {}", ticker, e)
+        emptyMap()
+    }
 
     private fun makeRequest(url: String): String {
         val request =

@@ -27,11 +27,7 @@ data class MainBankAccount(
 /**
  * Planned expense entry
  */
-data class PlannedExpenseEntry(
-    val name: String,
-    val expirationDate: LocalDate?,
-    val estimatedAmount: BigDecimal,
-)
+data class PlannedExpenseEntry(val name: String, val expirationDate: LocalDate?, val estimatedAmount: BigDecimal)
 
 /**
  * Bank account for planned expenses
@@ -106,10 +102,7 @@ object BankAccountHelper {
     /**
      * Calculate balance from transactions
      */
-    fun calculateBalance(
-        initialBalance: BigDecimal,
-        transactions: List<BankAccountTransaction>,
-    ): BigDecimal {
+    fun calculateBalance(initialBalance: BigDecimal, transactions: List<BankAccountTransaction>): BigDecimal {
         var balance = initialBalance
         transactions.forEach { transaction ->
             when (transaction) {

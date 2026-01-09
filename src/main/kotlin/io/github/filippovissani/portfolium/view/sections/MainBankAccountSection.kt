@@ -24,27 +24,27 @@ object MainBankAccountSection {
                     icon = "fas fa-coins",
                     iconColor = "info",
                     title = "Balance",
-                    value = formatCurrency(portfolio.liquidity.net)
+                    value = formatCurrency(portfolio.liquidity.net),
                 )
                 metricCard(
                     icon = "fas fa-arrow-up",
                     iconColor = "success",
                     title = "Total Income",
                     value = formatCurrency(portfolio.liquidity.totalIncome),
-                    valueClass = "positive"
+                    valueClass = "positive",
                 )
                 metricCard(
                     icon = "fas fa-arrow-down",
                     iconColor = "danger",
                     title = "Total Expense",
                     value = formatCurrency(portfolio.liquidity.totalExpense),
-                    valueClass = "negative"
+                    valueClass = "negative",
                 )
                 metricCard(
                     icon = "fas fa-calendar-alt",
                     iconColor = "warning",
                     title = "Avg Monthly (12m)",
-                    value = formatCurrency(portfolio.liquidity.avgMonthlyExpense12m)
+                    value = formatCurrency(portfolio.liquidity.avgMonthlyExpense12m),
                 )
             }
 
@@ -54,12 +54,12 @@ object MainBankAccountSection {
                     simpleChartContainer(
                         chartId = "mainBankMonthlyTrendChart",
                         title = "Monthly Trend",
-                        icon = "fas fa-chart-line"
+                        icon = "fas fa-chart-line",
                     )
                     simpleChartContainer(
                         chartId = "mainBankExpenseCategoryChart",
                         title = "Expense by Category",
-                        icon = "fas fa-chart-pie"
+                        icon = "fas fa-chart-pie",
                     )
                 }
             }

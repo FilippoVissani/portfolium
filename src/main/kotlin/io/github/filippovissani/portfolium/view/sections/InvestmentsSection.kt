@@ -28,13 +28,13 @@ object InvestmentsSection {
                     icon = "fas fa-coins",
                     iconColor = "success",
                     title = "Current Value",
-                    value = formatCurrency(portfolio.investments.totalCurrent)
+                    value = formatCurrency(portfolio.investments.totalCurrent),
                 )
                 metricCard(
                     icon = "fas fa-hand-holding-usd",
                     iconColor = "primary",
                     title = "Invested",
-                    value = formatCurrency(portfolio.investments.totalInvested)
+                    value = formatCurrency(portfolio.investments.totalInvested),
                 )
 
                 val pnl = portfolio.investments.totalCurrent - portfolio.investments.totalInvested
@@ -43,7 +43,7 @@ object InvestmentsSection {
                     iconColor = "warning",
                     title = "P&L",
                     value = formatCurrency(pnl),
-                    valueClass = getValueClass(pnl)
+                    valueClass = getValueClass(pnl),
                 )
             }
 
@@ -53,7 +53,7 @@ object InvestmentsSection {
                     simpleChartContainer(
                         chartId = "investmentsBreakdownChart",
                         title = "Portfolio Breakdown",
-                        icon = "fas fa-chart-pie"
+                        icon = "fas fa-chart-pie",
                     )
                 }
 
@@ -64,7 +64,7 @@ object InvestmentsSection {
                         title = "Historical Performance",
                         icon = "fas fa-chart-area",
                         badge = badge?.first,
-                        badgeClass = badge?.second ?: ""
+                        badgeClass = badge?.second ?: "",
                     )
                 }
             }

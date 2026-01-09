@@ -14,10 +14,7 @@ object LiquidityService {
     /**
      * Calculate liquidity summary from main bank account
      */
-    fun calculateLiquiditySummary(
-        account: MainBankAccount,
-        today: LocalDate = LocalDate.now(),
-    ): LiquiditySummary {
+    fun calculateLiquiditySummary(account: MainBankAccount, today: LocalDate = LocalDate.now()): LiquiditySummary {
         val totalIncome = account.totalIncome
         val totalExpense = account.totalExpenses
         val net = account.currentBalance

@@ -28,19 +28,19 @@ object PlannedExpensesSection {
                     icon = "fas fa-piggy-bank",
                     iconColor = "primary",
                     title = "Accrued Capital",
-                    value = formatCurrency(portfolio.planned.totalAccrued)
+                    value = formatCurrency(portfolio.planned.totalAccrued),
                 )
                 metricCard(
                     icon = "fas fa-bullseye",
                     iconColor = "warning",
                     title = "Target Capital",
-                    value = formatCurrency(portfolio.planned.totalEstimated)
+                    value = formatCurrency(portfolio.planned.totalEstimated),
                 )
                 metricCard(
                     icon = "fas fa-percentage",
                     iconColor = "info",
                     title = "Coverage",
-                    value = formatPercentage(portfolio.planned.coverageRatio)
+                    value = formatPercentage(portfolio.planned.coverageRatio),
                 )
                 metricCard(
                     icon = "fas fa-chart-line",
@@ -48,8 +48,8 @@ object PlannedExpensesSection {
                     title = "Invested",
                     value = calculatePercentage(
                         portfolio.planned.investedAccrued,
-                        portfolio.planned.totalAccrued
-                    )
+                        portfolio.planned.totalAccrued,
+                    ),
                 )
                 metricCard(
                     icon = "fas fa-water",
@@ -57,8 +57,8 @@ object PlannedExpensesSection {
                     title = "Liquid",
                     value = calculatePercentage(
                         portfolio.planned.liquidAccrued,
-                        portfolio.planned.totalAccrued
-                    )
+                        portfolio.planned.totalAccrued,
+                    ),
                 )
             }
 
@@ -67,7 +67,7 @@ object PlannedExpensesSection {
                 simpleChartContainer(
                     chartId = "plannedExpensesCoverageChart",
                     title = "Coverage Progress",
-                    icon = "fas fa-chart-bar"
+                    icon = "fas fa-chart-bar",
                 )
 
                 if (portfolio.planned.isInvested && portfolio.planned.historicalPerformance != null) {
@@ -77,7 +77,7 @@ object PlannedExpensesSection {
                         title = "Historical Performance",
                         icon = "fas fa-chart-area",
                         badge = badge?.first,
-                        badgeClass = badge?.second ?: ""
+                        badgeClass = badge?.second ?: "",
                     )
                 }
             }

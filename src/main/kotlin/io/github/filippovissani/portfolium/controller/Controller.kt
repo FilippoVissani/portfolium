@@ -49,7 +49,7 @@ object Controller {
         val liquiditySummary = LiquidityService.calculateLiquiditySummary(mainBankAccount)
         var plannedSummary = PlannedExpensesService.calculatePlannedExpensesSummary(
             plannedExpensesBankAccount,
-            currentPrices
+            currentPrices,
         )
         var emergencySummary =
             EmergencyFundService.calculateEmergencyFundSummary(
@@ -80,7 +80,7 @@ object Controller {
                     HistoricalPerformanceOrchestrator.calculateForAccount(
                         plannedExpensesBankAccount,
                         priceSource,
-                        config
+                        config,
                     )
                 } catch (e: Exception) {
                     logger.warn("Could not calculate planned expenses historical performance", e)

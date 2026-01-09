@@ -36,4 +36,3 @@ BREAKING CHANGE: the `symbol` column is now `ticker`.
 ## Release process
 
 Releases are automated by semantic-release. When Conventional Commits are merged into `main`, a release will be created with notes and the built JAR attached.
-

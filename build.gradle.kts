@@ -70,7 +70,6 @@ tasks.check {
 // Code Quality Plugin Configurations
 // ============================================
 
-
 // Kover - Code Coverage
 kover {
     reports {
@@ -131,8 +130,8 @@ spotless {
                 mapOf(
                     "indent_size" to "4",
                     "max_line_length" to "120",
-                    "ktlint_standard_no-wildcard-imports" to "disabled"
-                )
+                    "ktlint_standard_no-wildcard-imports" to "disabled",
+                ),
             )
         trimTrailingWhitespace()
         indentWithSpaces(4)

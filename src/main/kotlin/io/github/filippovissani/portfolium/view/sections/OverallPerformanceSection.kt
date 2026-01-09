@@ -27,19 +27,19 @@ object OverallPerformanceSection {
                     icon = "fas fa-wallet",
                     iconColor = "primary",
                     title = "Total Net Worth",
-                    value = formatCurrency(portfolio.totalNetWorth)
+                    value = formatCurrency(portfolio.totalNetWorth),
                 )
                 metricCard(
                     icon = "fas fa-chart-line",
                     iconColor = "success",
                     title = "Invested",
-                    value = formatPercentage(portfolio.percentInvested)
+                    value = formatPercentage(portfolio.percentInvested),
                 )
                 metricCard(
                     icon = "fas fa-water",
                     iconColor = "info",
                     title = "Liquid",
-                    value = formatPercentage(portfolio.percentLiquid)
+                    value = formatPercentage(portfolio.percentLiquid),
                 )
             }
 
@@ -48,13 +48,13 @@ object OverallPerformanceSection {
                 simpleChartContainer(
                     chartId = "overallAssetAllocationChart",
                     title = "Asset Allocation",
-                    icon = "fas fa-chart-pie"
+                    icon = "fas fa-chart-pie",
                 )
 
                 simpleChartContainer(
                     chartId = "overallNetWorthChart",
                     title = "Net Worth Distribution",
-                    icon = "fas fa-layer-group"
+                    icon = "fas fa-layer-group",
                 )
 
                 if (portfolio.overallHistoricalPerformance != null) {
@@ -65,7 +65,7 @@ object OverallPerformanceSection {
                         icon = "fas fa-chart-area",
                         badge = badge?.first,
                         badgeClass = badge?.second ?: "",
-                        fullWidth = true
+                        fullWidth = true,
                     )
                 }
             }

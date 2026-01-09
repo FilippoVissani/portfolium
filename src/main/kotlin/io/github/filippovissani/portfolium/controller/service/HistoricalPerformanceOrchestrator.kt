@@ -22,11 +22,7 @@ object HistoricalPerformanceOrchestrator {
     /**
      * Calculate historical performance for a single account
      */
-    fun calculateForAccount(
-        account: Any,
-        priceSource: PriceDataSource,
-        config: Config,
-    ): HistoricalPerformance? {
+    fun calculateForAccount(account: Any, priceSource: PriceDataSource, config: Config): HistoricalPerformance? {
         val transactions = extractTransactionsFromAccount(account)
         val etfTransactions = convertToInvestmentTransactions(transactions)
         return calculateFromTransactions(etfTransactions, priceSource, config)
@@ -35,11 +31,7 @@ object HistoricalPerformanceOrchestrator {
     /**
      * Calculate combined historical performance from multiple accounts
      */
-    fun calculateCombined(
-        accounts: List<Any>,
-        priceSource: PriceDataSource,
-        config: Config,
-    ): HistoricalPerformance? {
+    fun calculateCombined(accounts: List<Any>, priceSource: PriceDataSource, config: Config): HistoricalPerformance? {
         val allEtfTransactions =
             accounts.flatMap { account ->
                 val transactions = extractTransactionsFromAccount(account)
@@ -51,13 +43,12 @@ object HistoricalPerformanceOrchestrator {
     /**
      * Extract transactions from any account type
      */
-    private fun extractTransactionsFromAccount(account: Any): List<Any> =
-        when (account) {
-            is InvestmentBankAccount -> account.transactions
-            is PlannedExpensesBankAccount -> account.transactions
-            is EmergencyFundBankAccount -> account.transactions
-            else -> emptyList()
-        }
+    private fun extractTransactionsFromAccount(account: Any): List<Any> = when (account) {
+        is InvestmentBankAccount -> account.transactions
+        is PlannedExpensesBankAccount -> account.transactions
+        is EmergencyFundBankAccount -> account.transactions
+        else -> emptyList()
+    }
 
     /**
      * Convert bank account transactions to investment transactions
@@ -98,17 +89,16 @@ object HistoricalPerformanceOrchestrator {
         etfTransactions: List<InvestmentTransaction>,
         priceSource: PriceDataSource,
         config: Config,
-    ): HistoricalPerformance? =
-        if (etfTransactions.isNotEmpty()) {
-            val earliestDate = etfTransactions.minOfOrNull { it.date } ?: LocalDate.now()
-            HistoricalPerformanceService.calculateHistoricalPerformance(
-                transactions = etfTransactions,
-                priceSource = priceSource,
-                startDate = earliestDate,
-                endDate = LocalDate.now(),
-                intervalDays = config.historicalPerformanceIntervalDays,
-            )
-        } else {
-            null
-        }
+    ): HistoricalPerformance? = if (etfTransactions.isNotEmpty()) {
+        val earliestDate = etfTransactions.minOfOrNull { it.date } ?: LocalDate.now()
+        HistoricalPerformanceService.calculateHistoricalPerformance(
+            transactions = etfTransactions,
+            priceSource = priceSource,
+            startDate = earliestDate,
+            endDate = LocalDate.now(),
+            intervalDays = config.historicalPerformanceIntervalDays,
+        )
+    } else {
+        null
+    }
 }

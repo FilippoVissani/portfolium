@@ -27,20 +27,20 @@ object EmergencyFundSection {
                     icon = "fas fa-wallet",
                     iconColor = "success",
                     title = "Current Capital",
-                    value = formatCurrency(portfolio.emergency.currentCapital)
+                    value = formatCurrency(portfolio.emergency.currentCapital),
                 )
                 metricCard(
                     icon = "fas fa-bullseye",
                     iconColor = "warning",
                     title = "Target Capital",
-                    value = formatCurrency(portfolio.emergency.targetCapital)
+                    value = formatCurrency(portfolio.emergency.targetCapital),
                 )
                 metricCard(
                     icon = "fas fa-chart-line",
                     iconColor = "info",
                     title = "Delta",
                     value = formatCurrency(portfolio.emergency.deltaToTarget),
-                    valueClass = getValueClass(portfolio.emergency.deltaToTarget, zeroIsPositive = false)
+                    valueClass = getValueClass(portfolio.emergency.deltaToTarget, zeroIsPositive = false),
                 )
                 metricCard(
                     icon = "fas fa-info-circle",
@@ -50,7 +50,7 @@ object EmergencyFundSection {
                     valueClass = "small-value " + when {
                         portfolio.emergency.status.contains("OK", ignoreCase = true) -> "status-good"
                         else -> "status-warning"
-                    }
+                    },
                 )
             }
 
@@ -59,7 +59,7 @@ object EmergencyFundSection {
                 simpleChartContainer(
                     chartId = "emergencyFundProgressChart",
                     title = "Target Progress",
-                    icon = "fas fa-chart-bar"
+                    icon = "fas fa-chart-bar",
                 )
 
                 if (!portfolio.emergency.isLiquid && portfolio.emergency.historicalPerformance != null) {
@@ -69,7 +69,7 @@ object EmergencyFundSection {
                         title = "Historical Performance",
                         icon = "fas fa-chart-area",
                         badge = badge?.first,
-                        badgeClass = badge?.second ?: ""
+                        badgeClass = badge?.second ?: "",
                     )
                 }
             }

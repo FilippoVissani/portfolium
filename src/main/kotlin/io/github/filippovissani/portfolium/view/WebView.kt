@@ -28,10 +28,7 @@ object WebView {
      * @param portfolio The portfolio data to display
      * @param port The port to run the server on (default: 8080)
      */
-    fun startServer(
-        portfolio: Portfolio,
-        port: Int = 8080,
-    ) {
+    fun startServer(portfolio: Portfolio, port: Int = 8080) {
         portfolioData = portfolio
 
         embeddedServer(Netty, port = port) {

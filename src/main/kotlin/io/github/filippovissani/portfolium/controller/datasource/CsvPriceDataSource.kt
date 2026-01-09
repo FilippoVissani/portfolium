@@ -10,9 +10,7 @@ import java.time.LocalDate
 /**
  * CSV-based price data source - uses the existing current_prices.csv file
  */
-class CsvPriceDataSource(
-    private val csvFile: File,
-) : PriceDataSource {
+class CsvPriceDataSource(private val csvFile: File) : PriceDataSource {
     private val reader = csvReader { skipEmptyLine = true }
     private val pricesCache: Map<String, BigDecimal> by lazy { loadPrices() }
 
@@ -33,10 +31,7 @@ class CsvPriceDataSource(
 
     override fun getCurrentPrice(ticker: String): BigDecimal? = pricesCache[ticker]
 
-    override fun getHistoricalPrice(
-        ticker: String,
-        date: LocalDate,
-    ): BigDecimal? {
+    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? {
         // CSV doesn't support historical data, return current price as fallback
         return getCurrentPrice(ticker)
     }
@@ -50,9 +45,8 @@ class CsvPriceDataSource(
         return emptyMap()
     }
 
-    override fun getCurrentPrices(tickers: List<String>): Map<String, BigDecimal> =
-        tickers
-            .mapNotNull { ticker ->
-                pricesCache[ticker]?.let { ticker to it }
-            }.toMap()
+    override fun getCurrentPrices(tickers: List<String>): Map<String, BigDecimal> = tickers
+        .mapNotNull { ticker ->
+            pricesCache[ticker]?.let { ticker to it }
+        }.toMap()
 }

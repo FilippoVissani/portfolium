@@ -14,10 +14,8 @@ import java.time.LocalDate
  */
 object Calculators {
     // Liquidity summary from MainBankAccount
-    fun summarizeLiquidity(
-        account: MainBankAccount,
-        today: LocalDate = LocalDate.now(),
-    ): LiquiditySummary = LiquidityService.calculateLiquiditySummary(account, today)
+    fun summarizeLiquidity(account: MainBankAccount, today: LocalDate = LocalDate.now()): LiquiditySummary =
+        LiquidityService.calculateLiquiditySummary(account, today)
 
     // Planned expenses summary from PlannedExpensesBankAccount
     fun summarizePlanned(
@@ -26,15 +24,12 @@ object Calculators {
     ): PlannedExpensesSummary = PlannedExpensesService.calculatePlannedExpensesSummary(account, currentPrices)
 
     // Emergency fund summary from EmergencyFundBankAccount
-    fun summarizeEmergency(
-        account: EmergencyFundBankAccount,
-        avgMonthlyExpense: BigDecimal,
-    ): EmergencyFundSummary = EmergencyFundService.calculateEmergencyFundSummary(account, avgMonthlyExpense)
+    fun summarizeEmergency(account: EmergencyFundBankAccount, avgMonthlyExpense: BigDecimal): EmergencyFundSummary =
+        EmergencyFundService.calculateEmergencyFundSummary(account, avgMonthlyExpense)
 
     // Investment summary from list of Investment objects
-    fun summarizeInvestments(
-        items: List<Investment>
-    ): InvestmentsSummary = InvestmentService.calculateInvestmentsSummary(items)
+    fun summarizeInvestments(items: List<Investment>): InvestmentsSummary =
+        InvestmentService.calculateInvestmentsSummary(items)
 
     // Build complete portfolio from all summaries
     fun buildPortfolio(
@@ -44,13 +39,12 @@ object Calculators {
         investments: InvestmentsSummary,
         historicalPerformance: HistoricalPerformance? = null,
         overallHistoricalPerformance: HistoricalPerformance? = null,
-    ): Portfolio =
-        PortfolioService.buildPortfolio(
-            liquidity,
-            planned,
-            emergency,
-            investments,
-            historicalPerformance,
-            overallHistoricalPerformance,
-        )
+    ): Portfolio = PortfolioService.buildPortfolio(
+        liquidity,
+        planned,
+        emergency,
+        investments,
+        historicalPerformance,
+        overallHistoricalPerformance,
+    )
 }

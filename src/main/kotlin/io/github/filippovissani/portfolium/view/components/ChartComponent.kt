@@ -12,7 +12,7 @@ object ChartComponent {
         icon: String,
         badge: String? = null,
         badgeClass: String = "",
-        fullWidth: Boolean = false
+        fullWidth: Boolean = false,
     ) {
         div(classes = "chart-container${if (fullWidth) " full-width" else ""}") {
             div(classes = "chart-title") {
@@ -31,11 +31,7 @@ object ChartComponent {
         }
     }
 
-    fun DIV.simpleChartContainer(
-        chartId: String,
-        title: String,
-        icon: String
-    ) {
+    fun DIV.simpleChartContainer(chartId: String, title: String, icon: String) {
         div(classes = "chart-container") {
             div(classes = "chart-title") {
                 unsafe { raw("""<i class="$icon"></i>""") }

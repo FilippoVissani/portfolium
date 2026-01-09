@@ -22,10 +22,7 @@ class CachedPriceDataSourceTest :
                         return BigDecimal("100.50")
                     }
 
-                    override fun getHistoricalPrice(
-                        ticker: String,
-                        date: LocalDate,
-                    ): BigDecimal? = null
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -59,10 +56,7 @@ class CachedPriceDataSourceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(
-                        ticker: String,
-                        date: LocalDate,
-                    ): BigDecimal {
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal {
                         callCount++
                         return BigDecimal("150.25")
                     }
@@ -97,10 +91,7 @@ class CachedPriceDataSourceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal = BigDecimal("200.00")
 
-                    override fun getHistoricalPrice(
-                        ticker: String,
-                        date: LocalDate,
-                    ): BigDecimal? = null
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -122,10 +113,7 @@ class CachedPriceDataSourceTest :
                         return BigDecimal("200.00")
                     }
 
-                    override fun getHistoricalPrice(
-                        ticker: String,
-                        date: LocalDate,
-                    ): BigDecimal? = null
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -163,10 +151,7 @@ class CachedPriceDataSourceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(
-                        ticker: String,
-                        date: LocalDate,
-                    ): BigDecimal? = null
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? = null
 
                     override fun getHistoricalPrices(
                         ticker: String,

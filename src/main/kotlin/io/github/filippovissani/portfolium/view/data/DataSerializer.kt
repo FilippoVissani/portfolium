@@ -22,7 +22,7 @@ object DataSerializer {
                 "dataPoints" to dataPoints,
                 "totalReturn" to hp.totalReturn,
                 "annualizedReturn" to hp.annualizedReturn,
-            )
+            ),
         )
     }
 
@@ -46,7 +46,7 @@ object DataSerializer {
                     listOf(it.first, it.second)
                 },
                 "totalByCategory" to stats.totalByCategory,
-            )
+            ),
         )
     }
 

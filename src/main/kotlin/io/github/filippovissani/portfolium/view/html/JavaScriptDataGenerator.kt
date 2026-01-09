@@ -8,8 +8,7 @@ import io.github.filippovissani.portfolium.view.utils.FormattingUtils.formatPerc
  * Generates JavaScript data initialization for charts
  */
 object JavaScriptDataGenerator {
-    fun generatePortfolioData(portfolio: Portfolio): String {
-        return """
+    fun generatePortfolioData(portfolio: Portfolio): String = """
             const portfolioData = {
                 percentLiquid: ${formatPercentage(portfolio.percentLiquid, 2).removeSuffix("%")},
                 percentInvested: ${formatPercentage(portfolio.percentInvested, 2).removeSuffix("%")},
@@ -27,8 +26,8 @@ object JavaScriptDataGenerator {
                     status: "${portfolio.emergency.status}",
                     isLiquid: ${portfolio.emergency.isLiquid},
                     historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(
-            portfolio.emergency.historicalPerformance
-        )}
+        portfolio.emergency.historicalPerformance,
+    )}
                 },
                 investments: {
                     totalCurrent: ${portfolio.investments.totalCurrent},
@@ -43,16 +42,15 @@ object JavaScriptDataGenerator {
                     investedAccrued: ${portfolio.planned.investedAccrued},
                     isInvested: ${portfolio.planned.isInvested},
                     historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(
-            portfolio.planned.historicalPerformance
-        )}
+        portfolio.planned.historicalPerformance,
+    )}
                 },
                 historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(
-            portfolio.historicalPerformance
-        )},
+        portfolio.historicalPerformance,
+    )},
                 overallHistoricalPerformance: ${DataSerializer.serializeHistoricalPerformance(
-            portfolio.overallHistoricalPerformance
-        )}
+        portfolio.overallHistoricalPerformance,
+    )}
             };
-        """.trimIndent()
-    }
+    """.trimIndent()
 }

@@ -88,10 +88,7 @@ class CachedPriceDataSource(
         return price
     }
 
-    override fun getHistoricalPrice(
-        ticker: String,
-        date: LocalDate,
-    ): BigDecimal? {
+    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal? {
         // Check cache first
         val cachedPrice =
             lock.read {
@@ -207,20 +204,19 @@ class CachedPriceDataSource(
     /**
      * Get cache statistics
      */
-    fun getCacheStats(): Map<String, Any> =
-        lock.read {
-            val currentPrices = cache.values.count { it.type == CURRENT_PRICE_TYPE }
-            val historicalPrices = cache.values.count { it.type == HISTORICAL_PRICE_TYPE }
-            val freshCurrentPrices = cache.values.count { it.type == CURRENT_PRICE_TYPE && isFresh(it) }
+    fun getCacheStats(): Map<String, Any> = lock.read {
+        val currentPrices = cache.values.count { it.type == CURRENT_PRICE_TYPE }
+        val historicalPrices = cache.values.count { it.type == HISTORICAL_PRICE_TYPE }
+        val freshCurrentPrices = cache.values.count { it.type == CURRENT_PRICE_TYPE && isFresh(it) }
 
-            mapOf(
-                "totalEntries" to cache.size,
-                "currentPrices" to currentPrices,
-                "historicalPrices" to historicalPrices,
-                "freshCurrentPrices" to freshCurrentPrices,
-                "stalCurrentPrices" to (currentPrices - freshCurrentPrices),
-            )
-        }
+        mapOf(
+            "totalEntries" to cache.size,
+            "currentPrices" to currentPrices,
+            "historicalPrices" to historicalPrices,
+            "freshCurrentPrices" to freshCurrentPrices,
+            "stalCurrentPrices" to (currentPrices - freshCurrentPrices),
+        )
+    }
 
     private fun ensureCacheDirectoryExists() {
         val directory = cacheFile.parentFile
@@ -314,8 +310,6 @@ class CachedPriceDataSource(
 
     private fun currentPriceCacheKey(ticker: String): String = "$ticker|$CURRENT_PRICE_TYPE"
 
-    private fun historicalPriceCacheKey(
-        ticker: String,
-        date: LocalDate,
-    ): String = "$ticker|$HISTORICAL_PRICE_TYPE|$date"
+    private fun historicalPriceCacheKey(ticker: String, date: LocalDate): String =
+        "$ticker|$HISTORICAL_PRICE_TYPE|$date"
 }

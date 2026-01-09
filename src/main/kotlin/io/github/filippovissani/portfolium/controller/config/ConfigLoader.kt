@@ -64,16 +64,15 @@ object ConfigLoader {
     /**
      * Get default configuration
      */
-    private fun getDefaultConfig(): Config =
-        Config(
-            dataPath = "data",
-            mainBankAccountFile = "main_bank_account.yaml",
-            plannedExpensesBankAccountFile = "planned_expenses_bank_account.yaml",
-            emergencyFundBankAccountFile = "emergency_fund_bank_account.yaml",
-            investmentBankAccountFile = "investment_bank_account.yaml",
-            priceCacheFile = "price_cache.csv",
-            cacheDurationHours = 24L,
-            historicalPerformanceIntervalDays = 7L,
-            serverPort = 8080,
-        )
+    private fun getDefaultConfig(): Config = Config(
+        dataPath = "data",
+        mainBankAccountFile = "main_bank_account.yaml",
+        plannedExpensesBankAccountFile = "planned_expenses_bank_account.yaml",
+        emergencyFundBankAccountFile = "emergency_fund_bank_account.yaml",
+        investmentBankAccountFile = "investment_bank_account.yaml",
+        priceCacheFile = "price_cache.csv",
+        cacheDurationHours = 24L,
+        historicalPerformanceIntervalDays = 7L,
+        serverPort = 8080,
+    )
 }
