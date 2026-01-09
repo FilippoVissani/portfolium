@@ -467,36 +467,6 @@ object WebView {
                             }
 
                             div(classes = "container") {
-                                // Overview Summary Cards
-                                div(classes = "summary-cards") {
-                                    div(classes = "card") {
-                                        div(classes = "card-header") {
-                                            div(classes = "card-icon primary") {
-                                                unsafe { raw("""<i class="fas fa-wallet"></i>""") }
-                                            }
-                                            h2 { +"Net Worth" }
-                                        }
-                                        div(classes = "value") { +"€${portfolioData.totalNetWorth}" }
-                                    }
-                                    div(classes = "card") {
-                                        div(classes = "card-header") {
-                                            div(classes = "card-icon info") {
-                                                unsafe { raw("""<i class="fas fa-water"></i>""") }
-                                            }
-                                            h2 { +"Liquidity" }
-                                        }
-                                        div(classes = "value") { +"€${portfolioData.liquidity.net}" }
-                                    }
-                                    div(classes = "card") {
-                                        div(classes = "card-header") {
-                                            div(classes = "card-icon success") {
-                                                unsafe { raw("""<i class="fas fa-chart-line"></i>""") }
-                                            }
-                                            h2 { +"Investments" }
-                                        }
-                                        div(classes = "value") { +"€${portfolioData.investments.totalCurrent}" }
-                                    }
-                                }
 
                                 // SECTION 1: Main Bank Account
                                 renderMainBankAccountSection(portfolioData)

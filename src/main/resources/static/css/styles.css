@@ -40,8 +40,8 @@ body {
 
 .header-wrapper {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    padding: 3rem 1.5rem 8rem;
-    margin-bottom: -5rem;
+    padding: 3rem 1.5rem 3rem;
+    margin-bottom: 2rem;
     box-shadow: var(--shadow-lg);
 }
 
