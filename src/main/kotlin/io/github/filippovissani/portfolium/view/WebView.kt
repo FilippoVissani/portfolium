@@ -506,8 +506,8 @@ object WebView {
                                                             "monthlyTrend" to portfolioData.liquidity.statistics?.monthlyTrend?.map { 
                                                                 mapOf("yearMonth" to it.yearMonth, "income" to it.income, "expense" to it.expense, "net" to it.net)
                                                             },
-                                                            "topExpenseCategories" to portfolioData.liquidity.statistics?.topExpenseCategories,
-                                                            "topIncomeCategories" to portfolioData.liquidity.statistics?.topIncomeCategories,
+                                                            "topExpenseCategories" to portfolioData.liquidity.statistics?.topExpenseCategories?.map { listOf(it.first, it.second) },
+                                                            "topIncomeCategories" to portfolioData.liquidity.statistics?.topIncomeCategories?.map { listOf(it.first, it.second) },
                                                             "totalByCategory" to portfolioData.liquidity.statistics?.totalByCategory
                                                         ))
                                                     } else "null"
