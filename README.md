@@ -358,24 +358,8 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 
-## Roadmap
-
-Future enhancements under consideration:
-
-- [ ] Support for cryptocurrency tracking
-- [ ] Multiple currency support with conversion
-- [ ] Export reports to PDF
-- [ ] Database persistence option
-- [ ] Mobile-responsive dashboard improvements
-- [ ] Real-time price updates via WebSocket
-- [ ] Budget planning and tracking
-- [ ] Tax reporting features
-
 ## Author
 
 **Filippo Vissani** - [GitHub](https://github.com/filippovissani)
 
 ---
-
-**Note**: This tool is for personal finance tracking and educational purposes. Always consult with a qualified financial advisor for investment decisions.
-
