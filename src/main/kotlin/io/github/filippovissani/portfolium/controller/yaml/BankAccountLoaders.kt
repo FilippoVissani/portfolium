@@ -31,19 +31,21 @@ object BankAccountLoaders {
             return MainBankAccount()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        val data = yaml.load<Any>(file.inputStream()) as? Map<String, Any> ?: emptyMap()
+        val raw = file.inputStream().use { stream ->
+            yaml.loadAs(stream, MainBankAccountYaml::class.java) ?: MainBankAccountYaml()
+        }
 
-        val name = data["name"]?.toString() ?: "Main Account"
-        val initialBalance = parseBigDecimal(data["initialBalance"])
-
-        @Suppress("UNCHECKED_CAST")
-        val transactionsList = data["transactions"] as? List<*> ?: emptyList<Any>()
-
-        val transactions = transactionsList.mapNotNull { item ->
-            @Suppress("UNCHECKED_CAST")
-            val txData = item as? Map<String, Any> ?: return@mapNotNull null
-            parseLiquidTransaction(txData)
+        val name = raw.name ?: "Main Account"
+        val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
+        val transactions = (raw.transactions ?: emptyList()).mapNotNull { tx ->
+            val date = parseDate(tx.date) ?: return@mapNotNull null
+            LiquidTransaction(
+                date = date,
+                description = tx.description.orEmpty(),
+                category = tx.category.orEmpty(),
+                amount = tx.amount ?: BigDecimal.ZERO,
+                note = tx.note
+            )
         }
 
         return MainBankAccount(name, initialBalance, transactions)
@@ -69,29 +71,21 @@ object BankAccountLoaders {
             return PlannedExpensesBankAccount()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        val data = yaml.load<Any>(file.inputStream()) as? Map<String, Any> ?: emptyMap()
-
-        val name = data["name"]?.toString() ?: "Planned Expenses"
-        val initialBalance = parseBigDecimal(data["initialBalance"])
-
-        @Suppress("UNCHECKED_CAST")
-        val transactionsList = data["transactions"] as? List<*> ?: emptyList<Any>()
-        val transactions = transactionsList.mapNotNull { item ->
-            @Suppress("UNCHECKED_CAST")
-            val txData = item as? Map<String, Any> ?: return@mapNotNull null
-            parseGenericTransaction(txData)
+        val raw = file.inputStream().use { stream ->
+            yaml.loadAs(stream, PlannedExpensesBankAccountYaml::class.java) ?: PlannedExpensesBankAccountYaml()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        val plannedExpensesList = data["plannedExpenses"] as? List<*> ?: emptyList<Any>()
-        val plannedExpenses = plannedExpensesList.mapNotNull { item ->
-            @Suppress("UNCHECKED_CAST")
-            val peData = item as? Map<String, Any> ?: return@mapNotNull null
+        val name = raw.name ?: "Planned Expenses"
+        val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
+
+        val transactions = (raw.transactions ?: emptyList()).mapNotNull { parseGenericTransaction(it) }
+
+        val plannedExpenses = (raw.plannedExpenses ?: emptyList()).mapNotNull { pe ->
+            val namePe = pe.name ?: return@mapNotNull null
             PlannedExpenseEntry(
-                name = peData["name"]?.toString() ?: "",
-                expirationDate = parseDate(peData["expirationDate"]?.toString()),
-                estimatedAmount = parseBigDecimal(peData["estimatedAmount"])
+                name = namePe,
+                expirationDate = parseDate(pe.expirationDate),
+                estimatedAmount = pe.estimatedAmount ?: BigDecimal.ZERO
             )
         }
 
@@ -115,20 +109,15 @@ object BankAccountLoaders {
             return EmergencyFundBankAccount()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        val data = yaml.load<Any>(file.inputStream()) as? Map<String, Any> ?: emptyMap()
-
-        val name = data["name"]?.toString() ?: "Emergency Fund"
-        val initialBalance = parseBigDecimal(data["initialBalance"])
-        val targetMonthlyExpenses = (data["targetMonthlyExpenses"] as? Number)?.toInt() ?: 6
-
-        @Suppress("UNCHECKED_CAST")
-        val transactionsList = data["transactions"] as? List<*> ?: emptyList<Any>()
-        val transactions = transactionsList.mapNotNull { item ->
-            @Suppress("UNCHECKED_CAST")
-            val txData = item as? Map<String, Any> ?: return@mapNotNull null
-            parseGenericTransaction(txData)
+        val raw = file.inputStream().use { stream ->
+            yaml.loadAs(stream, EmergencyFundBankAccountYaml::class.java) ?: EmergencyFundBankAccountYaml()
         }
+
+        val name = raw.name ?: "Emergency Fund"
+        val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
+        val targetMonthlyExpenses = raw.targetMonthlyExpenses ?: 6
+
+        val transactions = (raw.transactions ?: emptyList()).mapNotNull { parseGenericTransaction(it) }
 
         return EmergencyFundBankAccount(name, initialBalance, transactions, targetMonthlyExpenses)
     }
@@ -156,85 +145,71 @@ object BankAccountLoaders {
             return InvestmentBankAccount()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        val data = yaml.load<Any>(file.inputStream()) as? Map<String, Any> ?: emptyMap()
-
-        val name = data["name"]?.toString() ?: "Investments"
-        val initialBalance = parseBigDecimal(data["initialBalance"])
-
-        @Suppress("UNCHECKED_CAST")
-        val transactionsList = data["transactions"] as? List<*> ?: emptyList<Any>()
-        val transactions = transactionsList.mapNotNull { item ->
-            @Suppress("UNCHECKED_CAST")
-            val txData = item as? Map<String, Any> ?: return@mapNotNull null
-            parseInvestmentTransaction(txData)
+        val raw = file.inputStream().use { stream ->
+            yaml.loadAs(stream, InvestmentBankAccountYaml::class.java) ?: InvestmentBankAccountYaml()
         }
+
+        val name = raw.name ?: "Investments"
+        val initialBalance = raw.initialBalance ?: BigDecimal.ZERO
+
+        val transactions = (raw.transactions ?: emptyList()).mapNotNull { parseInvestmentTransaction(it) }
 
         return InvestmentBankAccount(name, initialBalance, transactions)
     }
 
-    private fun parseLiquidTransaction(txData: Map<String, Any>): LiquidTransaction? {
-        val date = parseDate(txData["date"]?.toString()) ?: return null
-        return LiquidTransaction(
-            date = date,
-            description = txData["description"]?.toString() ?: "",
-            category = txData["category"]?.toString() ?: "",
-            amount = parseBigDecimal(txData["amount"]),
-            note = txData["note"]?.toString()
-        )
-    }
+    // Mapping helpers from YAML DTOs to domain transactions
 
-    private fun parseGenericTransaction(txData: Map<String, Any>): BankAccountTransaction? {
-        val type = txData["type"]?.toString()?.lowercase() ?: return null
-        val date = parseDate(txData["date"]?.toString()) ?: return null
+    private fun parseGenericTransaction(tx: GenericTransactionYaml): BankAccountTransaction? {
+        val type = tx.type?.lowercase() ?: return null
+        val date = parseDate(tx.date) ?: return null
 
         return when (type) {
             "deposit" -> DepositTransaction(
                 date = date,
-                amount = parseBigDecimal(txData["amount"]),
-                description = txData["description"]?.toString()
+                amount = tx.amount ?: BigDecimal.ZERO,
+                description = tx.description
             )
             "withdrawal" -> WithdrawalTransaction(
                 date = date,
-                amount = parseBigDecimal(txData["amount"]),
-                description = txData["description"]?.toString()
+                amount = tx.amount ?: BigDecimal.ZERO,
+                description = tx.description
             )
             else -> null
         }
     }
 
-    private fun parseInvestmentTransaction(txData: Map<String, Any>): BankAccountTransaction? {
-        val type = txData["type"]?.toString()?.lowercase() ?: return null
-        val date = parseDate(txData["date"]?.toString()) ?: return null
+    private fun parseInvestmentTransaction(tx: InvestmentTransactionYaml): BankAccountTransaction? {
+        val type = tx.type?.lowercase() ?: return null
+        val date = parseDate(tx.date) ?: return null
 
         return when (type) {
             "deposit" -> DepositTransaction(
                 date = date,
-                amount = parseBigDecimal(txData["amount"]),
-                description = txData["description"]?.toString()
+                amount = tx.amount ?: BigDecimal.ZERO,
+                description = tx.description
             )
             "withdrawal" -> WithdrawalTransaction(
                 date = date,
-                amount = parseBigDecimal(txData["amount"]),
-                description = txData["description"]?.toString()
+                amount = tx.amount ?: BigDecimal.ZERO,
+                description = tx.description
             )
             "etf_buy", "buy_etf" -> EtfBuyTransaction(
                 date = date,
-                name = txData["name"]?.toString() ?: "",
-                ticker = txData["ticker"]?.toString() ?: "",
-                area = txData["area"]?.toString(),
-                quantity = parseBigDecimal(txData["quantity"]),
-                price = parseBigDecimal(txData["price"]),
-                fees = txData["fees"]?.let { parseBigDecimal(it) }
+                name = tx.name.orEmpty(),
+                ticker = tx.ticker.orEmpty(),
+                area = tx.area,
+                quantity = tx.quantity ?: BigDecimal.ZERO,
+                price = tx.price ?: BigDecimal.ZERO,
+                fees = tx.fees
             )
             "etf_sell", "sell_etf" -> EtfSellTransaction(
                 date = date,
-                name = txData["name"]?.toString() ?: "",
-                ticker = txData["ticker"]?.toString() ?: "",
-                area = txData["area"]?.toString(),
-                quantity = parseBigDecimal(txData["quantity"]),
-                price = parseBigDecimal(txData["price"]),
-                fees = txData["fees"]?.let { parseBigDecimal(it) }
+                name = tx.name.orEmpty(),
+                ticker = tx.ticker.orEmpty(),
+                area = tx.area,
+                quantity = tx.quantity ?: BigDecimal.ZERO,
+                price = tx.price ?: BigDecimal.ZERO,
+                fees = tx.fees
             )
             else -> null
         }
@@ -248,13 +223,65 @@ object BankAccountLoaders {
             null
         }
     }
-
-    private fun parseBigDecimal(value: Any?): BigDecimal {
-        return when (value) {
-            is Number -> BigDecimal(value.toString())
-            is String -> value.toBigDecimalOrNull() ?: BigDecimal.ZERO
-            else -> BigDecimal.ZERO
-        }
-    }
 }
 
+// YAML DTOs (public, JavaBean-style) for SnakeYAML binding
+class MainBankAccountYaml {
+    var name: String? = null
+    var initialBalance: BigDecimal? = null
+    var transactions: List<LiquidTransactionYaml>? = null
+}
+
+class LiquidTransactionYaml {
+    var date: String? = null
+    var description: String? = null
+    var category: String? = null
+    var amount: BigDecimal? = null
+    var note: String? = null
+}
+
+class PlannedExpensesBankAccountYaml {
+    var name: String? = null
+    var initialBalance: BigDecimal? = null
+    var transactions: List<GenericTransactionYaml>? = null
+    var plannedExpenses: List<PlannedExpenseEntryYaml>? = null
+}
+
+class PlannedExpenseEntryYaml {
+    var name: String? = null
+    var expirationDate: String? = null
+    var estimatedAmount: BigDecimal? = null
+}
+
+class EmergencyFundBankAccountYaml {
+    var name: String? = null
+    var initialBalance: BigDecimal? = null
+    var targetMonthlyExpenses: Int? = null
+    var transactions: List<GenericTransactionYaml>? = null
+}
+
+class InvestmentBankAccountYaml {
+    var name: String? = null
+    var initialBalance: BigDecimal? = null
+    var transactions: List<InvestmentTransactionYaml>? = null
+}
+
+class GenericTransactionYaml {
+    var type: String? = null
+    var date: String? = null
+    var amount: BigDecimal? = null
+    var description: String? = null
+}
+
+class InvestmentTransactionYaml {
+    var type: String? = null
+    var date: String? = null
+    var name: String? = null
+    var ticker: String? = null
+    var area: String? = null
+    var quantity: BigDecimal? = null
+    var price: BigDecimal? = null
+    var fees: BigDecimal? = null
+    var amount: BigDecimal? = null // for deposit/withdrawal reuse
+    var description: String? = null // for deposit/withdrawal reuse
+}
