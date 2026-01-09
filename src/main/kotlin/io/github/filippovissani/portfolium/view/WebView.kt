@@ -150,8 +150,8 @@ object WebView {
                             unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
                             +"Historical Performance"
                             val hp = portfolio.planned.historicalPerformance
-                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                            if (hp.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -234,8 +234,8 @@ object WebView {
                             unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
                             +"Historical Performance"
                             val hp = portfolio.emergency.historicalPerformance
-                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                            if (hp.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -308,8 +308,8 @@ object WebView {
                             unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
                             +"Historical Performance"
                             val hp = portfolio.historicalPerformance
-                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                            if (hp.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
@@ -421,8 +421,8 @@ object WebView {
                             unsafe { raw("""<i class="fas fa-chart-area"></i>""") }
                             +"Overall Historical Performance"
                             val hp = portfolio.overallHistoricalPerformance
-                            if (hp?.totalReturn != java.math.BigDecimal.ZERO) {
-                                val returnClass = if (hp?.totalReturn!! >= java.math.BigDecimal.ZERO) "positive" else "negative"
+                            if (hp.totalReturn != java.math.BigDecimal.ZERO) {
+                                val returnClass = if (hp.totalReturn >= java.math.BigDecimal.ZERO) "positive" else "negative"
                                 span(classes = "return-badge $returnClass") {
                                     +"${hp.totalReturn}%"
                                 }
