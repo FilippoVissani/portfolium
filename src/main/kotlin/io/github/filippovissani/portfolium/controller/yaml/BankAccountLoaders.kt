@@ -271,6 +271,12 @@ class GenericTransactionYaml {
     var date: String? = null
     var amount: BigDecimal? = null
     var description: String? = null
+    var ticker: String? = null
+    var area: String? = null
+    var quantity: Int? = null
+    var price: BigDecimal? = null
+    var fees: BigDecimal? = null
+    var name: String? = null
 }
 
 class InvestmentTransactionYaml {
