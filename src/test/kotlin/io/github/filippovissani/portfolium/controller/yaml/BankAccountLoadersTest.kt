@@ -170,10 +170,18 @@ class BankAccountLoadersTest :
         }
 
         test("missing file returns default accounts") {
-            BankAccountLoaders.loadMainBankAccount(File("/non/existent/file-main.yaml")).name shouldBe "Main Account"
-            BankAccountLoaders.loadPlannedExpensesBankAccount(File("/non/existent/file-planned.yaml")).name shouldBe "Planned Expenses"
-            BankAccountLoaders.loadEmergencyFundBankAccount(File("/non/existent/file-em.yaml")).name shouldBe "Emergency Fund"
-            BankAccountLoaders.loadInvestmentBankAccount(File("/non/existent/file-inv.yaml")).name shouldBe "Investments"
+            BankAccountLoaders
+                .loadMainBankAccount(File("/non/existent/file-main.yaml"))
+                .name shouldBe "Main Account"
+            BankAccountLoaders
+                .loadPlannedExpensesBankAccount(File("/non/existent/file-planned.yaml"))
+                .name shouldBe "Planned Expenses"
+            BankAccountLoaders
+                .loadEmergencyFundBankAccount(File("/non/existent/file-em.yaml"))
+                .name shouldBe "Emergency Fund"
+            BankAccountLoaders
+                .loadInvestmentBankAccount(File("/non/existent/file-inv.yaml"))
+                .name shouldBe "Investments"
         }
     })
 

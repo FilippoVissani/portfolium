@@ -186,7 +186,8 @@ class CalculatorsTest :
             val s = Calculators.summarizePlanned(account)
             s.totalEstimated shouldBe bd2("0.00")
             s.totalAccrued shouldBe bd2("10.00")
-            // coverageRatio is computed as BigDecimal.ZERO when totalEstimated is zero; compare numerically to avoid scale sensitivity
+            // coverageRatio is computed as BigDecimal.ZERO when totalEstimated is zero
+            // compare numerically to avoid scale sensitivity
             s.coverageRatio.compareTo(BigDecimal.ZERO) shouldBe 0
             s.isInvested shouldBe false
         }
