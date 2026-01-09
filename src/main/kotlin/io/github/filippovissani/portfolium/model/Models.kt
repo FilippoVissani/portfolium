@@ -184,106 +184,10 @@ data class PlannedExpensesBankAccount(
     val plannedExpenses: List<PlannedExpenseEntry> = emptyList(),
 ) {
     val currentBalance: BigDecimal
-        get() {
-            var balance = initialBalance
-            transactions.forEach { transaction ->
-                when (transaction) {
-                    is DepositTransaction -> balance += transaction.amount
-                    is WithdrawalTransaction -> balance -= transaction.amount
-                    is EtfBuyTransaction -> {
-                        val totalCost =
-                            (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
-                        balance -= totalCost
-                    }
-
-                    is EtfSellTransaction -> {
-                        val totalProceeds =
-                            (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
-                        balance += totalProceeds
-                    }
-
-                    else -> {}
-                }
-            }
-            return balance
-        }
+        get() = calculateBalance(initialBalance, transactions)
 
     val etfHoldings: Map<String, EtfHolding>
-        get() {
-            val holdings = mutableMapOf<String, MutableList<EtfTransaction>>()
-
-            transactions.forEach { transaction ->
-                when (transaction) {
-                    is EtfBuyTransaction -> {
-                        val key = transaction.ticker
-                        holdings
-                            .getOrPut(key) { mutableListOf() }
-                            .add(
-                                EtfTransaction(
-                                    transaction.date,
-                                    transaction.quantity,
-                                    transaction.price,
-                                    transaction.fees,
-                                    transaction.name,
-                                    transaction.area,
-                                ),
-                            )
-                    }
-
-                    is EtfSellTransaction -> {
-                        val key = transaction.ticker
-                        holdings
-                            .getOrPut(key) { mutableListOf() }
-                            .add(
-                                EtfTransaction(
-                                    transaction.date,
-                                    -transaction.quantity,
-                                    transaction.price,
-                                    transaction.fees,
-                                    transaction.name,
-                                    transaction.area,
-                                ),
-                            )
-                    }
-
-                    else -> {}
-                }
-            }
-
-            return holdings
-                .mapValues { (ticker, txs) ->
-                    val totalQuantity = txs.sumOf { it.quantity }
-                    val totalCost =
-                        txs
-                            .filter { it.quantity > BigDecimal.ZERO }
-                            .sumOf { (it.quantity * it.price) + (it.fees ?: BigDecimal.ZERO) }
-                    val averagePrice =
-                        if (totalQuantity > BigDecimal.ZERO) {
-                            totalCost / totalQuantity
-                        } else {
-                            BigDecimal.ZERO
-                        }
-                    val name = txs.firstOrNull()?.name ?: ticker
-                    val area = txs.firstOrNull()?.area
-
-                    EtfHolding(
-                        name = name,
-                        ticker = ticker,
-                        area = area,
-                        quantity = totalQuantity,
-                        averagePrice = averagePrice,
-                    )
-                }.filterValues { it.quantity > BigDecimal.ZERO }
-        }
-
-    private data class EtfTransaction(
-        val date: LocalDate,
-        val quantity: BigDecimal,
-        val price: BigDecimal,
-        val fees: BigDecimal?,
-        val name: String,
-        val area: String?,
-    )
+        get() = calculateEtfHoldings(transactions)
 }
 
 data class EmergencyFundBankAccount(
@@ -312,106 +216,10 @@ data class InvestmentBankAccount(
     val transactions: List<BankAccountTransaction> = emptyList(),
 ) {
     val currentBalance: BigDecimal
-        get() {
-            var balance = initialBalance
-            transactions.forEach { transaction ->
-                when (transaction) {
-                    is DepositTransaction -> balance += transaction.amount
-                    is WithdrawalTransaction -> balance -= transaction.amount
-                    is EtfBuyTransaction -> {
-                        val totalCost =
-                            (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
-                        balance -= totalCost
-                    }
-
-                    is EtfSellTransaction -> {
-                        val totalProceeds =
-                            (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
-                        balance += totalProceeds
-                    }
-
-                    else -> {}
-                }
-            }
-            return balance
-        }
+        get() = calculateBalance(initialBalance, transactions)
 
     val etfHoldings: Map<String, EtfHolding>
-        get() {
-            val holdings = mutableMapOf<String, MutableList<EtfTransaction>>()
-
-            transactions.forEach { transaction ->
-                when (transaction) {
-                    is EtfBuyTransaction -> {
-                        val key = transaction.ticker
-                        holdings
-                            .getOrPut(key) { mutableListOf() }
-                            .add(
-                                EtfTransaction(
-                                    transaction.date,
-                                    transaction.quantity,
-                                    transaction.price,
-                                    transaction.fees,
-                                    transaction.name,
-                                    transaction.area,
-                                ),
-                            )
-                    }
-
-                    is EtfSellTransaction -> {
-                        val key = transaction.ticker
-                        holdings
-                            .getOrPut(key) { mutableListOf() }
-                            .add(
-                                EtfTransaction(
-                                    transaction.date,
-                                    -transaction.quantity,
-                                    transaction.price,
-                                    transaction.fees,
-                                    transaction.name,
-                                    transaction.area,
-                                ),
-                            )
-                    }
-
-                    else -> {}
-                }
-            }
-
-            return holdings
-                .mapValues { (ticker, txs) ->
-                    val totalQuantity = txs.sumOf { it.quantity }
-                    val totalCost =
-                        txs
-                            .filter { it.quantity > BigDecimal.ZERO }
-                            .sumOf { (it.quantity * it.price) + (it.fees ?: BigDecimal.ZERO) }
-                    val averagePrice =
-                        if (totalQuantity > BigDecimal.ZERO) {
-                            totalCost / totalQuantity
-                        } else {
-                            BigDecimal.ZERO
-                        }
-                    val name = txs.firstOrNull()?.name ?: ticker
-                    val area = txs.firstOrNull()?.area
-
-                    EtfHolding(
-                        name = name,
-                        ticker = ticker,
-                        area = area,
-                        quantity = totalQuantity,
-                        averagePrice = averagePrice,
-                    )
-                }.filterValues { it.quantity > BigDecimal.ZERO }
-        }
-
-    private data class EtfTransaction(
-        val date: LocalDate,
-        val quantity: BigDecimal,
-        val price: BigDecimal,
-        val fees: BigDecimal?,
-        val name: String,
-        val area: String?,
-    )
+        get() = calculateEtfHoldings(transactions)
 }
 
 data class EtfHolding(
@@ -421,3 +229,105 @@ data class EtfHolding(
     val quantity: BigDecimal,
     val averagePrice: BigDecimal,
 )
+
+// Helper data class for ETF transaction processing
+private data class EtfTransaction(
+    val date: LocalDate,
+    val quantity: BigDecimal,
+    val price: BigDecimal,
+    val fees: BigDecimal?,
+    val name: String,
+    val area: String?,
+)
+
+// Helper function to calculate balance from transactions
+private fun calculateBalance(
+    initialBalance: BigDecimal,
+    transactions: List<BankAccountTransaction>,
+): BigDecimal {
+    var balance = initialBalance
+    transactions.forEach { transaction ->
+        when (transaction) {
+            is DepositTransaction -> balance += transaction.amount
+            is WithdrawalTransaction -> balance -= transaction.amount
+            is EtfBuyTransaction -> {
+                val totalCost =
+                    (transaction.price * transaction.quantity) + (transaction.fees ?: BigDecimal.ZERO)
+                balance -= totalCost
+            }
+            is EtfSellTransaction -> {
+                val totalProceeds =
+                    (transaction.price * transaction.quantity) - (transaction.fees ?: BigDecimal.ZERO)
+                balance += totalProceeds
+            }
+            else -> {}
+        }
+    }
+    return balance
+}
+
+// Helper function to calculate ETF holdings from transactions
+private fun calculateEtfHoldings(transactions: List<BankAccountTransaction>): Map<String, EtfHolding> {
+    val holdings = mutableMapOf<String, MutableList<EtfTransaction>>()
+
+    transactions.forEach { transaction ->
+        when (transaction) {
+            is EtfBuyTransaction -> {
+                val key = transaction.ticker
+                holdings
+                    .getOrPut(key) { mutableListOf() }
+                    .add(
+                        EtfTransaction(
+                            transaction.date,
+                            transaction.quantity,
+                            transaction.price,
+                            transaction.fees,
+                            transaction.name,
+                            transaction.area,
+                        ),
+                    )
+            }
+            is EtfSellTransaction -> {
+                val key = transaction.ticker
+                holdings
+                    .getOrPut(key) { mutableListOf() }
+                    .add(
+                        EtfTransaction(
+                            transaction.date,
+                            -transaction.quantity,
+                            transaction.price,
+                            transaction.fees,
+                            transaction.name,
+                            transaction.area,
+                        ),
+                    )
+            }
+            else -> {}
+        }
+    }
+
+    return holdings
+        .mapValues { (ticker, txs) ->
+            val totalQuantity = txs.sumOf { it.quantity }
+            val totalCost =
+                txs
+                    .filter { it.quantity > BigDecimal.ZERO }
+                    .sumOf { (it.quantity * it.price) + (it.fees ?: BigDecimal.ZERO) }
+            val averagePrice =
+                if (totalQuantity > BigDecimal.ZERO) {
+                    totalCost / totalQuantity
+                } else {
+                    BigDecimal.ZERO
+                }
+            val name = txs.firstOrNull()?.name ?: ticker
+            val area = txs.firstOrNull()?.area
+
+            EtfHolding(
+                name = name,
+                ticker = ticker,
+                area = area,
+                quantity = totalQuantity,
+                averagePrice = averagePrice,
+            )
+        }.filterValues { it.quantity > BigDecimal.ZERO }
+}
