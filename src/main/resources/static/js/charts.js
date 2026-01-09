@@ -229,6 +229,49 @@ function initOverallNetWorthChart(portfolioData) {
 // Store chart instances for updates
 const chartInstances = {};
 
+// Determine optimal number of data points for a time window
+function getOptimalPointsForTimeWindow(timeWindow) {
+    switch(timeWindow) {
+        case '1M': return 30;   // Daily for 1 month
+        case '3M': return 45;   // ~2 days per point
+        case '6M': return 52;   // Weekly
+        case 'YTD': return 52;  // Weekly
+        case '1Y': return 52;   // Weekly
+        case '3Y': return 78;   // ~2 weeks per point
+        case '5Y': return 100;  // ~2.5 weeks per point
+        case 'ALL':
+        default: return 150;    // Maximum points for all-time view
+    }
+}
+
+// Reduce data points intelligently by sampling
+function reduceDataPoints(dataPoints, maxPoints) {
+    if (!dataPoints || dataPoints.length <= maxPoints) {
+        return dataPoints;
+    }
+
+    const result = [];
+    const interval = dataPoints.length / maxPoints;
+
+    // Always include first point
+    result.push(dataPoints[0]);
+
+    // Sample points at regular intervals
+    for (let i = 1; i < maxPoints - 1; i++) {
+        const index = Math.floor(i * interval);
+        if (index < dataPoints.length) {
+            result.push(dataPoints[index]);
+        }
+    }
+
+    // Always include last point
+    if (dataPoints.length > 1) {
+        result.push(dataPoints[dataPoints.length - 1]);
+    }
+
+    return result;
+}
+
 // Filter data based on time window
 function filterDataByTimeWindow(dataPoints, timeWindow) {
     if (!dataPoints || dataPoints.length === 0) return dataPoints;
@@ -260,10 +303,17 @@ function filterDataByTimeWindow(dataPoints, timeWindow) {
             break;
         case 'ALL':
         default:
-            return dataPoints;
+            // For ALL, just reduce points if there are too many
+            const maxPoints = getOptimalPointsForTimeWindow('ALL');
+            return reduceDataPoints(dataPoints, maxPoints);
     }
 
-    return dataPoints.filter(dp => new Date(dp.date) >= cutoffDate);
+    // Filter by date
+    const filteredData = dataPoints.filter(dp => new Date(dp.date) >= cutoffDate);
+
+    // Reduce points if still too many
+    const maxPoints = getOptimalPointsForTimeWindow(timeWindow);
+    return reduceDataPoints(filteredData, maxPoints);
 }
 
 // Update chart with filtered data
@@ -282,11 +332,17 @@ function updateHistoricalChart(chartId, fullData, timeWindow) {
     const lineColor = isPositive ? '#10b981' : '#ef4444';
     const gradientColor = isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
 
+    // Adjust point size based on number of data points
+    const pointRadius = values.length > 60 ? 0 : (values.length > 30 ? 2 : 3);
+    const pointHoverRadius = pointRadius > 0 ? pointRadius + 2 : 5;
+
     chart.data.labels = labels;
     chart.data.datasets[0].data = values;
     chart.data.datasets[0].borderColor = lineColor;
     chart.data.datasets[0].backgroundColor = gradientColor;
     chart.data.datasets[0].pointBackgroundColor = lineColor;
+    chart.data.datasets[0].pointRadius = pointRadius;
+    chart.data.datasets[0].pointHoverRadius = pointHoverRadius;
     chart.update('none');
 }
 
@@ -329,8 +385,10 @@ function initHistoricalChart(canvasId, historicalData) {
     const ctx = document.getElementById(canvasId);
     if (!ctx || !historicalData || !historicalData.dataPoints) return;
 
-    const labels = historicalData.dataPoints.map(dp => dp.date);
-    const values = historicalData.dataPoints.map(dp => parseFloat(dp.value));
+    // Apply initial data reduction for ALL view
+    const optimizedData = reduceDataPoints(historicalData.dataPoints, getOptimalPointsForTimeWindow('ALL'));
+    const labels = optimizedData.map(dp => dp.date);
+    const values = optimizedData.map(dp => parseFloat(dp.value));
 
     // Determine if overall trend is positive or negative for color
     const firstValue = values[0] || 0;
@@ -338,6 +396,10 @@ function initHistoricalChart(canvasId, historicalData) {
     const isPositive = lastValue >= firstValue;
     const lineColor = isPositive ? '#10b981' : '#ef4444';
     const gradientColor = isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+
+    // Adjust point size based on number of data points
+    const pointRadius = values.length > 60 ? 0 : (values.length > 30 ? 2 : 3);
+    const pointHoverRadius = pointRadius > 0 ? pointRadius + 2 : 5;
 
     const chart = new Chart(ctx, {
         type: 'line',
@@ -351,8 +413,8 @@ function initHistoricalChart(canvasId, historicalData) {
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
-                pointRadius: 3,
-                pointHoverRadius: 5,
+                pointRadius: pointRadius,
+                pointHoverRadius: pointHoverRadius,
                 pointBackgroundColor: lineColor,
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2
