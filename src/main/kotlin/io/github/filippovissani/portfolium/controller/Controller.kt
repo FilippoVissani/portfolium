@@ -47,7 +47,10 @@ object Controller {
 
         // Calculate summaries using new services
         val liquiditySummary = LiquidityService.calculateLiquiditySummary(mainBankAccount)
-        var plannedSummary = PlannedExpensesService.calculatePlannedExpensesSummary(plannedExpensesBankAccount, currentPrices)
+        var plannedSummary = PlannedExpensesService.calculatePlannedExpensesSummary(
+            plannedExpensesBankAccount,
+            currentPrices
+        )
         var emergencySummary =
             EmergencyFundService.calculateEmergencyFundSummary(
                 emergencyFundBankAccount,
@@ -74,7 +77,11 @@ object Controller {
             if (plannedSummary.isInvested && plannedExpensesBankAccount.transactions.isNotEmpty()) {
                 logger.info("Calculating planned expenses historical performance...")
                 try {
-                    HistoricalPerformanceOrchestrator.calculateForAccount(plannedExpensesBankAccount, priceSource, config)
+                    HistoricalPerformanceOrchestrator.calculateForAccount(
+                        plannedExpensesBankAccount,
+                        priceSource,
+                        config
+                    )
                 } catch (e: Exception) {
                     logger.warn("Could not calculate planned expenses historical performance", e)
                     null

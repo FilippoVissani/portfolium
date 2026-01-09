@@ -65,4 +65,3 @@ object DataSerializer {
         return gson.toJson(items)
     }
 }
-

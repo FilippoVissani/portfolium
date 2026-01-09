@@ -32,7 +32,9 @@ object Calculators {
     ): EmergencyFundSummary = EmergencyFundService.calculateEmergencyFundSummary(account, avgMonthlyExpense)
 
     // Investment summary from list of Investment objects
-    fun summarizeInvestments(items: List<Investment>): InvestmentsSummary = InvestmentService.calculateInvestmentsSummary(items)
+    fun summarizeInvestments(
+        items: List<Investment>
+    ): InvestmentsSummary = InvestmentService.calculateInvestmentsSummary(items)
 
     // Build complete portfolio from all summaries
     fun buildPortfolio(

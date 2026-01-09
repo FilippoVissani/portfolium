@@ -26,7 +26,9 @@ object JavaScriptDataGenerator {
                     deltaToTarget: ${portfolio.emergency.deltaToTarget},
                     status: "${portfolio.emergency.status}",
                     isLiquid: ${portfolio.emergency.isLiquid},
-                    historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(portfolio.emergency.historicalPerformance)}
+                    historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(
+            portfolio.emergency.historicalPerformance
+        )}
                 },
                 investments: {
                     totalCurrent: ${portfolio.investments.totalCurrent},
@@ -40,12 +42,17 @@ object JavaScriptDataGenerator {
                     liquidAccrued: ${portfolio.planned.liquidAccrued},
                     investedAccrued: ${portfolio.planned.investedAccrued},
                     isInvested: ${portfolio.planned.isInvested},
-                    historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(portfolio.planned.historicalPerformance)}
+                    historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(
+            portfolio.planned.historicalPerformance
+        )}
                 },
-                historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(portfolio.historicalPerformance)},
-                overallHistoricalPerformance: ${DataSerializer.serializeHistoricalPerformance(portfolio.overallHistoricalPerformance)}
+                historicalPerformance: ${DataSerializer.serializeHistoricalPerformance(
+            portfolio.historicalPerformance
+        )},
+                overallHistoricalPerformance: ${DataSerializer.serializeHistoricalPerformance(
+            portfolio.overallHistoricalPerformance
+        )}
             };
         """.trimIndent()
     }
 }
-

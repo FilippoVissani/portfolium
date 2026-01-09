@@ -32,4 +32,3 @@ object HtmlHeadGenerator {
         link(rel = "stylesheet", href = "/static/css/styles.css")
     }
 }
-
