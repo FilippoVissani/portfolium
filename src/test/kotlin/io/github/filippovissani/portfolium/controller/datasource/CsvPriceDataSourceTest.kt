@@ -93,4 +93,3 @@ class CsvPriceDataSourceTest :
             dataSource.getHistoricalPrices("AAPL", startDate, endDate) shouldBe emptyMap()
         }
     })
-

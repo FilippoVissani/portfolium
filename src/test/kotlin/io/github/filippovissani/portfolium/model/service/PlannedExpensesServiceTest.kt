@@ -185,4 +185,3 @@ class PlannedExpensesServiceTest :
             summary.investedAccrued shouldBe BigDecimal("1000.00")
         }
     })
-

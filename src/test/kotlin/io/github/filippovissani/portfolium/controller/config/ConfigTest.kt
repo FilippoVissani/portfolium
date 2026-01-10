@@ -49,4 +49,3 @@ class ConfigTest :
             config.historicalPerformanceIntervalDays shouldBe 14L
         }
     })
-

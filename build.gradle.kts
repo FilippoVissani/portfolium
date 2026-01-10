@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.versions)
     alias(libs.plugins.dependencyCheck)
-    alias(libs.plugins.spotless)
     alias(libs.plugins.diktat)
     application
 }
@@ -120,36 +119,6 @@ dependencyCheck {
     analyzers.nuspecEnabled = false
 }
 
-// Spotless - Code Formatting
-spotless {
-    kotlin {
-        target("**/*.kt")
-        targetExclude("**/build/**/*.kt")
-        ktlint("1.5.0")
-            .editorConfigOverride(
-                mapOf(
-                    "indent_size" to "4",
-                    "max_line_length" to "120",
-                    "ktlint_standard_no-wildcard-imports" to "disabled",
-                ),
-            )
-        trimTrailingWhitespace()
-        indentWithSpaces(4)
-        endWithNewline()
-    }
-    kotlinGradle {
-        target("**/*.gradle.kts")
-        ktlint("1.5.0")
-    }
-    format("misc") {
-        target("**/*.md", "**/*.yml", "**/*.yaml", "**/.gitignore")
-        targetExclude("**/build/**")
-        trimTrailingWhitespace()
-        indentWithSpaces(2)
-        endWithNewline()
-    }
-}
-
 // Diktat - Strict Kotlin Style Checker
 diktat {
     inputs {
@@ -159,4 +128,3 @@ diktat {
     debug = false
     ignoreFailures = true // Set to false to enforce strict rules
 }
-

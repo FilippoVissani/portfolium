@@ -30,8 +30,7 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal =
-                        BigDecimal("420.00")
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("420.00")
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -76,8 +75,7 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal =
-                        BigDecimal("450.00")
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("450.00")
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -176,12 +174,11 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal =
-                        when (ticker) {
-                            "SPY" -> BigDecimal("420.00")
-                            "VT" -> BigDecimal("110.00")
-                            else -> BigDecimal.ZERO
-                        }
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = when (ticker) {
+                        "SPY" -> BigDecimal("420.00")
+                        "VT" -> BigDecimal("110.00")
+                        else -> BigDecimal.ZERO
+                    }
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -233,8 +230,7 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal =
-                        BigDecimal("430.00")
+                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("430.00")
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -308,4 +304,3 @@ class HistoricalPerformanceServiceTest :
             annualizedReturnValue?.shouldBeLessThan(42.0)
         }
     })
-

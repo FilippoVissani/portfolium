@@ -141,4 +141,3 @@ class StatisticsServiceTest :
             stats.topIncomeCategories shouldBe emptyList()
         }
     })
-

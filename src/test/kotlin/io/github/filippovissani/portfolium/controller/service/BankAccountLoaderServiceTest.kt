@@ -95,12 +95,13 @@ class BankAccountLoaderServiceTest :
         }
 
         test("loadMainBankAccount should handle invalid YAML file gracefully") {
-            val tempDir = File.createTempFile("test_data", "").apply {
-                delete()
-                mkdir()
+            val tempDir =
+                File.createTempFile("test_data", "").apply {
+                    delete()
+                    mkdir()
 
-                deleteOnExit()
-            }
+                    deleteOnExit()
+                }
 
             val invalidYamlFile = File(tempDir, "invalid_main.yaml")
             invalidYamlFile.writeText("invalid: yaml: content: : :")
@@ -127,11 +128,12 @@ class BankAccountLoaderServiceTest :
         }
 
         test("loadPlannedExpensesBankAccount should handle invalid YAML file gracefully") {
-            val tempDir = File.createTempFile("test_data", "").apply {
-                delete()
-                mkdir()
-                deleteOnExit()
-            }
+            val tempDir =
+                File.createTempFile("test_data", "").apply {
+                    delete()
+                    mkdir()
+                    deleteOnExit()
+                }
 
             val invalidYamlFile = File(tempDir, "invalid_planned.yaml")
             invalidYamlFile.writeText("invalid: yaml: content:")
@@ -157,4 +159,3 @@ class BankAccountLoaderServiceTest :
             tempDir.deleteRecursively()
         }
     })
-

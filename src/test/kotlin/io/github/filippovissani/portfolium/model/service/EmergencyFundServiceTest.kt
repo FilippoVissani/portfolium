@@ -115,4 +115,3 @@ class EmergencyFundServiceTest :
             summary.isLiquid shouldBe true
         }
     })
-

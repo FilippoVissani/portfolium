@@ -186,4 +186,3 @@ class PortfolioServiceTest :
             portfolio.percentLiquid shouldBe BigDecimal.ONE
         }
     })
-

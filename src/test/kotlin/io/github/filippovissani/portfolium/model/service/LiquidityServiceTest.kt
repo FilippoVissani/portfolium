@@ -34,11 +34,12 @@ class LiquidityServiceTest :
                     ),
                 )
 
-            val account = MainBankAccount(
-                name = "Test Account",
-                initialBalance = BigDecimal("1000.00"),
-                transactions = transactions,
-            )
+            val account =
+                MainBankAccount(
+                    name = "Test Account",
+                    initialBalance = BigDecimal("1000.00"),
+                    transactions = transactions,
+                )
 
             val summary = LiquidityService.calculateLiquiditySummary(account)
 
@@ -73,11 +74,12 @@ class LiquidityServiceTest :
                     ),
                 )
 
-            val account = MainBankAccount(
-                name = "Test Account",
-                initialBalance = BigDecimal.ZERO,
-                transactions = transactions,
-            )
+            val account =
+                MainBankAccount(
+                    name = "Test Account",
+                    initialBalance = BigDecimal.ZERO,
+                    transactions = transactions,
+                )
 
             val summary = LiquidityService.calculateLiquiditySummary(account, today)
 
@@ -86,11 +88,12 @@ class LiquidityServiceTest :
         }
 
         test("calculateLiquiditySummary should handle empty transactions") {
-            val account = MainBankAccount(
-                name = "Empty Account",
-                initialBalance = BigDecimal("500.00"),
-                transactions = emptyList(),
-            )
+            val account =
+                MainBankAccount(
+                    name = "Empty Account",
+                    initialBalance = BigDecimal("500.00"),
+                    transactions = emptyList(),
+                )
 
             val summary = LiquidityService.calculateLiquiditySummary(account)
 
@@ -117,11 +120,12 @@ class LiquidityServiceTest :
                     ),
                 )
 
-            val account = MainBankAccount(
-                name = "Test Account",
-                initialBalance = BigDecimal.ZERO,
-                transactions = transactions,
-            )
+            val account =
+                MainBankAccount(
+                    name = "Test Account",
+                    initialBalance = BigDecimal.ZERO,
+                    transactions = transactions,
+                )
 
             val summary = LiquidityService.calculateLiquiditySummary(account)
 
@@ -129,4 +133,3 @@ class LiquidityServiceTest :
             summary.statistics.totalByCategory.size shouldBe 2
         }
     })
-

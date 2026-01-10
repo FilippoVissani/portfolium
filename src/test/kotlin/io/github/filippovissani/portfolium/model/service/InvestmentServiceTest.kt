@@ -83,11 +83,12 @@ class InvestmentServiceTest :
         }
 
         test("calculateInvestmentsSummary should work with InvestmentBankAccount") {
-            val account = InvestmentBankAccount(
-                name = "Investment Account",
-                initialBalance = BigDecimal("1000.00"),
-                transactions = emptyList(),
-            )
+            val account =
+                InvestmentBankAccount(
+                    name = "Investment Account",
+                    initialBalance = BigDecimal("1000.00"),
+                    transactions = emptyList(),
+                )
 
             val currentPrices =
                 mapOf(
@@ -102,4 +103,3 @@ class InvestmentServiceTest :
             summary.totalCurrent shouldBe BigDecimal("0.00")
         }
     })
-
