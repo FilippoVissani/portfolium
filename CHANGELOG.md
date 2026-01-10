@@ -1,3 +1,9 @@
+## [5.0.3](https://github.com/FilippoVissani/portfolium/compare/5.0.2...5.0.3) (2026-01-10)
+
+### Documentation
+
+* update README to center logo and remove architecture section ([bc5fa2c](https://github.com/FilippoVissani/portfolium/commit/bc5fa2cb89ab7b25cfb285e23ed01605d99c5310))
+
 ## [5.0.2](https://github.com/FilippoVissani/portfolium/compare/5.0.1...5.0.2) (2026-01-10)
 
 ### Dependency updates
