@@ -34,7 +34,10 @@ class HistoricalPerformanceOrchestratorTest :
             object : PriceDataSource {
                 override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("100.00")
+                override fun getHistoricalPrice(
+                    ticker: String,
+                    date: LocalDate,
+                ): BigDecimal = BigDecimal("100.00")
 
                 override fun getHistoricalPrices(
                     ticker: String,
@@ -143,33 +146,33 @@ class HistoricalPerformanceOrchestratorTest :
             val investmentAccount =
                 InvestmentBankAccount(
                     transactions =
-                    listOf(
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2024, 1, 1),
-                            name = "S&P 500 ETF",
-                            ticker = "SPY",
-                            area = "US",
-                            quantity = BigDecimal("10"),
-                            price = BigDecimal("400.00"),
-                            fees = BigDecimal.ZERO,
+                        listOf(
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2024, 1, 1),
+                                name = "S&P 500 ETF",
+                                ticker = "SPY",
+                                area = "US",
+                                quantity = BigDecimal("10"),
+                                price = BigDecimal("400.00"),
+                                fees = BigDecimal.ZERO,
+                            ),
                         ),
-                    ),
                 )
 
             val plannedAccount =
                 PlannedExpensesBankAccount(
                     transactions =
-                    listOf(
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2024, 2, 1),
-                            name = "World ETF",
-                            ticker = "VT",
-                            area = "World",
-                            quantity = BigDecimal("5"),
-                            price = BigDecimal("100.00"),
-                            fees = BigDecimal.ZERO,
+                        listOf(
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2024, 2, 1),
+                                name = "World ETF",
+                                ticker = "VT",
+                                area = "World",
+                                quantity = BigDecimal("5"),
+                                price = BigDecimal("100.00"),
+                                fees = BigDecimal.ZERO,
+                            ),
                         ),
-                    ),
                 )
 
             val performance =

@@ -30,7 +30,10 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("420.00")
+                    override fun getHistoricalPrice(
+                        ticker: String,
+                        date: LocalDate,
+                    ): BigDecimal = BigDecimal("420.00")
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -75,7 +78,10 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("450.00")
+                    override fun getHistoricalPrice(
+                        ticker: String,
+                        date: LocalDate,
+                    ): BigDecimal = BigDecimal("450.00")
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -119,7 +125,10 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal {
+                    override fun getHistoricalPrice(
+                        ticker: String,
+                        date: LocalDate,
+                    ): BigDecimal {
                         // Return 400 for start date, 440 for end date (10% increase)
                         return if (priceSequence++ == 0) BigDecimal("400.00") else BigDecimal("440.00")
                     }
@@ -174,11 +183,15 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = when (ticker) {
-                        "SPY" -> BigDecimal("420.00")
-                        "VT" -> BigDecimal("110.00")
-                        else -> BigDecimal.ZERO
-                    }
+                    override fun getHistoricalPrice(
+                        ticker: String,
+                        date: LocalDate,
+                    ): BigDecimal =
+                        when (ticker) {
+                            "SPY" -> BigDecimal("420.00")
+                            "VT" -> BigDecimal("110.00")
+                            else -> BigDecimal.ZERO
+                        }
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -230,7 +243,10 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal = BigDecimal("430.00")
+                    override fun getHistoricalPrice(
+                        ticker: String,
+                        date: LocalDate,
+                    ): BigDecimal = BigDecimal("430.00")
 
                     override fun getHistoricalPrices(
                         ticker: String,
@@ -274,7 +290,10 @@ class HistoricalPerformanceServiceTest :
                 object : PriceDataSource {
                     override fun getCurrentPrice(ticker: String): BigDecimal? = null
 
-                    override fun getHistoricalPrice(ticker: String, date: LocalDate): BigDecimal {
+                    override fun getHistoricalPrice(
+                        ticker: String,
+                        date: LocalDate,
+                    ): BigDecimal {
                         // Double the price over 2 years (100% return)
                         return if (priceSequence++ == 0) BigDecimal("400.00") else BigDecimal("800.00")
                     }

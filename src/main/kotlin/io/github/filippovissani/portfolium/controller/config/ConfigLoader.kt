@@ -37,26 +37,26 @@ object ConfigLoader {
             dataPath = properties.getProperty("data.path", "data"),
             mainBankAccountFile = properties.getProperty("data.main.bank.account", "main_bank_account.yaml"),
             plannedExpensesBankAccountFile =
-            properties.getProperty(
-                "data.planned.expenses.bank.account",
-                "planned_expenses_bank_account.yaml",
-            ),
+                properties.getProperty(
+                    "data.planned.expenses.bank.account",
+                    "planned_expenses_bank_account.yaml",
+                ),
             emergencyFundBankAccountFile =
-            properties.getProperty(
-                "data.emergency.fund.bank.account",
-                "emergency_fund_bank_account.yaml",
-            ),
+                properties.getProperty(
+                    "data.emergency.fund.bank.account",
+                    "emergency_fund_bank_account.yaml",
+                ),
             investmentBankAccountFile =
-            properties.getProperty(
-                "data.investment.bank.account",
-                "investment_bank_account.yaml",
-            ),
+                properties.getProperty(
+                    "data.investment.bank.account",
+                    "investment_bank_account.yaml",
+                ),
             priceCacheFile = properties.getProperty("data.price.cache", "price_cache.csv"),
             cacheDurationHours = properties.getProperty("cache.duration.hours", "24").toLongOrNull() ?: 24L,
             historicalPerformanceIntervalDays =
-            properties
-                .getProperty("historical.performance.interval.days", "7")
-                .toLongOrNull() ?: 7L,
+                properties
+                    .getProperty("historical.performance.interval.days", "7")
+                    .toLongOrNull() ?: 7L,
             serverPort = properties.getProperty("server.port", "8080").toIntOrNull() ?: 8080,
         )
     }
@@ -64,15 +64,16 @@ object ConfigLoader {
     /**
      * Get default configuration
      */
-    private fun getDefaultConfig(): Config = Config(
-        dataPath = "data",
-        mainBankAccountFile = "main_bank_account.yaml",
-        plannedExpensesBankAccountFile = "planned_expenses_bank_account.yaml",
-        emergencyFundBankAccountFile = "emergency_fund_bank_account.yaml",
-        investmentBankAccountFile = "investment_bank_account.yaml",
-        priceCacheFile = "price_cache.csv",
-        cacheDurationHours = 24L,
-        historicalPerformanceIntervalDays = 7L,
-        serverPort = 8080,
-    )
+    private fun getDefaultConfig(): Config =
+        Config(
+            dataPath = "data",
+            mainBankAccountFile = "main_bank_account.yaml",
+            plannedExpensesBankAccountFile = "planned_expenses_bank_account.yaml",
+            emergencyFundBankAccountFile = "emergency_fund_bank_account.yaml",
+            investmentBankAccountFile = "investment_bank_account.yaml",
+            priceCacheFile = "price_cache.csv",
+            cacheDurationHours = 24L,
+            historicalPerformanceIntervalDays = 7L,
+            serverPort = 8080,
+        )
 }

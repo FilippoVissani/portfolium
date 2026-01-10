@@ -93,7 +93,9 @@ object HistoricalPerformanceService {
         date: LocalDate,
     ): BigDecimal {
         // Group transactions by ticker up to the given date
-        data class Position(var quantity: BigDecimal)
+        data class Position(
+            var quantity: BigDecimal,
+        )
 
         val positions = mutableMapOf<String, Position>()
 

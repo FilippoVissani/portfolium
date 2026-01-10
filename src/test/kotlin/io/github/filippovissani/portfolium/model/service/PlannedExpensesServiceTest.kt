@@ -169,13 +169,13 @@ class PlannedExpensesServiceTest :
                 PlannedExpensesBankAccount(
                     transactions = transactions,
                     plannedExpenses =
-                    listOf(
-                        PlannedExpenseEntry(
-                            name = "Test",
-                            expirationDate = null,
-                            estimatedAmount = BigDecimal("1000.00"),
+                        listOf(
+                            PlannedExpenseEntry(
+                                name = "Test",
+                                expirationDate = null,
+                                estimatedAmount = BigDecimal("1000.00"),
+                            ),
                         ),
-                    ),
                 )
 
             // No current prices provided

@@ -17,72 +17,76 @@ object BankAccountLoaderService {
     /**
      * Load main bank account from file
      */
-    fun loadMainBankAccount(config: Config): MainBankAccount = try {
-        if (config.getMainBankAccountPath().exists()) {
-            BankAccountLoaders.loadMainBankAccount(config.getMainBankAccountPath()).also {
-                logger.info("Main bank account loaded: ${it.name}, ${it.transactions.size} transactions")
+    fun loadMainBankAccount(config: Config): MainBankAccount =
+        try {
+            if (config.getMainBankAccountPath().exists()) {
+                BankAccountLoaders.loadMainBankAccount(config.getMainBankAccountPath()).also {
+                    logger.info("Main bank account loaded: ${it.name}, ${it.transactions.size} transactions")
+                }
+            } else {
+                logger.info("Main bank account file not found, using empty account")
+                MainBankAccount()
             }
-        } else {
-            logger.info("Main bank account file not found, using empty account")
+        } catch (e: Exception) {
+            logger.warn("Error loading main bank account", e)
             MainBankAccount()
         }
-    } catch (e: Exception) {
-        logger.warn("Error loading main bank account", e)
-        MainBankAccount()
-    }
 
     /**
      * Load planned expenses bank account from file
      */
-    fun loadPlannedExpensesBankAccount(config: Config): PlannedExpensesBankAccount = try {
-        if (config.getPlannedExpensesBankAccountPath().exists()) {
-            BankAccountLoaders.loadPlannedExpensesBankAccount(config.getPlannedExpensesBankAccountPath()).also {
-                logger.info(
-                    "Planned expenses bank account loaded: ${it.name}, ${it.transactions.size} transactions, ${it.plannedExpenses.size} planned expenses",
-                )
+    fun loadPlannedExpensesBankAccount(config: Config): PlannedExpensesBankAccount =
+        try {
+            if (config.getPlannedExpensesBankAccountPath().exists()) {
+                BankAccountLoaders.loadPlannedExpensesBankAccount(config.getPlannedExpensesBankAccountPath()).also {
+                    logger.info(
+                        "Planned expenses bank account loaded: ${it.name}, ${it.transactions.size} transactions, ${it.plannedExpenses.size} planned expenses",
+                    )
+                }
+            } else {
+                logger.info("Planned expenses bank account file not found, using empty account")
+                PlannedExpensesBankAccount()
             }
-        } else {
-            logger.info("Planned expenses bank account file not found, using empty account")
+        } catch (e: Exception) {
+            logger.warn("Error loading planned expenses bank account", e)
             PlannedExpensesBankAccount()
         }
-    } catch (e: Exception) {
-        logger.warn("Error loading planned expenses bank account", e)
-        PlannedExpensesBankAccount()
-    }
 
     /**
      * Load emergency fund bank account from file
      */
-    fun loadEmergencyFundBankAccount(config: Config): EmergencyFundBankAccount = try {
-        if (config.getEmergencyFundBankAccountPath().exists()) {
-            BankAccountLoaders.loadEmergencyFundBankAccount(config.getEmergencyFundBankAccountPath()).also {
-                logger.info(
-                    "Emergency fund bank account loaded: ${it.name}, ${it.transactions.size} transactions, target: ${it.targetMonthlyExpenses} months",
-                )
+    fun loadEmergencyFundBankAccount(config: Config): EmergencyFundBankAccount =
+        try {
+            if (config.getEmergencyFundBankAccountPath().exists()) {
+                BankAccountLoaders.loadEmergencyFundBankAccount(config.getEmergencyFundBankAccountPath()).also {
+                    logger.info(
+                        "Emergency fund bank account loaded: ${it.name}, ${it.transactions.size} transactions, target: ${it.targetMonthlyExpenses} months",
+                    )
+                }
+            } else {
+                logger.info("Emergency fund bank account file not found, using empty account")
+                EmergencyFundBankAccount()
             }
-        } else {
-            logger.info("Emergency fund bank account file not found, using empty account")
+        } catch (e: Exception) {
+            logger.warn("Error loading emergency fund bank account", e)
             EmergencyFundBankAccount()
         }
-    } catch (e: Exception) {
-        logger.warn("Error loading emergency fund bank account", e)
-        EmergencyFundBankAccount()
-    }
 
     /**
      * Load investment bank account from file
      */
-    fun loadInvestmentBankAccount(config: Config): InvestmentBankAccount = try {
-        if (config.getInvestmentBankAccountPath().exists()) {
-            BankAccountLoaders.loadInvestmentBankAccount(config.getInvestmentBankAccountPath()).also {
-                logger.info("Investment bank account loaded: ${it.name}, ${it.transactions.size} transactions")
+    fun loadInvestmentBankAccount(config: Config): InvestmentBankAccount =
+        try {
+            if (config.getInvestmentBankAccountPath().exists()) {
+                BankAccountLoaders.loadInvestmentBankAccount(config.getInvestmentBankAccountPath()).also {
+                    logger.info("Investment bank account loaded: ${it.name}, ${it.transactions.size} transactions")
+                }
+            } else {
+                logger.info("Investment bank account file not found, using empty account")
+                InvestmentBankAccount()
             }
-        } else {
-            logger.info("Investment bank account file not found, using empty account")
+        } catch (e: Exception) {
+            logger.warn("Error loading investment bank account", e)
             InvestmentBankAccount()
         }
-    } catch (e: Exception) {
-        logger.warn("Error loading investment bank account", e)
-        InvestmentBankAccount()
-    }
 }

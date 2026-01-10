@@ -24,8 +24,11 @@ data class LiquidTransaction(
 /**
  * Generic deposit for specialized accounts
  */
-data class DepositTransaction(override val date: LocalDate, val amount: BigDecimal, val description: String? = null) :
-    BankAccountTransaction()
+data class DepositTransaction(
+    override val date: LocalDate,
+    val amount: BigDecimal,
+    val description: String? = null,
+) : BankAccountTransaction()
 
 /**
  * Generic withdrawal for specialized accounts

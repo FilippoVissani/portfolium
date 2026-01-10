@@ -16,22 +16,22 @@ class BankAccountTest :
                     name = "Test Main Account",
                     initialBalance = BigDecimal("1000.00"),
                     transactions =
-                    listOf(
-                        LiquidTransaction(
-                            date = LocalDate.of(2025, 1, 1),
-                            description = "Salary",
-                            category = "Income",
-                            amount = BigDecimal("500.00"),
-                            note = "Monthly salary",
+                        listOf(
+                            LiquidTransaction(
+                                date = LocalDate.of(2025, 1, 1),
+                                description = "Salary",
+                                category = "Income",
+                                amount = BigDecimal("500.00"),
+                                note = "Monthly salary",
+                            ),
+                            LiquidTransaction(
+                                date = LocalDate.of(2025, 1, 2),
+                                description = "Groceries",
+                                category = "Food",
+                                amount = BigDecimal("-200.00"),
+                                note = null,
+                            ),
                         ),
-                        LiquidTransaction(
-                            date = LocalDate.of(2025, 1, 2),
-                            description = "Groceries",
-                            category = "Food",
-                            amount = BigDecimal("-200.00"),
-                            note = null,
-                        ),
-                    ),
                 )
 
             account.currentBalance.compareTo(BigDecimal("1300.00")) shouldBe 0
@@ -45,17 +45,17 @@ class BankAccountTest :
                     name = "Test Investment Account",
                     initialBalance = BigDecimal("10000.00"),
                     transactions =
-                    listOf(
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2025, 1, 10),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("10"),
-                            price = BigDecimal("450.00"),
-                            fees = BigDecimal("5.00"),
+                        listOf(
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2025, 1, 10),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("10"),
+                                price = BigDecimal("450.00"),
+                                fees = BigDecimal("5.00"),
+                            ),
                         ),
-                    ),
                 )
 
             // Balance = 10000 - (10 * 450 + 5) = 10000 - 4505 = 5495
@@ -68,26 +68,26 @@ class BankAccountTest :
                     name = "Test Investment Account",
                     initialBalance = BigDecimal("10000.00"),
                     transactions =
-                    listOf(
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2025, 1, 10),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("10"),
-                            price = BigDecimal("450.00"),
-                            fees = BigDecimal("5.00"),
+                        listOf(
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2025, 1, 10),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("10"),
+                                price = BigDecimal("450.00"),
+                                fees = BigDecimal("5.00"),
+                            ),
+                            EtfSellTransaction(
+                                date = LocalDate.of(2025, 1, 20),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("5"),
+                                price = BigDecimal("455.00"),
+                                fees = BigDecimal("2.50"),
+                            ),
                         ),
-                        EtfSellTransaction(
-                            date = LocalDate.of(2025, 1, 20),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("5"),
-                            price = BigDecimal("455.00"),
-                            fees = BigDecimal("2.50"),
-                        ),
-                    ),
                 )
 
             // Buy: 10000 - 4505 = 5495
@@ -101,35 +101,35 @@ class BankAccountTest :
                     name = "Test Investment Account",
                     initialBalance = BigDecimal("10000.00"),
                     transactions =
-                    listOf(
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2025, 1, 10),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("10"),
-                            price = BigDecimal("450.00"),
-                            fees = BigDecimal("5.00"),
+                        listOf(
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2025, 1, 10),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("10"),
+                                price = BigDecimal("450.00"),
+                                fees = BigDecimal("5.00"),
+                            ),
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2025, 1, 15),
+                                name = "MSCI World",
+                                ticker = "IWDA",
+                                area = "World",
+                                quantity = BigDecimal("20"),
+                                price = BigDecimal("80.00"),
+                                fees = BigDecimal("3.00"),
+                            ),
+                            EtfSellTransaction(
+                                date = LocalDate.of(2025, 1, 20),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("5"),
+                                price = BigDecimal("455.00"),
+                                fees = BigDecimal("2.50"),
+                            ),
                         ),
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2025, 1, 15),
-                            name = "MSCI World",
-                            ticker = "IWDA",
-                            area = "World",
-                            quantity = BigDecimal("20"),
-                            price = BigDecimal("80.00"),
-                            fees = BigDecimal("3.00"),
-                        ),
-                        EtfSellTransaction(
-                            date = LocalDate.of(2025, 1, 20),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("5"),
-                            price = BigDecimal("455.00"),
-                            fees = BigDecimal("2.50"),
-                        ),
-                    ),
                 )
 
             val holdings = account.etfHoldings
@@ -152,26 +152,26 @@ class BankAccountTest :
                     name = "Test Investment Account",
                     initialBalance = BigDecimal("10000.00"),
                     transactions =
-                    listOf(
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2025, 1, 10),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("10"),
-                            price = BigDecimal("450.00"),
-                            fees = BigDecimal("10.00"),
+                        listOf(
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2025, 1, 10),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("10"),
+                                price = BigDecimal("450.00"),
+                                fees = BigDecimal("10.00"),
+                            ),
+                            EtfBuyTransaction(
+                                date = LocalDate.of(2025, 1, 15),
+                                name = "S&P 500",
+                                ticker = "VOO",
+                                area = "US",
+                                quantity = BigDecimal("10"),
+                                price = BigDecimal("460.00"),
+                                fees = BigDecimal("10.00"),
+                            ),
                         ),
-                        EtfBuyTransaction(
-                            date = LocalDate.of(2025, 1, 15),
-                            name = "S&P 500",
-                            ticker = "VOO",
-                            area = "US",
-                            quantity = BigDecimal("10"),
-                            price = BigDecimal("460.00"),
-                            fees = BigDecimal("10.00"),
-                        ),
-                    ),
                 )
 
             val holdings = account.etfHoldings
@@ -190,23 +190,23 @@ class BankAccountTest :
                     name = "Planned Expenses",
                     initialBalance = BigDecimal.ZERO,
                     transactions =
-                    listOf(
-                        DepositTransaction(
-                            date = LocalDate.of(2025, 1, 1),
-                            amount = BigDecimal("500.00"),
-                            description = "Initial",
+                        listOf(
+                            DepositTransaction(
+                                date = LocalDate.of(2025, 1, 1),
+                                amount = BigDecimal("500.00"),
+                                description = "Initial",
+                            ),
+                            DepositTransaction(
+                                date = LocalDate.of(2025, 2, 1),
+                                amount = BigDecimal("300.00"),
+                                description = "Monthly",
+                            ),
                         ),
-                        DepositTransaction(
-                            date = LocalDate.of(2025, 2, 1),
-                            amount = BigDecimal("300.00"),
-                            description = "Monthly",
-                        ),
-                    ),
                     plannedExpenses =
-                    listOf(
-                        PlannedExpenseEntry("Car", LocalDate.of(2026, 12, 31), BigDecimal("15000.00")),
-                        PlannedExpenseEntry("Vacation", LocalDate.of(2025, 8, 1), BigDecimal("3000.00")),
-                    ),
+                        listOf(
+                            PlannedExpenseEntry("Car", LocalDate.of(2026, 12, 31), BigDecimal("15000.00")),
+                            PlannedExpenseEntry("Vacation", LocalDate.of(2025, 8, 1), BigDecimal("3000.00")),
+                        ),
                 )
 
             account.currentBalance.compareTo(BigDecimal("800.00")) shouldBe 0
@@ -219,18 +219,18 @@ class BankAccountTest :
                     name = "Emergency Fund",
                     initialBalance = BigDecimal.ZERO,
                     transactions =
-                    listOf(
-                        DepositTransaction(
-                            date = LocalDate.of(2025, 1, 1),
-                            amount = BigDecimal("5000.00"),
-                            description = "Initial",
+                        listOf(
+                            DepositTransaction(
+                                date = LocalDate.of(2025, 1, 1),
+                                amount = BigDecimal("5000.00"),
+                                description = "Initial",
+                            ),
+                            WithdrawalTransaction(
+                                date = LocalDate.of(2025, 3, 1),
+                                amount = BigDecimal("500.00"),
+                                description = "Emergency",
+                            ),
                         ),
-                        WithdrawalTransaction(
-                            date = LocalDate.of(2025, 3, 1),
-                            amount = BigDecimal("500.00"),
-                            description = "Emergency",
-                        ),
-                    ),
                     targetMonthlyExpenses = 6,
                 )
 

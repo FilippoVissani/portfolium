@@ -15,4 +15,7 @@ data class HistoricalPerformance(
 /**
  * Performance data point at a specific date
  */
-data class PerformanceDataPoint(val date: LocalDate, val value: BigDecimal)
+data class PerformanceDataPoint(
+    val date: LocalDate,
+    val value: BigDecimal,
+)
