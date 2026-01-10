@@ -111,7 +111,6 @@ fun isNonStable(version: String): Boolean {
 // OWASP Dependency Check - Security Scanning
 dependencyCheck {
     formats = listOf("HTML", "JSON", "XML")
-    outputDirectory = "${layout.buildDirectory.get()}/reports/dependency-check"
     scanConfigurations = listOf("runtimeClasspath")
     suppressionFile = "$projectDir/config/owasp/suppressions.xml"
     failBuildOnCVSS = 7.0f // Fail build if CVSS score >= 7
