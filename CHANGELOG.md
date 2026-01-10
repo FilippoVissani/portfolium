@@ -1,3 +1,21 @@
+## [5.0.2](https://github.com/FilippoVissani/portfolium/compare/5.0.1...5.0.2) (2026-01-10)
+
+### Dependency updates
+
+* **deps:** update dependency com.github.ben-manes.versions to v0.53.0 ([00885bd](https://github.com/FilippoVissani/portfolium/commit/00885bd23bc9acbf4acdd583a8e9b1bb542e28b8))
+* **deps:** update dependency com.lemonappdev:konsist to v0.17.3 ([e4c4d73](https://github.com/FilippoVissani/portfolium/commit/e4c4d73ef9bf30e9645b8b3a576ae1c6404e738a))
+* **deps:** update dependency org.jetbrains.kotlinx.kover to v0.9.4 ([6ce9e17](https://github.com/FilippoVissani/portfolium/commit/6ce9e17d72cbfbc0aec7995a4a4bdb85c37f8bec))
+* **deps:** update dependency org.owasp.dependencycheck to v11 ([d22c599](https://github.com/FilippoVissani/portfolium/commit/d22c599b0495b09193b1a7b46ed0e95998944b0b))
+* **deps:** update dependency org.owasp.dependencycheck to v12 ([f15d440](https://github.com/FilippoVissani/portfolium/commit/f15d44006864f3de86cd94681562fcfbd787fa34))
+
+### Bug Fixes
+
+* retrigger release ([62c6704](https://github.com/FilippoVissani/portfolium/commit/62c670423200cf5e6788910686d90b1911ab0eb9))
+
+### Build and continuous integration
+
+* remove output directory for OWASP Dependency Check reports ([5465ce2](https://github.com/FilippoVissani/portfolium/commit/5465ce206f757945876d9c751f266aa2efb63314))
+
 ## [5.0.1](https://github.com/FilippoVissani/portfolium/compare/5.0.0...5.0.1) (2026-01-10)
 
 ### Dependency updates
