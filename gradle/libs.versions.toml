@@ -9,7 +9,7 @@ kover = "0.9.4"
 versions = "0.51.0"
 dependencyCheck = "11.1.1"
 diktat = "2.0.0"
-konsist = "0.16.1"
+konsist = "0.17.3"
 
 [libraries]
 # CSV utilities
