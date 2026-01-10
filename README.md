@@ -6,7 +6,9 @@
 
 A comprehensive personal finance portfolio management tool built with Kotlin. Track your investments, manage multiple bank accounts, monitor planned expenses, and visualize your financial health through an intuitive web dashboard.
 
-![Portfolium Logo](portfolium-logo.png)
+<div align="center">
+  <img src="portfolium-logo.png" alt="Portfolium Logo" width="300"/>
+</div>
 
 ## Features
 
@@ -47,37 +49,6 @@ A comprehensive personal finance portfolio management tool built with Kotlin. Tr
 - Color-coded financial data
 - Quick overview without running the web server
 
-## Architecture
-
-Portfolium follows a clean architecture with clear separation of concerns:
-
-```
-src/main/kotlin/io/github/filippovissani/portfolium/
-├── Main.kt                          # Application entry point
-├── controller/                      # Business logic layer
-│   ├── Controller.kt                # Main controller
-│   ├── config/                      # Configuration management
-│   │   ├── Config.kt
-│   │   └── ConfigLoader.kt
-│   ├── datasource/                  # Price data sources
-│   │   ├── PriceDataSource.kt       # Interface
-│   │   ├── YahooFinancePriceDataSource.kt
-│   │   ├── CachedPriceDataSource.kt # Caching decorator
-│   │   └── CsvPriceDataSource.kt
-│   ├── yaml/                        # YAML file loaders
-│   │   └── BankAccountLoaders.kt
-│   └── csv/                         # CSV utilities
-│       └── CsvUtils.kt
-├── model/                           # Domain models
-│   ├── Models.kt                    # Core data structures
-│   ├── Calculators.kt               # Financial calculations
-│   ├── HistoricalPerformanceCalculator.kt
-│   └── util/
-│       └── Money.kt                 # Money arithmetic utilities
-└── view/                            # Presentation layer
-    ├── Console.kt                   # CLI output
-    └── WebView.kt                   # Web dashboard (Ktor)
-```
 
 ## Getting Started
 
