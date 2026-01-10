@@ -77,7 +77,7 @@ jobs:
         run: ./gradlew --no-daemon test
 
       - name: Generate coverage report
-        run: ./gradlew --no-daemon jacocoTestReport
+        run: ./gradlew --no-daemon koverHtmlReport koverXmlReport
 
       - name: Publish test report artifacts
         if: always()
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: coverage-reports
-          path: build/reports/jacoco/test
+          path: build/reports/kover
 
   release:
     runs-on: ubuntu-latest
