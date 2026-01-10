@@ -316,6 +316,37 @@ function filterDataByTimeWindow(dataPoints, timeWindow) {
     return reduceDataPoints(filteredData, maxPoints);
 }
 
+// Calculate return percentage for a given time period
+function calculateReturn(dataPoints) {
+    if (!dataPoints || dataPoints.length < 2) return 0;
+
+    const firstValue = parseFloat(dataPoints[0].value);
+    const lastValue = parseFloat(dataPoints[dataPoints.length - 1].value);
+
+    if (firstValue === 0) return 0;
+
+    const returnPct = ((lastValue - firstValue) / firstValue) * 100;
+    return returnPct.toFixed(2);
+}
+
+// Update return badge for a chart
+function updateReturnBadge(chartId, returnPct) {
+    // Find the return badge in the chart's container
+    const canvas = document.getElementById(chartId);
+    if (!canvas) return;
+
+    const container = canvas.closest('.chart-container');
+    if (!container) return;
+
+    const badge = container.querySelector('.return-badge');
+    if (!badge) return;
+
+    // Update the badge text and color
+    badge.textContent = returnPct + '%';
+    badge.classList.remove('positive', 'negative');
+    badge.classList.add(parseFloat(returnPct) >= 0 ? 'positive' : 'negative');
+}
+
 // Update chart with filtered data
 function updateHistoricalChart(chartId, fullData, timeWindow) {
     const chart = chartInstances[chartId];
@@ -344,6 +375,10 @@ function updateHistoricalChart(chartId, fullData, timeWindow) {
     chart.data.datasets[0].pointRadius = pointRadius;
     chart.data.datasets[0].pointHoverRadius = pointHoverRadius;
     chart.update('none');
+
+    // Update the return badge with the calculated return for this time window
+    const returnPct = calculateReturn(filteredData);
+    updateReturnBadge(chartId, returnPct);
 }
 
 // Create time window selector for a chart
@@ -429,6 +464,10 @@ function initHistoricalChart(canvasId, historicalData) {
     // Create time window selector
     const containerId = canvasId + 'Container';
     createTimeWindowSelector(containerId, canvasId, historicalData);
+
+    // Set initial return badge value based on ALL time window
+    const returnPct = calculateReturn(optimizedData);
+    updateReturnBadge(canvasId, returnPct);
 }
 
 // Standard chart options

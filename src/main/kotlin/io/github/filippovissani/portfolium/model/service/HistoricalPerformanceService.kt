@@ -1,7 +1,10 @@
-package io.github.filippovissani.portfolium.model
+package io.github.filippovissani.portfolium.model.service
 
 import io.github.filippovissani.portfolium.controller.csv.CsvUtils.toMoney
 import io.github.filippovissani.portfolium.controller.datasource.PriceDataSource
+import io.github.filippovissani.portfolium.model.domain.HistoricalPerformance
+import io.github.filippovissani.portfolium.model.domain.InvestmentTransaction
+import io.github.filippovissani.portfolium.model.domain.PerformanceDataPoint
 import io.github.filippovissani.portfolium.model.util.times
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -9,7 +12,10 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.math.pow
 
-object HistoricalPerformanceCalculator {
+/**
+ * Service for calculating historical performance
+ */
+object HistoricalPerformanceService {
     /**
      * Calculate historical performance of investments over a date range
      * @param transactions All investment transactions
