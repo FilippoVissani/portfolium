@@ -7,7 +7,7 @@ logback = "1.5.24"
 snakeyaml = "2.5"
 kover = "0.9.4"
 versions = "0.51.0"
-dependencyCheck = "10.0.4"
+dependencyCheck = "11.1.1"
 diktat = "2.0.0"
 konsist = "0.16.1"
 
