@@ -1,3 +1,15 @@
+## [5.0.1](https://github.com/FilippoVissani/portfolium/compare/5.0.0...5.0.1) (2026-01-10)
+
+### Dependency updates
+
+* **deps:** update plugin ktlint to v12.3.0 ([#52](https://github.com/FilippoVissani/portfolium/issues/52)) ([56b8581](https://github.com/FilippoVissani/portfolium/commit/56b85810d22205787fc8455735d710a0941a5fbb))
+* **deps:** update plugin ktlint to v13 ([#53](https://github.com/FilippoVissani/portfolium/issues/53)) ([433a254](https://github.com/FilippoVissani/portfolium/commit/433a254f8583f8bc2b3ff13ae6dee2a15fce0912))
+* **deps:** update plugin ktlint to v14 ([#54](https://github.com/FilippoVissani/portfolium/issues/54)) ([ecc7549](https://github.com/FilippoVissani/portfolium/commit/ecc7549ea18841e5a76622ade6a6f9d11d3c4068))
+
+### Bug Fixes
+
+* fix bugs, add build tools and refactor code ([aa70316](https://github.com/FilippoVissani/portfolium/commit/aa7031655518b5feb83fed8f7eab28d85fec62e9))
+
 ## [5.0.0](https://github.com/FilippoVissani/portfolium/compare/4.0.2...5.0.0) (2026-01-09)
 
 ### ⚠ BREAKING CHANGES
