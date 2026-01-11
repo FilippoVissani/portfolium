@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.versions)
     alias(libs.plugins.dependencyCheck)
-    alias(libs.plugins.diktat)
     alias(libs.plugins.graalvm)
     application
 }
@@ -117,16 +116,6 @@ dependencyCheck {
     failBuildOnCVSS = 7.0f // Fail build if CVSS score >= 7
     analyzers.assemblyEnabled = false
     analyzers.nuspecEnabled = false
-}
-
-// Diktat - Strict Kotlin Style Checker
-diktat {
-    inputs {
-        include("src/**/*.kt")
-        exclude("**/build/**")
-    }
-    debug = false
-    ignoreFailures = true // Set to false to enforce strict rules
 }
 
 // ============================================

@@ -8,7 +8,6 @@ snakeyaml = "2.5"
 kover = "0.9.4"
 versions = "0.53.0"
 dependencyCheck = "12.1.9"
-diktat = "2.0.0"
 konsist = "0.17.3"
 graalvm = "0.11.3"
 
@@ -43,7 +42,5 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 # OWASP Dependency Check - Security vulnerability scanner
 dependencyCheck = { id = "org.owasp.dependencycheck", version.ref = "dependencyCheck" }
-# Diktat - Strict Kotlin code style checker
-diktat = { id = "com.saveourtool.diktat", version.ref = "diktat" }
 # GraalVM Native Image
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm" }
