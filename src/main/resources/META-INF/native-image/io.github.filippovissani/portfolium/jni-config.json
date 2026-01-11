@@ -1,0 +1,12 @@
+[
+  {
+    "name": "sun.security.provider.NativePRNG"
+  },
+  {
+    "name": "sun.security.provider.SHA"
+  },
+  {
+    "name": "sun.security.provider.SecureRandom$SHA1PRNG"
+  }
+]
+

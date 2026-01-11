@@ -10,6 +10,7 @@ versions = "0.53.0"
 dependencyCheck = "12.1.9"
 diktat = "2.0.0"
 konsist = "0.17.3"
+graalvm = "0.11.3"
 
 [libraries]
 # CSV utilities
@@ -44,3 +45,5 @@ versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 dependencyCheck = { id = "org.owasp.dependencycheck", version.ref = "dependencyCheck" }
 # Diktat - Strict Kotlin code style checker
 diktat = { id = "com.saveourtool.diktat", version.ref = "diktat" }
+# GraalVM Native Image
+graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm" }

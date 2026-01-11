@@ -1,0 +1,29 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": ".*\\.properties$"
+      },
+      {
+        "pattern": ".*\\.xml$"
+      },
+      {
+        "pattern": ".*\\.yaml$"
+      },
+      {
+        "pattern": ".*\\.yml$"
+      },
+      {
+        "pattern": ".*\\.csv$"
+      },
+      {
+        "pattern": "static/.*"
+      },
+      {
+        "pattern": "META-INF/services/.*"
+      }
+    ]
+  },
+  "bundles": []
+}
+
