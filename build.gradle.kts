@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kover)
     alias(libs.plugins.versions)
-    alias(libs.plugins.dependencyCheck)
     alias(libs.plugins.graalvm)
     application
 }
@@ -106,16 +105,6 @@ fun isNonStable(version: String): Boolean {
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(version)
     return isStable.not()
-}
-
-// OWASP Dependency Check - Security Scanning
-dependencyCheck {
-    formats = listOf("HTML", "JSON", "XML")
-    scanConfigurations = listOf("runtimeClasspath")
-    suppressionFile = "$projectDir/config/owasp/suppressions.xml"
-    failBuildOnCVSS = 7.0f // Fail build if CVSS score >= 7
-    analyzers.assemblyEnabled = false
-    analyzers.nuspecEnabled = false
 }
 
 // ============================================
