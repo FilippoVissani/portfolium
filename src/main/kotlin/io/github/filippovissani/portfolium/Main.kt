@@ -8,10 +8,12 @@ private val logger = LoggerFactory.getLogger("io.github.filippovissani.portfoliu
 
 fun main() {
     // Add shutdown hook to handle Ctrl+C gracefully
-    Runtime.getRuntime().addShutdownHook(Thread {
-        logger.info("Shutdown signal received (Ctrl+C). Exiting gracefully...")
-        exitProcess(0)
-    })
+    Runtime.getRuntime().addShutdownHook(
+        Thread {
+            logger.info("Shutdown signal received (Ctrl+C). Exiting gracefully...")
+            exitProcess(0)
+        },
+    )
 
     try {
         computePortfolioSummary()
