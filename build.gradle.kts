@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.versions)
     alias(libs.plugins.dependencyCheck)
     alias(libs.plugins.diktat)
+    alias(libs.plugins.graalvm)
     application
 }
 
@@ -126,4 +127,60 @@ diktat {
     }
     debug = false
     ignoreFailures = true // Set to false to enforce strict rules
+}
+
+// ============================================
+// GraalVM Native Image Configuration
+// ============================================
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+}
+
+graalvmNative {
+    binaries {
+        named("main") {
+            javaLauncher.set(
+                javaToolchains.launcherFor {
+                    languageVersion.set(JavaLanguageVersion.of(25))
+                },
+            )
+            imageName.set("portfolium")
+            mainClass.set("io.github.filippovissani.portfolium.MainKt")
+
+            buildArgs.add("--verbose")
+            buildArgs.add("--no-fallback")
+            buildArgs.add("-H:+ReportExceptionStackTraces")
+
+            // Enable all-public reflection for SnakeYAML and other libraries
+            buildArgs.add("-H:+AddAllCharsets")
+            buildArgs.add("-H:+IncludeAllLocales")
+
+            // Resource inclusion
+            buildArgs.add("-H:IncludeResources=.*\\.properties")
+            buildArgs.add("-H:IncludeResources=.*\\.xml")
+            buildArgs.add("-H:IncludeResources=static/.*")
+
+            // Enable HTTP
+            buildArgs.add("--enable-url-protocols=http,https")
+
+            // Memory settings
+            buildArgs.add("-J-Xmx4g")
+        }
+    }
+
+    // Use agent mode for automatic metadata generation
+    agent {
+        defaultMode.set("standard")
+        modes {
+            standard {
+            }
+        }
+        metadataCopy {
+            inputTaskNames.add("run")
+            outputDirectories.add("src/main/resources/META-INF/native-image")
+            mergeWithExisting.set(true)
+        }
+    }
 }

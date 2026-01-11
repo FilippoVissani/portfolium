@@ -77,6 +77,15 @@ cd portfolium
 
 The web dashboard will start on `http://localhost:8080` (configurable).
 
+### Native Executable (GraalVM)
+
+Build a native executable for faster startup and lower memory usage:
+
+**Prerequisites:**
+- GraalVM JDK 25 or compatible
+
+./gradlew nativeCompile
+
 ## Configuration
 
 Configure Portfolium through `src/main/resources/application.properties`:

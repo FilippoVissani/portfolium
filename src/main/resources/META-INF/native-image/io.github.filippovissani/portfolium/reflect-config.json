@@ -1,0 +1,168 @@
+[
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.MainBankAccountYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.LiquidTransactionYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.PlannedExpensesBankAccountYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.PlannedExpenseEntryYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.EmergencyFundBankAccountYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.InvestmentBankAccountYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.GenericTransactionYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "io.github.filippovissani.portfolium.controller.yaml.InvestmentTransactionYaml",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.math.BigDecimal",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.util.ArrayList",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "java.util.LinkedHashMap",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.ThrowableProxyConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.RootCauseFirstThrowableProxyConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BlackCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.RedCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.GreenCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.YellowCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BlueCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.MagentaCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.CyanCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.WhiteCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.GrayCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldRedCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldGreenCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldYellowCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldBlueCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldMagentaCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldCyanCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.color.BoldWhiteCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.DateConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.LevelConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.LoggerConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.MessageConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.ThreadConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.LineSeparatorConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.core.pattern.IdentityCompositeConverter",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "ch.qos.logback.classic.pattern.color.HighlightingCompositeConverter",
+    "allDeclaredConstructors": true
+  }
+]
+
