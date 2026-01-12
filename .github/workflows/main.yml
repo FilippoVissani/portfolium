@@ -25,3 +25,4 @@ jobs:
       - check
       - test
     uses: ./.github/workflows/release.yml
+    secrets: inherit
