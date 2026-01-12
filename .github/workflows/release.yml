@@ -15,10 +15,11 @@ jobs:
             platform: macos
             arch: amd64
             binary: portfolium
-          - os: windows-latest
-            platform: windows
-            arch: amd64
-            binary: portfolium.exe
+          # Temporarily disabled due to active issue in native-build-tools
+          # - os: windows-latest
+          #   platform: windows
+          #   arch: amd64
+          #   binary: portfolium.exe
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
