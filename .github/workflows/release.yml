@@ -99,9 +99,6 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Build JAR
-        run: ./gradlew build -x test
-
       - name: Download all binaries
         uses: actions/download-artifact@v7
         with:
