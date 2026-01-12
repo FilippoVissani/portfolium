@@ -1,3 +1,25 @@
+## [5.0.4](https://github.com/FilippoVissani/portfolium/compare/5.0.3...5.0.4) (2026-01-12)
+
+### Bug Fixes
+
+* add shutdown hook for graceful exit on Ctrl+C ([6442dc8](https://github.com/FilippoVissani/portfolium/commit/6442dc8d99463129d74d92e8641dece9a68c1b83))
+
+### Build and continuous integration
+
+* add GraalVM native image support and configuration ([eb98a5c](https://github.com/FilippoVissani/portfolium/commit/eb98a5cfb1893660fc32125c417c7c238103ead8))
+* **deps:** update actions/download-artifact action to v7 ([#63](https://github.com/FilippoVissani/portfolium/issues/63)) ([ac4da50](https://github.com/FilippoVissani/portfolium/commit/ac4da50679c3f8644e66cc5cf4dce31fb8e08532))
+* inherit secrets for release workflow ([2b4c230](https://github.com/FilippoVissani/portfolium/commit/2b4c2301c0d37d4b91fbaa26d35829ff39d41314))
+* refactor CI workflows to use GraalVM and modularize checks, tests, and releases ([f2c0325](https://github.com/FilippoVissani/portfolium/commit/f2c03256e5e94c751d9ab1c7bc56c7c542295959))
+* remove Diktat checks ([75f08b7](https://github.com/FilippoVissani/portfolium/commit/75f08b7dba46c55791f45e98f49bcbc21caf9102))
+* remove Diktat plugin and related configuration ([4052f79](https://github.com/FilippoVissani/portfolium/commit/4052f79d92d17ddc14d948050669ed8109df5390))
+* remove OWASP Dependency Check plugin and related configurations ([ec792bf](https://github.com/FilippoVissani/portfolium/commit/ec792bf9a0ec1c55c4cdb82dd74723bb0d9d5b4b))
+* remove OWASP dependency check workflow from checks.yml ([bfc7bed](https://github.com/FilippoVissani/portfolium/commit/bfc7bed25881b25006bb6e7c7e5dd9d7d5dd28d4))
+* temporarily disable Windows build configuration ([3a626d3](https://github.com/FilippoVissani/portfolium/commit/3a626d3774ebfc5a324d6b51914fc1adc42ee647))
+
+### General maintenance
+
+* format code ([bcd2c82](https://github.com/FilippoVissani/portfolium/commit/bcd2c82ae9d41d4cde3b61ebca95a6380c616f29))
+
 ## [5.0.3](https://github.com/FilippoVissani/portfolium/compare/5.0.2...5.0.3) (2026-01-10)
 
 ### Documentation
