@@ -1,3 +1,13 @@
+## [5.0.5](https://github.com/FilippoVissani/portfolium/compare/5.0.4...5.0.5) (2026-01-13)
+
+### Documentation
+
+* update README to reflect changes in Gradle tasks and Kover usage ([3b50ae6](https://github.com/FilippoVissani/portfolium/commit/3b50ae6bcfc72dae0f0ec24ce75b0539dc600d73))
+
+### Build and continuous integration
+
+* update release workflow to include Gradle build step ([#67](https://github.com/FilippoVissani/portfolium/issues/67)) ([78e459d](https://github.com/FilippoVissani/portfolium/commit/78e459df54d45cd3417189e979f36b9d923f2056))
+
 ## [5.0.4](https://github.com/FilippoVissani/portfolium/compare/5.0.3...5.0.4) (2026-01-12)
 
 ### Bug Fixes
