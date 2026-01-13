@@ -152,6 +152,11 @@ graalvmNative {
             // Enable HTTP
             buildArgs.add("--enable-url-protocols=http,https")
 
+            // Fix for Netty and logging issues with Java 25
+            buildArgs.add("--initialize-at-run-time=io.netty")
+            buildArgs.add("--initialize-at-run-time=ch.qos.logback")
+            buildArgs.add("--initialize-at-run-time=org.slf4j")
+
             // Memory settings
             buildArgs.add("-J-Xmx4g")
         }
