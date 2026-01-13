@@ -84,7 +84,11 @@ Build a native executable for faster startup and lower memory usage:
 **Prerequisites:**
 - GraalVM JDK 25 or compatible
 
+```bash
 ./gradlew nativeCompile
+```
+
+The native executable will be created in `build/native/nativeCompile/`.
 
 ## Configuration
 
@@ -231,10 +235,13 @@ transactions:
 # Run tests
 ./gradlew test
 
-# Generate coverage report
-./gradlew jacocoTestReport
+# Generate coverage report (HTML + XML)
+./gradlew koverHtmlReport koverXmlReport
 
-# Check code quality (ktlint + tests + coverage)
+# Verify coverage meets minimum threshold
+./gradlew koverVerify
+
+# Check code quality (ktlint + tests + coverage verification)
 ./gradlew check
 
 # Build distribution
@@ -269,7 +276,7 @@ The application automatically calculates:
 This project enforces high code quality standards:
 
 - **ktlint**: Kotlin code style checking and formatting
-- **JaCoCo**: Code coverage reporting
+- **Kover**: JetBrains code coverage tool
 - **JUnit 5 + Kotest**: Comprehensive test suite
 
 ```bash
@@ -279,7 +286,7 @@ This project enforces high code quality standards:
 # Check code style
 ./gradlew ktlintCheck
 
-# Run all checks
+# Run all checks (includes ktlint + tests + coverage verification)
 ./gradlew check
 ```
 
@@ -293,6 +300,7 @@ This project enforces high code quality standards:
 - **CSV Processing**: kotlin-csv 1.10.0
 - **Logging**: Logback 1.5.24
 - **Testing**: JUnit 5, Kotest 6.0.7
+- **Code Coverage**: Kover 0.9.4
 - **Charts**: Chart.js (client-side)
 
 ## Contributing
@@ -323,11 +331,17 @@ Run tests with:
 ./gradlew test --info
 ```
 
-View coverage report (generated in `build/reports/jacoco/test/html/`):
+View coverage report (HTML generated in `build/reports/kover/html/`):
 
 ```bash
-./gradlew jacocoTestReport
-open build/reports/jacoco/test/html/index.html
+./gradlew koverHtmlReport
+open build/reports/kover/html/index.html
+```
+
+View coverage report (XML generated in `build/reports/kover/report.xml`):
+
+```bash
+./gradlew koverXmlReport
 ```
 
 ## License
