@@ -55,6 +55,15 @@ application {
     mainClass.set("io.github.filippovissani.portfolium.MainKt")
 }
 
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "io.github.filippovissani.portfolium.MainKt"
+    }
+    // Include dependencies in the JAR
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+}
+
 tasks.test {
     useJUnitPlatform()
 }
@@ -142,6 +151,11 @@ graalvmNative {
 
             // Enable HTTP
             buildArgs.add("--enable-url-protocols=http,https")
+
+            // Fix for Netty and logging issues with Java 25
+            buildArgs.add("--initialize-at-run-time=io.netty")
+            buildArgs.add("--initialize-at-run-time=ch.qos.logback")
+            buildArgs.add("--initialize-at-run-time=org.slf4j")
 
             // Memory settings
             buildArgs.add("-J-Xmx4g")
