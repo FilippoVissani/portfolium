@@ -55,6 +55,15 @@ application {
     mainClass.set("io.github.filippovissani.portfolium.MainKt")
 }
 
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "io.github.filippovissani.portfolium.MainKt"
+    }
+    // Include dependencies in the JAR
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+}
+
 tasks.test {
     useJUnitPlatform()
 }
