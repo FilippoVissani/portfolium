@@ -103,7 +103,10 @@ object PdfExporter {
         document.add(timestampPara)
     }
 
-    private fun addSummarySection(document: Document, portfolio: Portfolio) {
+    private fun addSummarySection(
+        document: Document,
+        portfolio: Portfolio,
+    ) {
         val heading = Paragraph("Portfolio Summary", HEADING_FONT)
         heading.spacingBefore = 10f
         heading.spacingAfter = 10f
@@ -121,7 +124,10 @@ object PdfExporter {
         document.add(Chunk.NEWLINE)
     }
 
-    private fun addLiquiditySection(document: Document, portfolio: Portfolio) {
+    private fun addLiquiditySection(
+        document: Document,
+        portfolio: Portfolio,
+    ) {
         val heading = Paragraph("Liquidity (Main Bank Account)", HEADING_FONT)
         heading.spacingBefore = 10f
         heading.spacingAfter = 10f
@@ -140,7 +146,10 @@ object PdfExporter {
         document.add(Chunk.NEWLINE)
     }
 
-    private fun addPlannedExpensesSection(document: Document, portfolio: Portfolio) {
+    private fun addPlannedExpensesSection(
+        document: Document,
+        portfolio: Portfolio,
+    ) {
         val heading = Paragraph("Planned & Predictable Expenses", HEADING_FONT)
         heading.spacingBefore = 10f
         heading.spacingAfter = 10f
@@ -181,7 +190,10 @@ object PdfExporter {
         document.add(Chunk.NEWLINE)
     }
 
-    private fun addEmergencyFundSection(document: Document, portfolio: Portfolio) {
+    private fun addEmergencyFundSection(
+        document: Document,
+        portfolio: Portfolio,
+    ) {
         val heading = Paragraph("Emergency Fund", HEADING_FONT)
         heading.spacingBefore = 10f
         heading.spacingAfter = 10f
@@ -222,7 +234,10 @@ object PdfExporter {
         document.add(Chunk.NEWLINE)
     }
 
-    private fun addInvestmentsSection(document: Document, portfolio: Portfolio) {
+    private fun addInvestmentsSection(
+        document: Document,
+        portfolio: Portfolio,
+    ) {
         val heading = Paragraph("Investments (Long Term)", HEADING_FONT)
         heading.spacingBefore = 10f
         heading.spacingAfter = 10f
@@ -288,7 +303,10 @@ object PdfExporter {
         document.add(Chunk.NEWLINE)
     }
 
-    private fun addHistoricalPerformanceSection(document: Document, portfolio: Portfolio) {
+    private fun addHistoricalPerformanceSection(
+        document: Document,
+        portfolio: Portfolio,
+    ) {
         portfolio.overallHistoricalPerformance?.let { perf ->
             val heading = Paragraph("Overall Portfolio Performance", HEADING_FONT)
             heading.spacingBefore = 10f
@@ -309,7 +327,12 @@ object PdfExporter {
         }
     }
 
-    private fun addTableRow(table: PdfPTable, label: String, value: String, isHeader: Boolean = false) {
+    private fun addTableRow(
+        table: PdfPTable,
+        label: String,
+        value: String,
+        isHeader: Boolean = false,
+    ) {
         val font = if (isHeader) SUBHEADING_FONT else NORMAL_FONT
         val labelCell = PdfPCell(Phrase(label, font))
         labelCell.border = PdfPCell.NO_BORDER
@@ -323,7 +346,11 @@ object PdfExporter {
         table.addCell(valueCell)
     }
 
-    private fun addTableRow(table: PdfPTable, values: List<String>, isHeader: Boolean = false) {
+    private fun addTableRow(
+        table: PdfPTable,
+        values: List<String>,
+        isHeader: Boolean = false,
+    ) {
         val font = if (isHeader) SUBHEADING_FONT else NORMAL_FONT
         values.forEach { value ->
             val cell = PdfPCell(Phrase(value, font))
@@ -334,11 +361,7 @@ object PdfExporter {
         }
     }
 
-    private fun formatMoney(amount: BigDecimal): String {
-        return "€${amount.setScale(2, RoundingMode.HALF_UP)}"
-    }
+    private fun formatMoney(amount: BigDecimal): String = "€${amount.setScale(2, RoundingMode.HALF_UP)}"
 
-    private fun formatPercentage(ratio: BigDecimal): String {
-        return "${(ratio * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%"
-    }
+    private fun formatPercentage(ratio: BigDecimal): String = "${(ratio * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%"
 }
