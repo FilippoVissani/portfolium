@@ -25,10 +25,10 @@ import kotlinx.html.*
  * Web-based view for the portfolio dashboard.
  * Provides an interactive HTML interface with charts and detailed metrics.
  */
-public class WebView(val controller: IController): IView {
+class WebView(val controller: IController): IView {
     private lateinit var portfolioData: Portfolio
 
-    public override fun render(portfolio: Portfolio, port: Int) {
+    override fun render(portfolio: Portfolio, port: Int) {
         portfolioData = portfolio
 
         embeddedServer(Netty, port = port) {

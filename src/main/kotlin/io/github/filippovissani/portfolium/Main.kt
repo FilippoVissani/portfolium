@@ -1,6 +1,7 @@
 package io.github.filippovissani.portfolium
 
 import io.github.filippovissani.portfolium.controller.Controller
+import io.github.filippovissani.portfolium.view.ConsoleView
 import io.github.filippovissani.portfolium.view.WebView
 import org.slf4j.LoggerFactory
 import kotlin.system.exitProcess
@@ -18,7 +19,7 @@ fun main() {
 
     try {
         val controller = Controller()
-        val views = setOf(WebView(controller))
+        val views = setOf(WebView(controller), ConsoleView())
         controller.setViews(*views.toTypedArray())
         controller.computePortfolioSummary()
     } catch (e: Exception) {

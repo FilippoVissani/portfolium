@@ -13,11 +13,10 @@ import io.github.filippovissani.portfolium.model.service.InvestmentService
 import io.github.filippovissani.portfolium.model.service.LiquidityService
 import io.github.filippovissani.portfolium.model.service.PlannedExpensesService
 import io.github.filippovissani.portfolium.model.service.PortfolioService
-import io.github.filippovissani.portfolium.view.Console.printDashboard
 import io.github.filippovissani.portfolium.view.IView
 import org.slf4j.LoggerFactory
 
-public class Controller : IController {
+class Controller : IController {
     private val logger = LoggerFactory.getLogger(Controller::class.java)
     private var views: Set<IView> = HashSet()
     private lateinit var portfolio: Portfolio
@@ -156,7 +155,6 @@ public class Controller : IController {
                 overallHistoricalPerformance,
             )
 
-        printDashboard(portfolio)
         views.forEach { view -> view.render(portfolio, config.serverPort) }
     }
 
