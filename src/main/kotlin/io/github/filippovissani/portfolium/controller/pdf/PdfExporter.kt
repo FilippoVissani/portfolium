@@ -179,9 +179,9 @@ object PdfExporter {
             perfTable.widthPercentage = 100f
             perfTable.setWidths(floatArrayOf(3f, 2f))
 
-            addTableRow(perfTable, "Total Return", formatPercentage(perf.totalReturn))
+            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
             perf.annualizedReturn?.let {
-                addTableRow(perfTable, "Annualized Return", formatPercentage(it))
+                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
             }
 
             document.add(perfTable)
@@ -223,9 +223,9 @@ object PdfExporter {
             perfTable.widthPercentage = 100f
             perfTable.setWidths(floatArrayOf(3f, 2f))
 
-            addTableRow(perfTable, "Total Return", formatPercentage(perf.totalReturn))
+            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
             perf.annualizedReturn?.let {
-                addTableRow(perfTable, "Annualized Return", formatPercentage(it))
+                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
             }
 
             document.add(perfTable)
@@ -292,9 +292,9 @@ object PdfExporter {
             perfTable.widthPercentage = 100f
             perfTable.setWidths(floatArrayOf(3f, 2f))
 
-            addTableRow(perfTable, "Total Return", formatPercentage(perf.totalReturn))
+            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
             perf.annualizedReturn?.let {
-                addTableRow(perfTable, "Annualized Return", formatPercentage(it))
+                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
             }
 
             document.add(perfTable)
@@ -317,9 +317,9 @@ object PdfExporter {
             table.widthPercentage = 100f
             table.setWidths(floatArrayOf(3f, 2f))
 
-            addTableRow(table, "Total Return", formatPercentage(perf.totalReturn), true)
+            addTableRow(table, "Total Return", formatPercentageValue(perf.totalReturn), true)
             perf.annualizedReturn?.let {
-                addTableRow(table, "Annualized Return", formatPercentage(it))
+                addTableRow(table, "Annualized Return", formatPercentageValue(it))
             }
 
             document.add(table)
@@ -364,4 +364,6 @@ object PdfExporter {
     private fun formatMoney(amount: BigDecimal): String = "€${amount.setScale(2, RoundingMode.HALF_UP)}"
 
     private fun formatPercentage(ratio: BigDecimal): String = "${(ratio * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)}%"
+
+    private fun formatPercentageValue(percentage: BigDecimal): String = "${percentage.setScale(2, RoundingMode.HALF_UP)}%"
 }
