@@ -1,3 +1,35 @@
+## [5.1.0](https://github.com/FilippoVissani/portfolium/compare/5.0.5...5.1.0) (2026-01-16)
+
+### Features
+
+* add PDF export functionality for portfolio data ([0dbdeb9](https://github.com/FilippoVissani/portfolium/commit/0dbdeb9c65b95102dfc26efda115efbd7832efdf))
+
+### Dependency updates
+
+* **deps:** update node.js to 24.13 ([#69](https://github.com/FilippoVissani/portfolium/issues/69)) ([b6d224b](https://github.com/FilippoVissani/portfolium/commit/b6d224bf105ea2ace8cc4f45c780434719685811))
+
+### Bug Fixes
+
+* update percentage formatting in PDF report exporter ([1805d0c](https://github.com/FilippoVissani/portfolium/commit/1805d0c5e703398a8818204a7904944a6b085f20))
+
+### Build and continuous integration
+
+* **deps:** update actions/upload-artifact action to v6 ([ed4f7e9](https://github.com/FilippoVissani/portfolium/commit/ed4f7e9a6ee820b4ec38232c020bada8fb0e8a95))
+* **deps:** update dependency node to v24.13.0 ([#71](https://github.com/FilippoVissani/portfolium/issues/71)) ([ec0bd00](https://github.com/FilippoVissani/portfolium/commit/ec0bd00a445a57104243d670731253fb5a96ad2d))
+* fix jar build ([37d0503](https://github.com/FilippoVissani/portfolium/commit/37d0503129f973a0f97f7a9044fe3bec9382867d))
+* re-enable Windows build configuration in release workflow ([69918a4](https://github.com/FilippoVissani/portfolium/commit/69918a4caa3684f0c133fff53e2b7908723f50fe))
+
+### General maintenance
+
+* change default data directory ([c14cbb2](https://github.com/FilippoVissani/portfolium/commit/c14cbb20a197f0561402f2c1cec707ffa32ca31f))
+* format code ([c819ebe](https://github.com/FilippoVissani/portfolium/commit/c819ebec5dea843d9b7ab0db4cb716667f2c04c5))
+* remove unused Font import in PdfExporter ([e7907e5](https://github.com/FilippoVissani/portfolium/commit/e7907e50f55d57567009537921201849471ce058))
+
+### Refactoring
+
+* move PDF report export functionality in Controller ([8d09ddf](https://github.com/FilippoVissani/portfolium/commit/8d09ddfa4df838eca0f4dc832f51cba5f9122780))
+* rename Console to ConsoleView and update rendering logic ([2296569](https://github.com/FilippoVissani/portfolium/commit/2296569546dc6631fa82c6811036e01263eada4b))
+
 ## [5.0.5](https://github.com/FilippoVissani/portfolium/compare/5.0.4...5.0.5) (2026-01-13)
 
 ### Documentation
