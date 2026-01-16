@@ -1,4 +1,4 @@
-package io.github.filippovissani.portfolium.view.pdf
+package io.github.filippovissani.portfolium.controller.pdf
 
 import com.lowagie.text.Chunk
 import com.lowagie.text.Document

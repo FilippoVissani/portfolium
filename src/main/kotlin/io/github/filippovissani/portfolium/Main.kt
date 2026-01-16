@@ -1,6 +1,7 @@
 package io.github.filippovissani.portfolium
 
-import io.github.filippovissani.portfolium.controller.Controller.computePortfolioSummary
+import io.github.filippovissani.portfolium.controller.Controller
+import io.github.filippovissani.portfolium.view.WebView
 import org.slf4j.LoggerFactory
 import kotlin.system.exitProcess
 
@@ -16,7 +17,10 @@ fun main() {
     )
 
     try {
-        computePortfolioSummary()
+        val controller = Controller()
+        val views = setOf(WebView(controller))
+        controller.setViews(*views.toTypedArray())
+        controller.computePortfolioSummary()
     } catch (e: Exception) {
         logger.error("Error computing portfolio summary", e)
     }

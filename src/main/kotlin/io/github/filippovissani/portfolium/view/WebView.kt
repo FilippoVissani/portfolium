@@ -1,9 +1,9 @@
 package io.github.filippovissani.portfolium.view
 
+import io.github.filippovissani.portfolium.controller.IController
 import io.github.filippovissani.portfolium.model.Portfolio
 import io.github.filippovissani.portfolium.view.html.HtmlHeadGenerator.generateHead
 import io.github.filippovissani.portfolium.view.html.JavaScriptDataGenerator
-import io.github.filippovissani.portfolium.view.pdf.PdfExporter
 import io.github.filippovissani.portfolium.view.sections.EmergencyFundSection
 import io.github.filippovissani.portfolium.view.sections.InvestmentsSection
 import io.github.filippovissani.portfolium.view.sections.MainBankAccountSection
@@ -25,16 +25,10 @@ import kotlinx.html.*
  * Web-based view for the portfolio dashboard.
  * Provides an interactive HTML interface with charts and detailed metrics.
  */
-object WebView {
+public class WebView(val controller: IController): IView {
     private lateinit var portfolioData: Portfolio
 
-    /**
-     * Starts the web server for the portfolio dashboard.
-     *
-     * @param portfolio The portfolio data to display
-     * @param port The port to run the server on (default: 8080)
-     */
-    fun startServer(portfolio: Portfolio, port: Int = 8080) {
+    public override fun render(portfolio: Portfolio, port: Int) {
         portfolioData = portfolio
 
         embeddedServer(Netty, port = port) {
@@ -61,14 +55,13 @@ object WebView {
 
                 get("/export/pdf") {
                     try {
-                        val pdfBytes = PdfExporter.exportToPdf(portfolioData)
-                        val filename = "portfolium-dashboard-${java.time.LocalDate.now()}.pdf"
+                        val portfolioReport = controller.exportPortfolioReport()
                         call.response.headers.append(
                             HttpHeaders.ContentDisposition,
-                            "attachment; filename=\"$filename\""
+                            "attachment; filename=\"${portfolioReport.fileName}\""
                         )
                         call.respondBytes(
-                            bytes = pdfBytes,
+                            bytes = portfolioReport.content,
                             contentType = ContentType.Application.Pdf
                         )
                     } catch (e: Exception) {
