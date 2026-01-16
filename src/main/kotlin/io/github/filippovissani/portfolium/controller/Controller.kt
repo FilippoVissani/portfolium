@@ -3,21 +3,26 @@ package io.github.filippovissani.portfolium.controller
 import io.github.filippovissani.portfolium.controller.config.ConfigLoader
 import io.github.filippovissani.portfolium.controller.datasource.CachedPriceDataSource
 import io.github.filippovissani.portfolium.controller.datasource.YahooFinancePriceDataSource
+import io.github.filippovissani.portfolium.controller.pdf.PdfExporter
+import io.github.filippovissani.portfolium.controller.pdf.PdfReport
 import io.github.filippovissani.portfolium.controller.service.BankAccountLoaderService
 import io.github.filippovissani.portfolium.controller.service.HistoricalPerformanceOrchestrator
+import io.github.filippovissani.portfolium.model.Portfolio
 import io.github.filippovissani.portfolium.model.service.EmergencyFundService
 import io.github.filippovissani.portfolium.model.service.InvestmentService
 import io.github.filippovissani.portfolium.model.service.LiquidityService
 import io.github.filippovissani.portfolium.model.service.PlannedExpensesService
 import io.github.filippovissani.portfolium.model.service.PortfolioService
 import io.github.filippovissani.portfolium.view.Console.printDashboard
-import io.github.filippovissani.portfolium.view.WebView
+import io.github.filippovissani.portfolium.view.IView
 import org.slf4j.LoggerFactory
 
-object Controller {
+public class Controller : IController {
     private val logger = LoggerFactory.getLogger(Controller::class.java)
+    private var views: Set<IView> = HashSet()
+    private lateinit var portfolio: Portfolio
 
-    fun computePortfolioSummary() {
+    override fun computePortfolioSummary() {
         // Load configuration
         val config = ConfigLoader.loadConfig()
         logger.info("Configuration loaded: data path = ${config.dataPath}")
@@ -141,7 +146,7 @@ object Controller {
             }
 
         // Build portfolio with historical performance
-        val portfolio =
+        portfolio =
             PortfolioService.buildPortfolio(
                 liquiditySummary,
                 plannedSummary,
@@ -152,6 +157,16 @@ object Controller {
             )
 
         printDashboard(portfolio)
-        WebView.startServer(portfolio, config.serverPort)
+        views.forEach { view -> view.render(portfolio, config.serverPort) }
+    }
+
+    override fun exportPortfolioReport(): PdfReport {
+        val pdfBytes = PdfExporter.exportToPdf(portfolio)
+        val filename = "portfolium-dashboard-${java.time.LocalDate.now()}.pdf"
+        return PdfReport(pdfBytes, filename)
+    }
+
+    override fun setViews(vararg views: IView) {
+        this.views = views.toSet()
     }
 }
