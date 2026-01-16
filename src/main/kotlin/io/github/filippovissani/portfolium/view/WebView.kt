@@ -3,15 +3,21 @@ package io.github.filippovissani.portfolium.view
 import io.github.filippovissani.portfolium.model.Portfolio
 import io.github.filippovissani.portfolium.view.html.HtmlHeadGenerator.generateHead
 import io.github.filippovissani.portfolium.view.html.JavaScriptDataGenerator
+import io.github.filippovissani.portfolium.view.pdf.PdfExporter
 import io.github.filippovissani.portfolium.view.sections.EmergencyFundSection
 import io.github.filippovissani.portfolium.view.sections.InvestmentsSection
 import io.github.filippovissani.portfolium.view.sections.MainBankAccountSection
 import io.github.filippovissani.portfolium.view.sections.OverallPerformanceSection
 import io.github.filippovissani.portfolium.view.sections.PlannedExpensesSection
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.*
 import io.ktor.server.html.*
 import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondBytes
 import io.ktor.server.routing.*
 import kotlinx.html.*
 
@@ -52,6 +58,23 @@ object WebView {
                         }
                     }
                 }
+
+                get("/export/pdf") {
+                    try {
+                        val pdfBytes = PdfExporter.exportToPdf(portfolioData)
+                        val filename = "portfolium-dashboard-${java.time.LocalDate.now()}.pdf"
+                        call.response.headers.append(
+                            HttpHeaders.ContentDisposition,
+                            "attachment; filename=\"$filename\""
+                        )
+                        call.respondBytes(
+                            bytes = pdfBytes,
+                            contentType = ContentType.Application.Pdf
+                        )
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.InternalServerError)
+                    }
+                }
             }
         }.start(wait = true)
     }
@@ -61,6 +84,11 @@ object WebView {
             div(classes = "header-content") {
                 h1 { +"Portfolium" }
                 div(classes = "subtitle") { +"Professional Personal Finance Dashboard" }
+                div(classes = "header-actions") {
+                    a(href = "/export/pdf", classes = "export-button") {
+                        +"📄 Export as PDF"
+                    }
+                }
             }
         }
     }
