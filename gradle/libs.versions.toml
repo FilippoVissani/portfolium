@@ -9,6 +9,7 @@ kover = "0.9.4"
 versions = "0.53.0"
 konsist = "0.17.3"
 graalvm = "0.11.3"
+openpdf = "2.0.4"
 
 [libraries]
 # CSV utilities
@@ -29,6 +30,8 @@ ktor-server-html = { module = "io.ktor:ktor-server-html-builder", version.ref = 
 ktor-serialization-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+# OpenPDF for PDF generation
+openpdf = { module = "com.github.librepdf:openpdf", version.ref = "openpdf" }
 
 [plugins]
 # Kotlin JVM plugin

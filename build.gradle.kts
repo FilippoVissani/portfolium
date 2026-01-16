@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.findLibrary("ktor-serialization-gson").get())
     implementation(libs.findLibrary("ktor-server-content-negotiation").get())
     implementation(libs.findLibrary("logback").get())
+    implementation(libs.findLibrary("openpdf").get())
     testImplementation(libs.findLibrary("kotlinTest").get())
     // Kotest
     testImplementation(libs.findLibrary("kotest-assertions-core").get())
