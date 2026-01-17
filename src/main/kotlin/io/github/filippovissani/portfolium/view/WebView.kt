@@ -9,6 +9,7 @@ import io.github.filippovissani.portfolium.view.sections.InvestmentsSection
 import io.github.filippovissani.portfolium.view.sections.MainBankAccountSection
 import io.github.filippovissani.portfolium.view.sections.OverallPerformanceSection
 import io.github.filippovissani.portfolium.view.sections.PlannedExpensesSection
+import io.github.filippovissani.portfolium.view.util.BrowserLauncher
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -20,18 +21,20 @@ import io.ktor.server.response.respond
 import io.ktor.server.response.respondBytes
 import io.ktor.server.routing.*
 import kotlinx.html.*
+import org.slf4j.LoggerFactory
 
 /**
  * Web-based view for the portfolio dashboard.
  * Provides an interactive HTML interface with charts and detailed metrics.
  */
 class WebView(val controller: IController): IView {
+    private val logger = LoggerFactory.getLogger(WebView::class.java)
     private lateinit var portfolioData: Portfolio
 
     override fun render(portfolio: Portfolio, port: Int) {
         portfolioData = portfolio
 
-        embeddedServer(Netty, port = port) {
+        val server = embeddedServer(Netty, port = port) {
             routing {
                 staticResources("/static", "static")
 
@@ -69,7 +72,23 @@ class WebView(val controller: IController): IView {
                     }
                 }
             }
-        }.start(wait = true)
+        }
+
+        server.start(wait = false)
+        logger.info("Server started on port $port")
+
+        // Give the server a moment to fully start before opening the browser
+        Thread.sleep(500)
+
+        // Automatically open the browser
+        val url = "http://localhost:$port"
+        val opened = BrowserLauncher.openBrowser(url)
+        if (!opened) {
+            logger.info("Please open your browser and navigate to: $url")
+        }
+
+        // Now wait for the server to keep running
+        Thread.currentThread().join()
     }
 
     private fun BODY.renderHeader() {
