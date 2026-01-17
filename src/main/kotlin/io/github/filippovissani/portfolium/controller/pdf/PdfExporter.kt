@@ -112,9 +112,7 @@ object PdfExporter {
         heading.spacingAfter = 10f
         document.add(heading)
 
-        val table = PdfPTable(2)
-        table.widthPercentage = 100f
-        table.setWidths(floatArrayOf(3f, 2f))
+        val table = createStandardTable()
 
         addTableRow(table, "Total Net Worth", formatMoney(portfolio.totalNetWorth), true)
         addTableRow(table, "Invested Capital", formatPercentage(portfolio.percentInvested))
@@ -133,9 +131,7 @@ object PdfExporter {
         heading.spacingAfter = 10f
         document.add(heading)
 
-        val table = PdfPTable(2)
-        table.widthPercentage = 100f
-        table.setWidths(floatArrayOf(3f, 2f))
+        val table = createStandardTable()
 
         addTableRow(table, "Total Income", formatMoney(portfolio.liquidity.totalIncome), true)
         addTableRow(table, "Total Expense", formatMoney(portfolio.liquidity.totalExpense))
@@ -155,9 +151,7 @@ object PdfExporter {
         heading.spacingAfter = 10f
         document.add(heading)
 
-        val table = PdfPTable(2)
-        table.widthPercentage = 100f
-        table.setWidths(floatArrayOf(3f, 2f))
+        val table = createStandardTable()
 
         addTableRow(table, "Total Estimated", formatMoney(portfolio.planned.totalEstimated), true)
         addTableRow(table, "Total Accrued", formatMoney(portfolio.planned.totalAccrued))
@@ -167,25 +161,7 @@ object PdfExporter {
 
         document.add(table)
 
-        // Add historical performance if available
-        if (portfolio.planned.historicalPerformance != null) {
-            val perf = portfolio.planned.historicalPerformance
-            document.add(Chunk.NEWLINE)
-            val perfHeading = Paragraph("Performance", SUBHEADING_FONT)
-            perfHeading.spacingAfter = 5f
-            document.add(perfHeading)
-
-            val perfTable = PdfPTable(2)
-            perfTable.widthPercentage = 100f
-            perfTable.setWidths(floatArrayOf(3f, 2f))
-
-            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
-            perf.annualizedReturn?.let {
-                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
-            }
-
-            document.add(perfTable)
-        }
+        addPerformanceSection(document, portfolio.planned.historicalPerformance)
 
         document.add(Chunk.NEWLINE)
     }
@@ -199,9 +175,7 @@ object PdfExporter {
         heading.spacingAfter = 10f
         document.add(heading)
 
-        val table = PdfPTable(2)
-        table.widthPercentage = 100f
-        table.setWidths(floatArrayOf(3f, 2f))
+        val table = createStandardTable()
 
         addTableRow(table, "Target Capital", formatMoney(portfolio.emergency.targetCapital), true)
         addTableRow(table, "Current Capital", formatMoney(portfolio.emergency.currentCapital))
@@ -211,25 +185,7 @@ object PdfExporter {
 
         document.add(table)
 
-        // Add historical performance if available
-        if (portfolio.emergency.historicalPerformance != null) {
-            val perf = portfolio.emergency.historicalPerformance
-            document.add(Chunk.NEWLINE)
-            val perfHeading = Paragraph("Performance", SUBHEADING_FONT)
-            perfHeading.spacingAfter = 5f
-            document.add(perfHeading)
-
-            val perfTable = PdfPTable(2)
-            perfTable.widthPercentage = 100f
-            perfTable.setWidths(floatArrayOf(3f, 2f))
-
-            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
-            perf.annualizedReturn?.let {
-                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
-            }
-
-            document.add(perfTable)
-        }
+        addPerformanceSection(document, portfolio.emergency.historicalPerformance)
 
         document.add(Chunk.NEWLINE)
     }
@@ -243,9 +199,7 @@ object PdfExporter {
         heading.spacingAfter = 10f
         document.add(heading)
 
-        val table = PdfPTable(2)
-        table.widthPercentage = 100f
-        table.setWidths(floatArrayOf(3f, 2f))
+        val table = createStandardTable()
 
         addTableRow(table, "Total Invested", formatMoney(portfolio.investments.totalInvested), true)
         addTableRow(table, "Total Current Value", formatMoney(portfolio.investments.totalCurrent))
@@ -280,25 +234,7 @@ object PdfExporter {
             document.add(breakdownTable)
         }
 
-        // Add historical performance if available
-        if (portfolio.historicalPerformance != null) {
-            val perf = portfolio.historicalPerformance
-            document.add(Chunk.NEWLINE)
-            val perfHeading = Paragraph("Performance", SUBHEADING_FONT)
-            perfHeading.spacingAfter = 5f
-            document.add(perfHeading)
-
-            val perfTable = PdfPTable(2)
-            perfTable.widthPercentage = 100f
-            perfTable.setWidths(floatArrayOf(3f, 2f))
-
-            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
-            perf.annualizedReturn?.let {
-                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
-            }
-
-            document.add(perfTable)
-        }
+        addPerformanceSection(document, portfolio.historicalPerformance)
 
         document.add(Chunk.NEWLINE)
     }
@@ -313,9 +249,7 @@ object PdfExporter {
             heading.spacingAfter = 10f
             document.add(heading)
 
-            val table = PdfPTable(2)
-            table.widthPercentage = 100f
-            table.setWidths(floatArrayOf(3f, 2f))
+            val table = createStandardTable()
 
             addTableRow(table, "Total Return", formatPercentageValue(perf.totalReturn), true)
             perf.annualizedReturn?.let {
@@ -324,6 +258,40 @@ object PdfExporter {
 
             document.add(table)
             document.add(Chunk.NEWLINE)
+        }
+    }
+
+    /**
+     * Creates a standard 2-column table with default settings
+     */
+    private fun createStandardTable(): PdfPTable {
+        val table = PdfPTable(2)
+        table.widthPercentage = 100f
+        table.setWidths(floatArrayOf(3f, 2f))
+        return table
+    }
+
+    /**
+     * Adds a performance section to the document if performance data is available
+     */
+    private fun addPerformanceSection(
+        document: Document,
+        performance: io.github.filippovissani.portfolium.model.domain.HistoricalPerformance?,
+    ) {
+        performance?.let { perf ->
+            document.add(Chunk.NEWLINE)
+            val perfHeading = Paragraph("Performance", SUBHEADING_FONT)
+            perfHeading.spacingAfter = 5f
+            document.add(perfHeading)
+
+            val perfTable = createStandardTable()
+
+            addTableRow(perfTable, "Total Return", formatPercentageValue(perf.totalReturn))
+            perf.annualizedReturn?.let {
+                addTableRow(perfTable, "Annualized Return", formatPercentageValue(it))
+            }
+
+            document.add(perfTable)
         }
     }
 
