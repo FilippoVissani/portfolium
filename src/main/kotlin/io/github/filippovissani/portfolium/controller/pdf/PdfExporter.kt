@@ -84,12 +84,12 @@ object PdfExporter {
     }
 
     private fun addTitle(document: Document) {
-        val title = Paragraph("Portfolium Dashboard", TITLE_FONT)
+        val title = Paragraph("Portfolium Report", TITLE_FONT)
         title.alignment = Element.ALIGN_CENTER
         title.spacingAfter = 10f
         document.add(title)
 
-        val subtitle = Paragraph("Professional Personal Finance Dashboard", NORMAL_FONT)
+        val subtitle = Paragraph("Personal Finance Dashboard", NORMAL_FONT)
         subtitle.alignment = Element.ALIGN_CENTER
         subtitle.spacingAfter = 20f
         document.add(subtitle)

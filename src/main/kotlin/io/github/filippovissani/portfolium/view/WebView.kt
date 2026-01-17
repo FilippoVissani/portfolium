@@ -76,7 +76,7 @@ class WebView(val controller: IController): IView {
         div(classes = "header-wrapper") {
             div(classes = "header-content") {
                 h1 { +"Portfolium" }
-                div(classes = "subtitle") { +"Professional Personal Finance Dashboard" }
+                div(classes = "subtitle") { +"Personal Finance Dashboard" }
                 div(classes = "header-actions") {
                     a(href = "/export/pdf", classes = "export-button") {
                         +"📄 Export as PDF"
