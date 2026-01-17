@@ -1,16 +1,16 @@
 package io.github.filippovissani.portfolium.controller.pdf
 
-import com.lowagie.text.Chunk
-import com.lowagie.text.Document
-import com.lowagie.text.Element
-import com.lowagie.text.FontFactory
-import com.lowagie.text.PageSize
-import com.lowagie.text.Paragraph
-import com.lowagie.text.Phrase
-import com.lowagie.text.pdf.PdfPCell
-import com.lowagie.text.pdf.PdfPTable
-import com.lowagie.text.pdf.PdfWriter
 import io.github.filippovissani.portfolium.model.domain.Portfolio
+import org.openpdf.text.Chunk
+import org.openpdf.text.Document
+import org.openpdf.text.Element
+import org.openpdf.text.FontFactory
+import org.openpdf.text.PageSize
+import org.openpdf.text.Paragraph
+import org.openpdf.text.Phrase
+import org.openpdf.text.pdf.PdfPCell
+import org.openpdf.text.pdf.PdfPTable
+import org.openpdf.text.pdf.PdfWriter
 import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.io.ByteArrayOutputStream
