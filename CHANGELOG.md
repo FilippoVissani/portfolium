@@ -1,3 +1,20 @@
+## [5.1.1](https://github.com/FilippoVissani/portfolium/compare/5.1.0...5.1.1) (2026-01-17)
+
+### Dependency updates
+
+* **deps:** update dependency com.github.librepdf:openpdf to v2.0.5 ([#73](https://github.com/FilippoVissani/portfolium/issues/73)) ([1cc6b52](https://github.com/FilippoVissani/portfolium/commit/1cc6b52553584187b883d74a75b02a0f5527a62e))
+* **deps:** update dependency com.github.librepdf:openpdf to v2.4.0 ([#74](https://github.com/FilippoVissani/portfolium/issues/74)) ([1da9176](https://github.com/FilippoVissani/portfolium/commit/1da917658cf5b4ab41b10ff54ca23755f1f5f550))
+* **deps:** update openpdf dependency to v3.0.0 ([54ab291](https://github.com/FilippoVissani/portfolium/commit/54ab291b43d8200ebbd35370e17c92e16321ee69))
+
+### Bug Fixes
+
+* update report titles for consistency in PDF and web views ([cb5c2e9](https://github.com/FilippoVissani/portfolium/commit/cb5c2e99c2ccfdf7a83dfdb278181674e5a49cc1))
+
+### Refactoring
+
+* simplify PDF report structure by extracting table creation and performance section logic ([d7e20ed](https://github.com/FilippoVissani/portfolium/commit/d7e20ed14513bf390b0290343991f8a22e4ce61a))
+* update PDF library imports to use OpenPDF ([51973b1](https://github.com/FilippoVissani/portfolium/commit/51973b1f55f5d92379f123818b22238302cc8df6))
+
 ## [5.1.0](https://github.com/FilippoVissani/portfolium/compare/5.0.5...5.1.0) (2026-01-16)
 
 ### Features
