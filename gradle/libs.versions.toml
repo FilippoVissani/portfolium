@@ -8,7 +8,7 @@ snakeyaml = "2.5"
 kover = "0.9.4"
 versions = "0.53.0"
 konsist = "0.17.3"
-graalvm = "0.11.3"
+graalvm = "0.11.4"
 openpdf = "3.0.0"
 
 [libraries]
