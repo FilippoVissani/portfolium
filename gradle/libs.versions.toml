@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.3.0"
 kotlinCsv = "1.10.0"
-kotest = "6.0.7"
+kotest = "6.1.0"
 ktor = "3.3.3"
 logback = "1.5.25"
 snakeyaml = "2.5"
