@@ -65,7 +65,7 @@ jobs:
         run: mv build/native/nativeCompile/${{ matrix.binary }} build/native/nativeCompile/portfolium-${{ matrix.platform }}-${{ matrix.arch }}.exe
 
       - name: Upload Binary
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: portfolium-${{ matrix.platform }}-${{ matrix.arch }}
           path: build/native/nativeCompile/portfolium-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.os == 'windows-latest' && '.exe' || '' }}

@@ -70,7 +70,7 @@ jobs:
 
       - name: Publish dependency updates report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-updates-report
           path: build/reports/dependencyUpdates/report.html
