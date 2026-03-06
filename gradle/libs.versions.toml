@@ -37,7 +37,7 @@ openpdf = { module = "com.github.librepdf:openpdf", version.ref = "openpdf" }
 # Kotlin JVM plugin
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 # ktlint plugin
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.0.1" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.1.0" }
 # Kover - JetBrains code coverage
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 # Gradle Versions Plugin - Dependency updates checker
