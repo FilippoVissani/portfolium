@@ -34,7 +34,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Verify Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v5
+        uses: gradle/actions/wrapper-validation@v6
 
       - name: Run tests
         run: ./gradlew --no-daemon test
