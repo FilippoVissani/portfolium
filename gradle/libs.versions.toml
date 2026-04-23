@@ -2,7 +2,7 @@
 kotlin = "2.3.20"
 kotlinCsv = "1.10.0"
 kotest = "6.1.11"
-ktor = "3.4.2"
+ktor = "3.4.3"
 logback = "1.5.32"
 snakeyaml = "2.6"
 kover = "0.9.8"
