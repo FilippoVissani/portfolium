@@ -184,7 +184,7 @@ class BaseAccountPage(QWidget):
                 startangle=90,
                 colors=colors,
                 wedgeprops={"edgecolor": c["bg"], "linewidth": 1.5},
-                textprops={"color": c["text"], "fontsize": 8},
+                textprops={"color": "#000000", "fontsize": 8},  # Dark text
             )
             ax.legend(
                 labels,

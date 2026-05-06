@@ -159,7 +159,7 @@ class _AllocationPieChart(QWidget):
         colors = [palette[i % len(palette)] for i in range(len(labels))]
         self._ax.pie(
             sizes, labels=labels, colors=colors, autopct="%1.1f%%",
-            textprops={"color": c["text"], "fontsize": 8}, startangle=90,
+            textprops={"color": "#000000", "fontsize": 8}, startangle=90,  # Dark text
         )
         self._ax.set_facecolor(c["bg"])
         self._canvas.draw()
