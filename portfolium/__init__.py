@@ -1,0 +1,1 @@
+"""Portfolium – Personal Finance Manager."""

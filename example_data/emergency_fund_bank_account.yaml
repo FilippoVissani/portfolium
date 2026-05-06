@@ -1,6 +1,7 @@
 name: "Emergency Fund"
+type: "emergency"
 initialBalance: 1000.00
-targetMonthlyExpenses: 6
+targetCapital: 4000.00
 transactions:
   # Initial deposits
   - type: deposit
@@ -8,11 +9,10 @@ transactions:
     amount: 2000.00
     description: "Initial fund"
   # Invest in conservative ETFs
-  - type: etf_buy
+  - type: asset_buy
     date: 2024-02-01
     name: "iShares Core U.S. Aggregate Bond ETF"
     ticker: "AGG"
-    area: "US"
     quantity: 10
     price: 100.00
     fees: 5.00
@@ -20,3 +20,28 @@ transactions:
     date: 2024-03-15
     amount: 1500.00
     description: "Additional savings"
+  # Selling some assets
+  - type: asset_sell
+    date: 2024-04-10
+    name: "Vanguard S&P 500 ETF"
+    ticker: "VOO"
+    quantity: 5
+    price: 420.00
+    fees: 5.00
+  # Withdrawing funds
+  - type: withdrawal
+    date: 2024-04-15
+    amount: 2000.00
+    description: "Partial withdrawal"
+  # February 2026 contributions
+  - type: deposit
+    date: 2026-02-10
+    amount: 500.00
+    description: "Monthly emergency fund contribution"
+  - type: asset_buy
+    date: 2026-02-13
+    name: "iShares Core U.S. Aggregate Bond ETF"
+    ticker: "AGG"
+    quantity: 4
+    price: 102.00
+    fees: 3.00
