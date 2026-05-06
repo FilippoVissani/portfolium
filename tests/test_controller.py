@@ -1,4 +1,5 @@
 """Tests for portfolium.controllers module."""
+
 from datetime import date
 
 import pytest
@@ -115,7 +116,9 @@ class TestPortfolioController:
         assert "ACWI" in controller._prices
         assert controller._prices["VOO"] == 425.0
 
-    def test_get_investment_asset_infos(self, sample_portfolio: Portfolio, mock_market_data):
+    def test_get_investment_asset_infos(
+        self, sample_portfolio: Portfolio, mock_market_data
+    ):
         controller = PortfolioController(sample_portfolio, mock_market_data)
         controller.refresh_market_data()
 
@@ -126,12 +129,16 @@ class TestPortfolioController:
         assert voo_info.quantity == 5.0
         assert voo_info.current_price == 425.0
 
-    def test_get_investment_cash_balance(self, sample_portfolio: Portfolio, mock_market_data):
+    def test_get_investment_cash_balance(
+        self, sample_portfolio: Portfolio, mock_market_data
+    ):
         controller = PortfolioController(sample_portfolio, mock_market_data)
         cash = controller.get_investment_cash_balance()
         assert pytest.approx(cash) == 1185.0
 
-    def test_get_total_investment_value(self, sample_portfolio: Portfolio, mock_market_data):
+    def test_get_total_investment_value(
+        self, sample_portfolio: Portfolio, mock_market_data
+    ):
         controller = PortfolioController(sample_portfolio, mock_market_data)
         controller.refresh_market_data()
 
@@ -142,7 +149,9 @@ class TestPortfolioController:
         # Total: 5270
         assert pytest.approx(total) == 5270.0
 
-    def test_get_total_investment_gain_loss(self, sample_portfolio: Portfolio, mock_market_data):
+    def test_get_total_investment_gain_loss(
+        self, sample_portfolio: Portfolio, mock_market_data
+    ):
         controller = PortfolioController(sample_portfolio, mock_market_data)
         controller.refresh_market_data()
 
@@ -153,7 +162,9 @@ class TestPortfolioController:
         assert gain > 0
         assert gain_pct > 0
 
-    def test_get_investment_allocation_data(self, sample_portfolio: Portfolio, mock_market_data):
+    def test_get_investment_allocation_data(
+        self, sample_portfolio: Portfolio, mock_market_data
+    ):
         controller = PortfolioController(sample_portfolio, mock_market_data)
         controller.refresh_market_data()
 
@@ -265,7 +276,9 @@ class TestBaseAccountAnalytics:
         assert pytest.approx(summary["savings"]) == 2215.0
         assert pytest.approx(summary["current_balance"]) == 4215.0
 
-        categories = controller.get_base_expenses_by_category(date(2026, 2, 1), date(2026, 2, 28))
+        categories = controller.get_base_expenses_by_category(
+            date(2026, 2, 1), date(2026, 2, 28)
+        )
         assert pytest.approx(categories["Housing"]) == 1200.0
         assert pytest.approx(categories["Food"]) == 85.0
 
@@ -275,14 +288,31 @@ class TestBaseAccountAnalytics:
             type="base",
             initial_balance=2000.0,
             transactions=[
-                Transaction(type="deposit", date=date(2026, 1, 10), amount=1000.0, category="Salary"),
-                Transaction(type="withdrawal", date=date(2026, 1, 15), amount=-300.0, category="Food"),
-                Transaction(type="deposit", date=date(2026, 2, 10), amount=1200.0, category="Salary"),
+                Transaction(
+                    type="deposit",
+                    date=date(2026, 1, 10),
+                    amount=1000.0,
+                    category="Salary",
+                ),
+                Transaction(
+                    type="withdrawal",
+                    date=date(2026, 1, 15),
+                    amount=-300.0,
+                    category="Food",
+                ),
+                Transaction(
+                    type="deposit",
+                    date=date(2026, 2, 10),
+                    amount=1200.0,
+                    category="Salary",
+                ),
             ],
         )
         controller = PortfolioController(Portfolio([acc]), mock_market_data)
 
-        monthly = controller.get_base_monthly_cashflow(date(2026, 1, 1), date(2026, 2, 28))
+        monthly = controller.get_base_monthly_cashflow(
+            date(2026, 1, 1), date(2026, 2, 28)
+        )
         assert "2026-01" in monthly.index
         assert "2026-02" in monthly.index
         assert pytest.approx(monthly.loc["2026-01", "income"]) == 1000.0

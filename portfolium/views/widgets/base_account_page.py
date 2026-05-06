@@ -91,7 +91,13 @@ class BaseAccountPage(QWidget):
         self._expenses = _KpiCard("Expenses")
         self._savings = _KpiCard("Savings")
         self._avg = _KpiCard("Avg Monthly Expenses")
-        for card in [self._balance, self._income, self._expenses, self._savings, self._avg]:
+        for card in [
+            self._balance,
+            self._income,
+            self._expenses,
+            self._savings,
+            self._avg,
+        ]:
             kpis.addWidget(card)
         root.addLayout(kpis)
 
@@ -110,7 +116,9 @@ class BaseAccountPage(QWidget):
         root.addLayout(middle, 3)
 
         self._tx_table = QTableWidget(0, 4)
-        self._tx_table.setHorizontalHeaderLabels(["Date", "Description", "Category", "Amount (€)"])
+        self._tx_table.setHorizontalHeaderLabels(
+            ["Date", "Description", "Category", "Amount (€)"]
+        )
         hh = self._tx_table.horizontalHeader()
         hh.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         hh.setSectionResizeMode(1, QHeaderView.Stretch)
@@ -152,7 +160,9 @@ class BaseAccountPage(QWidget):
         self._savings.set_value(f"EUR {savings:,.2f}", _GREEN if savings >= 0 else _RED)
         self._avg.set_value(f"EUR {summary['avg_monthly_expenses']:,.2f}")
 
-        self._draw_expenses_pie(self.controller.get_base_expenses_by_category(start, end))
+        self._draw_expenses_pie(
+            self.controller.get_base_expenses_by_category(start, end)
+        )
         self._draw_monthly_bars(self.controller.get_base_monthly_cashflow(start, end))
         self._fill_transactions(start, end)
 
@@ -201,8 +211,12 @@ class BaseAccountPage(QWidget):
         income = monthly_df["income"].to_numpy(dtype=float)
         expenses = monthly_df["expenses"].to_numpy(dtype=float)
 
-        bar_income = pg.BarGraphItem(x=x - 0.18, height=income, width=0.34, brush=_GREEN)
-        bar_expenses = pg.BarGraphItem(x=x + 0.18, height=expenses, width=0.34, brush=_RED)
+        bar_income = pg.BarGraphItem(
+            x=x - 0.18, height=income, width=0.34, brush=_GREEN
+        )
+        bar_expenses = pg.BarGraphItem(
+            x=x + 0.18, height=expenses, width=0.34, brush=_RED
+        )
 
         self._bars.addItem(bar_income)
         self._bars.addItem(bar_expenses)
@@ -227,7 +241,9 @@ class BaseAccountPage(QWidget):
                 item = QTableWidgetItem(value)
                 if col == 3:
                     item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
-                    item.setForeground(Qt.GlobalColor.green if amount >= 0 else Qt.GlobalColor.red)
+                    item.setForeground(
+                        Qt.GlobalColor.green if amount >= 0 else Qt.GlobalColor.red
+                    )
                 self._tx_table.setItem(row, col, item)
 
         self._tx_table.setSortingEnabled(True)

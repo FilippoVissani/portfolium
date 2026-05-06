@@ -39,7 +39,9 @@ class _KpiCard(QFrame):
         self._title = QLabel(title)
         self._title.setStyleSheet("color: #6c7086; font-size: 8pt;")
         self._value = QLabel("-")
-        self._value.setStyleSheet(f"color: {_TEXT}; font-size: 12pt; font-weight: bold;")
+        self._value.setStyleSheet(
+            f"color: {_TEXT}; font-size: 12pt; font-weight: bold;"
+        )
 
         layout.addWidget(self._title)
         layout.addWidget(self._value)
@@ -66,7 +68,9 @@ class _FundProgressCard(QFrame):
         # Title row
         title_row = QHBoxLayout()
         self._title = QLabel("Emergency Fund Coverage")
-        self._title.setStyleSheet(f"color: {_TEXT}; font-size: 11pt; font-weight: bold;")
+        self._title.setStyleSheet(
+            f"color: {_TEXT}; font-size: 11pt; font-weight: bold;"
+        )
         self._status_badge = QLabel()
         self._status_badge.setStyleSheet(
             "border-radius: 6px; padding: 2px 8px; font-size: 8pt; font-weight: bold;"
@@ -92,7 +96,9 @@ class _FundProgressCard(QFrame):
         self._saved_label = QLabel()
         self._saved_label.setStyleSheet(f"color: {_TEXT}; font-size: 9pt;")
         self._pct_label = QLabel()
-        self._pct_label.setStyleSheet(f"color: {_TEXT}; font-size: 9pt; font-weight: bold;")
+        self._pct_label.setStyleSheet(
+            f"color: {_TEXT}; font-size: 9pt; font-weight: bold;"
+        )
         self._target_label = QLabel()
         self._target_label.setStyleSheet("color: #6c7086; font-size: 9pt;")
         figures.addWidget(self._saved_label)
@@ -248,8 +254,10 @@ class EmergencyFundPage(QWidget):
 
         # KPI cards
         cov_color = (
-            _GREEN if status.is_funded or status.coverage_pct >= 75
-            else _YELLOW if status.coverage_pct >= 40
+            _GREEN
+            if status.is_funded or status.coverage_pct >= 75
+            else _YELLOW
+            if status.coverage_pct >= 40
             else _RED
         )
         self._kpi_value.set_value(f"€{status.current_value:,.2f}")
@@ -277,7 +285,13 @@ class EmergencyFundPage(QWidget):
             _set_cell(self._table, row, 3, f"{info.quantity:,.4f}")
             _set_cell(self._table, row, 4, f"{info.gain_loss_eur:+,.2f}", gl_color)
             _set_cell(self._table, row, 5, f"{info.gain_loss_pct:+.2f}%", gl_color)
-            _set_cell(self._table, row, 6, f"{info.intraday_gain_loss_eur:+,.2f}", intraday_color)
+            _set_cell(
+                self._table,
+                row,
+                6,
+                f"{info.intraday_gain_loss_eur:+,.2f}",
+                intraday_color,
+            )
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────── #
@@ -290,14 +304,24 @@ def _section_label(text: str) -> QLabel:
 
 
 def _build_holdings_table() -> QTableWidget:
-    columns = ["Name", "Ticker", "Price (€)", "Qty", "G/L (€)", "G/L (%)", "Intraday G/L (€)"]
+    columns = [
+        "Name",
+        "Ticker",
+        "Price (€)",
+        "Qty",
+        "G/L (€)",
+        "G/L (%)",
+        "Intraday G/L (€)",
+    ]
     table = QTableWidget(0, len(columns))
     table.setHorizontalHeaderLabels(columns)
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
     for col in range(1, len(columns)):
-        table.horizontalHeader().setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+        table.horizontalHeader().setSectionResizeMode(
+            col, QHeaderView.ResizeMode.ResizeToContents
+        )
     table.verticalHeader().setVisible(False)
     return table
 
@@ -309,5 +333,6 @@ def _set_cell(
     item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
     if color:
         from PySide6.QtGui import QColor
+
         item.setForeground(QColor(color))
     table.setItem(row, col, item)

@@ -2,12 +2,14 @@
 Entry point – run with:
     python -m portfolium [data_dir]
 """
+
 import sys
 import argparse
 from pathlib import Path
 
 # Configure the matplotlib backend before any view imports pull it in
 import matplotlib
+
 matplotlib.use("QtAgg")
 
 from PySide6.QtWidgets import QApplication, QMessageBox
@@ -49,7 +51,9 @@ def main() -> None:
     try:
         accounts = load_accounts_from_directory(data_dir)
     except Exception as exc:
-        QMessageBox.critical(None, "Portfolium – Error", f"Failed to load accounts:\n{exc}")
+        QMessageBox.critical(
+            None, "Portfolium – Error", f"Failed to load accounts:\n{exc}"
+        )
         sys.exit(1)
 
     if not accounts:

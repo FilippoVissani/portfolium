@@ -26,7 +26,9 @@ class Portfolio:
 
     def __init__(self, accounts: List[Account]) -> None:
         self.accounts = accounts
-        self._investment_accounts = [acc for acc in accounts if acc.type == "investment"]
+        self._investment_accounts = [
+            acc for acc in accounts if acc.type == "investment"
+        ]
         self._base_accounts = [acc for acc in accounts if acc.type == "base"]
         self._planned_accounts = [acc for acc in accounts if acc.type == "planned"]
         self._emergency_accounts = [acc for acc in accounts if acc.type == "emergency"]
@@ -51,7 +53,9 @@ class Portfolio:
     # Investment holdings                                                  #
     # ------------------------------------------------------------------ #
 
-    def get_investment_holdings(self, up_to: Optional[date] = None) -> Dict[str, Holding]:
+    def get_investment_holdings(
+        self, up_to: Optional[date] = None
+    ) -> Dict[str, Holding]:
         """Compute open positions via weighted-average cost method."""
         state: Dict[str, Dict] = {}  # symbol -> {name, quantity, total_cost}
 
@@ -61,7 +65,11 @@ class Portfolio:
                 qty = txn.quantity or 0.0
                 cost = (txn.price or 0.0) * qty + (txn.commission or 0.0)
                 if sym not in state:
-                    state[sym] = {"name": txn.name or sym, "quantity": 0.0, "total_cost": 0.0}
+                    state[sym] = {
+                        "name": txn.name or sym,
+                        "quantity": 0.0,
+                        "total_cost": 0.0,
+                    }
                 state[sym]["quantity"] += qty
                 state[sym]["total_cost"] += cost
 
@@ -100,9 +108,13 @@ class Portfolio:
             elif txn.type == "withdrawal":
                 balance -= txn.amount or 0.0
             elif txn.type == "asset_buy":
-                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (txn.commission or 0.0)
+                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (
+                    txn.commission or 0.0
+                )
             elif txn.type == "asset_sell":
-                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (txn.commission or 0.0)
+                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (
+                    txn.commission or 0.0
+                )
         return balance
 
     def get_base_cash_balance(self, up_to: Optional[date] = None) -> float:
@@ -121,9 +133,13 @@ class Portfolio:
             elif txn.type == "withdrawal":
                 balance -= txn.amount or 0.0
             elif txn.type == "asset_buy":
-                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (txn.commission or 0.0)
+                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (
+                    txn.commission or 0.0
+                )
             elif txn.type == "asset_sell":
-                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (txn.commission or 0.0)
+                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (
+                    txn.commission or 0.0
+                )
         return balance
 
     def get_emergency_cash_balance(self, up_to: Optional[date] = None) -> float:
@@ -135,9 +151,13 @@ class Portfolio:
             elif txn.type == "withdrawal":
                 balance -= txn.amount or 0.0
             elif txn.type == "asset_buy":
-                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (txn.commission or 0.0)
+                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (
+                    txn.commission or 0.0
+                )
             elif txn.type == "asset_sell":
-                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (txn.commission or 0.0)
+                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (
+                    txn.commission or 0.0
+                )
         return balance
 
     def get_total_cash_balance(self, up_to: Optional[date] = None) -> float:
@@ -190,7 +210,11 @@ class Portfolio:
                 qty = txn.quantity or 0.0
                 cost = (txn.price or 0.0) * qty + (txn.commission or 0.0)
                 if sym not in state:
-                    state[sym] = {"name": txn.name or sym, "quantity": 0.0, "total_cost": 0.0}
+                    state[sym] = {
+                        "name": txn.name or sym,
+                        "quantity": 0.0,
+                        "total_cost": 0.0,
+                    }
                 state[sym]["quantity"] += qty
                 state[sym]["total_cost"] += cost
 
@@ -251,7 +275,9 @@ class Portfolio:
         ]
         return sorted(txns, key=lambda t: t.date)
 
-    def get_emergency_holdings(self, up_to: Optional[date] = None) -> Dict[str, Holding]:
+    def get_emergency_holdings(
+        self, up_to: Optional[date] = None
+    ) -> Dict[str, Holding]:
         """Compute open positions in emergency accounts via weighted-average cost."""
         state: Dict[str, Dict] = {}
 
@@ -261,7 +287,11 @@ class Portfolio:
                 qty = txn.quantity or 0.0
                 cost = (txn.price or 0.0) * qty + (txn.commission or 0.0)
                 if sym not in state:
-                    state[sym] = {"name": txn.name or sym, "quantity": 0.0, "total_cost": 0.0}
+                    state[sym] = {
+                        "name": txn.name or sym,
+                        "quantity": 0.0,
+                        "total_cost": 0.0,
+                    }
                 state[sym]["quantity"] += qty
                 state[sym]["total_cost"] += cost
 
@@ -334,7 +364,9 @@ class Portfolio:
         expenses = -sum(a for a in amounts if a < 0)
         savings = income - expenses
 
-        month_span = max(1, (end.year - start.year) * 12 + (end.month - start.month) + 1)
+        month_span = max(
+            1, (end.year - start.year) * 12 + (end.month - start.month) + 1
+        )
         avg_monthly_expenses = expenses / month_span
 
         current_base_balance = self.get_base_cash_balance(end)
@@ -374,7 +406,10 @@ class Portfolio:
             return pd.DataFrame(columns=["income", "expenses", "savings"])
 
         df = pd.DataFrame(rows)
-        grouped = df.groupby("month", as_index=True)[["income", "expenses"]].sum().sort_index()
+        grouped = (
+            df.groupby("month", as_index=True)[["income", "expenses"]]
+            .sum()
+            .sort_index()
+        )
         grouped["savings"] = grouped["income"] - grouped["expenses"]
         return grouped
-

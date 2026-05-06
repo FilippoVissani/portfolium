@@ -46,15 +46,21 @@ def load_account(file_path: Path) -> Account:
         # "symbol" and "commission" used by investment accounts.
         symbol = raw.get("symbol") or raw.get("ticker")
         commission = (
-            float(raw["commission"]) if "commission" in raw
-            else float(raw["fees"]) if "fees" in raw
+            float(raw["commission"])
+            if "commission" in raw
+            else float(raw["fees"])
+            if "fees" in raw
             else None
         )
         # asset description stored under "description" in planned YAMLs
         name = raw.get("name") or (
             raw.get("description") if txn_type in ("asset_buy", "asset_sell") else None
         )
-        description = raw.get("description") if txn_type not in ("asset_buy", "asset_sell") else raw.get("description")
+        description = (
+            raw.get("description")
+            if txn_type not in ("asset_buy", "asset_sell")
+            else raw.get("description")
+        )
 
         transactions.append(
             Transaction(
@@ -77,7 +83,9 @@ def load_account(file_path: Path) -> Account:
         initial_balance=float(data.get("initialBalance", 0.0)),
         transactions=transactions,
         planned_expenses=planned_expenses,
-        target_capital=float(data["targetCapital"]) if "targetCapital" in data else None,
+        target_capital=float(data["targetCapital"])
+        if "targetCapital" in data
+        else None,
     )
 
 
