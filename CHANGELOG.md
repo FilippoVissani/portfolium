@@ -1,3 +1,95 @@
+## [6.0.0](https://github.com/FilippoVissani/portfolium/compare/5.1.1...6.0.0) (2026-05-06)
+
+### ⚠ BREAKING CHANGES
+
+* introduce new Python implementation
+
+### Features
+
+* implement theme management and update UI components for dynamic theming ([00b9ecf](https://github.com/FilippoVissani/portfolium/commit/00b9ecfa39d18cd1abc66a010b19259ad168da0a))
+* introduce new Python implementation ([da90f2c](https://github.com/FilippoVissani/portfolium/commit/da90f2cb3fe7781935510886742dca2d859e2630))
+
+### Dependency updates
+
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.25 ([#79](https://github.com/FilippoVissani/portfolium/issues/79)) ([9e776e0](https://github.com/FilippoVissani/portfolium/commit/9e776e0446f6c3343ffec979701aa0bfefb9db00))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.26 ([#84](https://github.com/FilippoVissani/portfolium/issues/84)) ([cd44c8d](https://github.com/FilippoVissani/portfolium/commit/cd44c8dfe5104f9271aaa81322b702bc936c1ccb))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.27 ([#87](https://github.com/FilippoVissani/portfolium/issues/87)) ([ed23839](https://github.com/FilippoVissani/portfolium/commit/ed2383923a03cfcc10e2451c202a2190d7722333))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.28 ([#92](https://github.com/FilippoVissani/portfolium/issues/92)) ([1163a6a](https://github.com/FilippoVissani/portfolium/commit/1163a6a80fd98fbfc7fa0614eba54117ccc00d9e))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.29 ([#93](https://github.com/FilippoVissani/portfolium/issues/93)) ([f545312](https://github.com/FilippoVissani/portfolium/commit/f545312c0ad8fb1a39c0c36f685505c8245ad1c8))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.30 ([#96](https://github.com/FilippoVissani/portfolium/issues/96)) ([2132924](https://github.com/FilippoVissani/portfolium/commit/2132924fd0fecf13c0ab49242fa4bc12c1ba2af7))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.31 ([#97](https://github.com/FilippoVissani/portfolium/issues/97)) ([8730599](https://github.com/FilippoVissani/portfolium/commit/8730599c1050e48c01d838873701f4a9786a1f82))
+* **deps:** update dependency ch.qos.logback:logback-classic to v1.5.32 ([#98](https://github.com/FilippoVissani/portfolium/issues/98)) ([3ecfbc4](https://github.com/FilippoVissani/portfolium/commit/3ecfbc4f7e5d894f37d42b002d55a6a760e53cfc))
+* **deps:** update dependency com.github.ben-manes.versions to v0.54.0 ([#129](https://github.com/FilippoVissani/portfolium/issues/129)) ([2066271](https://github.com/FilippoVissani/portfolium/commit/2066271d1b6c0cb29e68a9f46cba8a75c1f2491c))
+* **deps:** update dependency com.github.librepdf:openpdf to v3.0.1 ([#99](https://github.com/FilippoVissani/portfolium/issues/99)) ([24bf7c5](https://github.com/FilippoVissani/portfolium/commit/24bf7c5de6ef0e8783bab65ae85017be5f40d57b))
+* **deps:** update dependency com.github.librepdf:openpdf to v3.0.2 ([#106](https://github.com/FilippoVissani/portfolium/issues/106)) ([e92bfce](https://github.com/FilippoVissani/portfolium/commit/e92bfce53ff322ac7c229268cfd56b4a7070f992))
+* **deps:** update dependency com.github.librepdf:openpdf to v3.0.3 ([#112](https://github.com/FilippoVissani/portfolium/issues/112)) ([7c94f63](https://github.com/FilippoVissani/portfolium/commit/7c94f6327d27234baead1a4b19727357cae4f6c4))
+* **deps:** update dependency com.github.librepdf:openpdf to v3.0.4 ([#134](https://github.com/FilippoVissani/portfolium/issues/134)) ([4a2efc3](https://github.com/FilippoVissani/portfolium/commit/4a2efc3ec650b6c16f9eaed8e3c979baefc17165))
+* **deps:** update dependency org.graalvm.buildtools.native to v0.11.4 ([#81](https://github.com/FilippoVissani/portfolium/issues/81)) ([ddf92fb](https://github.com/FilippoVissani/portfolium/commit/ddf92fbb7458b0fb2fed2dae7cae24d15113c109))
+* **deps:** update dependency org.graalvm.buildtools.native to v0.11.5 ([#108](https://github.com/FilippoVissani/portfolium/issues/108)) ([857c32b](https://github.com/FilippoVissani/portfolium/commit/857c32bc4da175296d167d410acfd62d1b26d5e2))
+* **deps:** update dependency org.graalvm.buildtools.native to v1 ([#124](https://github.com/FilippoVissani/portfolium/issues/124)) ([51229af](https://github.com/FilippoVissani/portfolium/commit/51229afe819600a85a6ef8f7c5cdb41e1db56c9e))
+* **deps:** update dependency org.graalvm.buildtools.native to v1.1.0 ([#132](https://github.com/FilippoVissani/portfolium/issues/132)) ([95aedd8](https://github.com/FilippoVissani/portfolium/commit/95aedd8de7b1f82a34545192bf2a7681fa7c2200))
+* **deps:** update dependency org.jetbrains.kotlin:kotlin-test to v2.3.10 ([#89](https://github.com/FilippoVissani/portfolium/issues/89)) ([65c317b](https://github.com/FilippoVissani/portfolium/commit/65c317b6468070792a12f4cae2031c5b0080c829))
+* **deps:** update dependency org.jetbrains.kotlin:kotlin-test to v2.3.21 ([#131](https://github.com/FilippoVissani/portfolium/issues/131)) ([1770b19](https://github.com/FilippoVissani/portfolium/commit/1770b19722f635b05e405f6b01f8b1d4e4238ed4))
+* **deps:** update dependency org.jetbrains.kotlinx.kover to v0.9.5 ([#88](https://github.com/FilippoVissani/portfolium/issues/88)) ([3769f4d](https://github.com/FilippoVissani/portfolium/commit/3769f4dc8290fa042ef0116267f382b26a657f01))
+* **deps:** update dependency org.jetbrains.kotlinx.kover to v0.9.6 ([#90](https://github.com/FilippoVissani/portfolium/issues/90)) ([b1ed250](https://github.com/FilippoVissani/portfolium/commit/b1ed2508dc787ef802a6157dbde2657dc08c2720))
+* **deps:** update dependency org.jetbrains.kotlinx.kover to v0.9.7 ([#94](https://github.com/FilippoVissani/portfolium/issues/94)) ([af7f819](https://github.com/FilippoVissani/portfolium/commit/af7f819d103b4fb2ed2677a4a78bd8bdcd0d656d))
+* **deps:** update dependency org.jetbrains.kotlinx.kover to v0.9.8 ([#122](https://github.com/FilippoVissani/portfolium/issues/122)) ([2b78b30](https://github.com/FilippoVissani/portfolium/commit/2b78b3079c06d3c6dffcab60d1b3d2e8b20e2b30))
+* **deps:** update dependency org.yaml:snakeyaml to v2.6 ([#105](https://github.com/FilippoVissani/portfolium/issues/105)) ([3178754](https://github.com/FilippoVissani/portfolium/commit/3178754ba6e1d9336562617c0815d537efb9822e))
+* **deps:** update gradle to v9.3.0 ([43e946b](https://github.com/FilippoVissani/portfolium/commit/43e946b1fb56834e8af4e6a8c7f244d3e9103ab7))
+* **deps:** update gradle to v9.3.1 ([#86](https://github.com/FilippoVissani/portfolium/issues/86)) ([4662d02](https://github.com/FilippoVissani/portfolium/commit/4662d025b55d28de0ce59405f979809fd994ed2c))
+* **deps:** update gradle to v9.4.0 ([#109](https://github.com/FilippoVissani/portfolium/issues/109)) ([6c0f51f](https://github.com/FilippoVissani/portfolium/commit/6c0f51f95a066416f8b57f55ad5dc6ac41ae6a9a))
+* **deps:** update gradle to v9.4.1 ([#117](https://github.com/FilippoVissani/portfolium/issues/117)) ([e360d79](https://github.com/FilippoVissani/portfolium/commit/e360d79f21cf4b33ff6f5e60fad0863e7067f214))
+* **deps:** update gradle to v9.5.0 ([#133](https://github.com/FilippoVissani/portfolium/issues/133)) ([401e936](https://github.com/FilippoVissani/portfolium/commit/401e936fb769b6d3e2524f2f481bcaeddf0c5279))
+* **deps:** update kotest to v6.1.0 ([#80](https://github.com/FilippoVissani/portfolium/issues/80)) ([80e5dae](https://github.com/FilippoVissani/portfolium/commit/80e5dae7e1b1bf81e96a18cef134f7afa3ffa31c))
+* **deps:** update kotest to v6.1.1 ([875bc58](https://github.com/FilippoVissani/portfolium/commit/875bc58cba6c4b673a3357e98e2726c47ecc19b5))
+* **deps:** update kotest to v6.1.10 ([#125](https://github.com/FilippoVissani/portfolium/issues/125)) ([fcc2124](https://github.com/FilippoVissani/portfolium/commit/fcc2124e441a8cc5875716b586712e3c630ede63))
+* **deps:** update kotest to v6.1.11 ([#126](https://github.com/FilippoVissani/portfolium/issues/126)) ([d70b32f](https://github.com/FilippoVissani/portfolium/commit/d70b32f19446b99feaa8fc6f0ffa117536a860e5))
+* **deps:** update kotest to v6.1.2 ([#85](https://github.com/FilippoVissani/portfolium/issues/85)) ([d3fda03](https://github.com/FilippoVissani/portfolium/commit/d3fda036b939b177ee7bf010cb7bb02d0adce522))
+* **deps:** update kotest to v6.1.3 ([#91](https://github.com/FilippoVissani/portfolium/issues/91)) ([9451121](https://github.com/FilippoVissani/portfolium/commit/94511216837fe587c8372a15ce4beb92f3495453))
+* **deps:** update kotest to v6.1.4 ([#102](https://github.com/FilippoVissani/portfolium/issues/102)) ([72d5719](https://github.com/FilippoVissani/portfolium/commit/72d5719842c357269d5348d42f1a3380f11d15fe))
+* **deps:** update kotest to v6.1.5 ([#111](https://github.com/FilippoVissani/portfolium/issues/111)) ([691b5e3](https://github.com/FilippoVissani/portfolium/commit/691b5e33da6735df8dfe0871b1c6b4ae6f098de4))
+* **deps:** update kotest to v6.1.6 ([#113](https://github.com/FilippoVissani/portfolium/issues/113)) ([cb40be0](https://github.com/FilippoVissani/portfolium/commit/cb40be07dfb920af4604254206540a5204dc1c7f))
+* **deps:** update kotest to v6.1.7 ([#115](https://github.com/FilippoVissani/portfolium/issues/115)) ([ed02fa8](https://github.com/FilippoVissani/portfolium/commit/ed02fa8d69f6d3f7d1f835c289be5f9adfb181be))
+* **deps:** update kotest to v6.1.8 ([#118](https://github.com/FilippoVissani/portfolium/issues/118)) ([618b8f5](https://github.com/FilippoVissani/portfolium/commit/618b8f5752215921ac551174c71a387a228eafc3))
+* **deps:** update kotest to v6.1.9 ([#119](https://github.com/FilippoVissani/portfolium/issues/119)) ([0b93683](https://github.com/FilippoVissani/portfolium/commit/0b9368301c34e8ce105786561544516182cfb471))
+* **deps:** update kotlin monorepo to v2.3.20 ([#116](https://github.com/FilippoVissani/portfolium/issues/116)) ([be311a4](https://github.com/FilippoVissani/portfolium/commit/be311a4a28e2f2d29073e55d9d7dab8aa5c1b846))
+* **deps:** update ktor monorepo to v3.4.0 ([#82](https://github.com/FilippoVissani/portfolium/issues/82)) ([b22972c](https://github.com/FilippoVissani/portfolium/commit/b22972cb44482f5235d67d5139585e05460e79b5))
+* **deps:** update ktor monorepo to v3.4.1 ([#107](https://github.com/FilippoVissani/portfolium/issues/107)) ([6885832](https://github.com/FilippoVissani/portfolium/commit/6885832f488a87117dde492a6538309256240e9d))
+* **deps:** update ktor monorepo to v3.4.2 ([#123](https://github.com/FilippoVissani/portfolium/issues/123)) ([fd361c1](https://github.com/FilippoVissani/portfolium/commit/fd361c1aea0691417033752f96835bd4c18a32aa))
+* **deps:** update ktor monorepo to v3.4.3 ([#130](https://github.com/FilippoVissani/portfolium/issues/130)) ([7d531b7](https://github.com/FilippoVissani/portfolium/commit/7d531b7c682fbd26a0f2f6a96d6d451f7db25a21))
+* **deps:** update node.js to 24.14 ([#100](https://github.com/FilippoVissani/portfolium/issues/100)) ([1bd0207](https://github.com/FilippoVissani/portfolium/commit/1bd02077e4741405d1dac38b14eb518a50bd5e94))
+* **deps:** update node.js to 24.15 ([#127](https://github.com/FilippoVissani/portfolium/issues/127)) ([5507b85](https://github.com/FilippoVissani/portfolium/commit/5507b857715cb83244d427cfd5fa7beac8b0b688))
+* **deps:** update plugin ktlint to v14.1.0 ([#110](https://github.com/FilippoVissani/portfolium/issues/110)) ([f5f2634](https://github.com/FilippoVissani/portfolium/commit/f5f263431fa57623233461e8a8f44ef10ce6e166))
+* **deps:** update plugin ktlint to v14.2.0 ([#114](https://github.com/FilippoVissani/portfolium/issues/114)) ([6c3e5ac](https://github.com/FilippoVissani/portfolium/commit/6c3e5ac613ee2f2574b1608d5126033ce593032b))
+
+### Bug Fixes
+
+* update text color to dark for better visibility in pie charts ([a1ddbc4](https://github.com/FilippoVissani/portfolium/commit/a1ddbc49813f60e739b4ddfc45b628e2beec63c1))
+
+### Documentation
+
+* add README ([f11fc06](https://github.com/FilippoVissani/portfolium/commit/f11fc06ae5479ada82c415d191cbb6af070dd6fd))
+
+### Build and continuous integration
+
+* add Ruff for code formatting and linting checks ([f4eac91](https://github.com/FilippoVissani/portfolium/commit/f4eac91f49a3e6954cba7a174e9eb27f0abff25a))
+* add system dependencies installation for Linux ([5d3d60a](https://github.com/FilippoVissani/portfolium/commit/5d3d60a66a192e551e6ea51114755e030e677fd1))
+* **deps:** update actions/download-artifact action to v8 ([#103](https://github.com/FilippoVissani/portfolium/issues/103)) ([6f0b004](https://github.com/FilippoVissani/portfolium/commit/6f0b00425de273e11769fbb99174b821bd0f1ae5))
+* **deps:** update actions/upload-artifact action to v7 ([#104](https://github.com/FilippoVissani/portfolium/issues/104)) ([b5226eb](https://github.com/FilippoVissani/portfolium/commit/b5226eb60d3cf5bbbf801fae4cf5c7f0caa3a638))
+* **deps:** update dependency node to v24.13.1 ([#95](https://github.com/FilippoVissani/portfolium/issues/95)) ([9e3321a](https://github.com/FilippoVissani/portfolium/commit/9e3321a25afb983d46b1ee67da139f2ac9d5af36))
+* **deps:** update dependency node to v24.14.0 ([#101](https://github.com/FilippoVissani/portfolium/issues/101)) ([f3e6bf7](https://github.com/FilippoVissani/portfolium/commit/f3e6bf76c1be3f1d22eaeee7c0f0a39148be5893))
+* **deps:** update dependency node to v24.14.1 ([#121](https://github.com/FilippoVissani/portfolium/issues/121)) ([7e36dbc](https://github.com/FilippoVissani/portfolium/commit/7e36dbcd63033b04acff427b318f553494cd8a62))
+* **deps:** update dependency node to v24.15.0 ([#128](https://github.com/FilippoVissani/portfolium/issues/128)) ([829c7f6](https://github.com/FilippoVissani/portfolium/commit/829c7f6ac9bf2b9f466b99e09be4b0a1f814a127))
+* **deps:** update gradle/actions action to v6 ([#120](https://github.com/FilippoVissani/portfolium/issues/120)) ([f060860](https://github.com/FilippoVissani/portfolium/commit/f06086028bffcfd80397b2938510e2b7a7821be2))
+* fix typo in package name for system dependencies ([94c2ab9](https://github.com/FilippoVissani/portfolium/commit/94c2ab961891838cbf4b38baebf401ea4de7ae50))
+* migrate workflows to Python ([9e3fda5](https://github.com/FilippoVissani/portfolium/commit/9e3fda5c9f8fb547b6d29fca94033a0b3d408ab4))
+
+### General maintenance
+
+* format code ([811600a](https://github.com/FilippoVissani/portfolium/commit/811600a029859468434da37506e1fa517c6d8b13))
+* format code ([51d2582](https://github.com/FilippoVissani/portfolium/commit/51d2582bbeaab9158628c35be75cef139a439147))
+* remove unused imports ([d4396a7](https://github.com/FilippoVissani/portfolium/commit/d4396a784385572d75803d2d2c2aa76ba7f971d1))
+
 ## [5.1.1](https://github.com/FilippoVissani/portfolium/compare/5.1.0...5.1.1) (2026-01-17)
 
 ### Dependency updates
