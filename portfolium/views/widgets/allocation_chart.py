@@ -68,7 +68,7 @@ class AllocationChartWidget(QWidget):
         )
 
         for at in autotexts:
-            at.set_color(c["text"])
+            at.set_color("#000000")  # Dark text (Catppuccin Latte text)
             at.set_fontsize(8)
             at.set_fontweight("bold")
 
