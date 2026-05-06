@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Optional
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas

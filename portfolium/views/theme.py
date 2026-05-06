@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QColor, QPalette
-from PySide6.QtCore import Qt
 
 # Catppuccin Mocha palette
 _BG = QColor(30, 30, 46)  # base
