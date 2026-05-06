@@ -4,8 +4,17 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QFrame, QHBoxLayout, QLabel, QProgressBar, QSizePolicy,
-    QSplitter, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QHeaderView,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QSizePolicy,
+    QSplitter,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+    QWidget,
+    QHeaderView,
 )
 
 from ...controllers.portfolio_controller import EmergencyFundStatus, PortfolioController
@@ -32,7 +41,9 @@ class _KpiCard(QFrame):
         c = ThemeManager().colors()
         self.setStyleSheet(f"background-color: {c['bg_alt']}; border-radius: 8px;")
         self._title_lbl.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt;")
-        self._value_lbl.setStyleSheet(f"color: {c['text']}; font-size: 12pt; font-weight: bold;")
+        self._value_lbl.setStyleSheet(
+            f"color: {c['text']}; font-size: 12pt; font-weight: bold;"
+        )
 
     def set_value(self, text: str, color: Optional[str] = None) -> None:
         c = ThemeManager().colors()
@@ -88,9 +99,13 @@ class _FundProgressCard(QFrame):
     def _apply_theme(self, _theme: str) -> None:
         c = ThemeManager().colors()
         self.setStyleSheet(f"background-color: {c['bg_alt']}; border-radius: 10px;")
-        self._title_lbl.setStyleSheet(f"color: {c['text']}; font-size: 11pt; font-weight: bold;")
+        self._title_lbl.setStyleSheet(
+            f"color: {c['text']}; font-size: 11pt; font-weight: bold;"
+        )
         self._saved_label.setStyleSheet(f"color: {c['text']}; font-size: 9pt;")
-        self._pct_label.setStyleSheet(f"color: {c['text']}; font-size: 9pt; font-weight: bold;")
+        self._pct_label.setStyleSheet(
+            f"color: {c['text']}; font-size: 9pt; font-weight: bold;"
+        )
         self._target_label.setStyleSheet(f"color: {c['subtext']}; font-size: 9pt;")
         self._bar.setStyleSheet(
             f"QProgressBar {{ background-color: {c['surface']}; border-radius: 7px; }}"
@@ -158,8 +173,12 @@ class _AllocationPieChart(QWidget):
         sizes = list(data.values())
         colors = [palette[i % len(palette)] for i in range(len(labels))]
         self._ax.pie(
-            sizes, labels=labels, colors=colors, autopct="%1.1f%%",
-            textprops={"color": "#000000", "fontsize": 8}, startangle=90,  # Dark text
+            sizes,
+            labels=labels,
+            colors=colors,
+            autopct="%1.1f%%",
+            textprops={"color": "#000000", "fontsize": 8},
+            startangle=90,  # Dark text
         )
         self._ax.set_facecolor(c["bg"])
         self._canvas.draw()
@@ -180,13 +199,18 @@ class EmergencyFundPage(QWidget):
 
         kpi_row = QHBoxLayout()
         kpi_row.setSpacing(12)
-        self._kpi_value    = _KpiCard("Current Value")
-        self._kpi_target   = _KpiCard("Target Capital")
+        self._kpi_value = _KpiCard("Current Value")
+        self._kpi_target = _KpiCard("Target Capital")
         self._kpi_coverage = _KpiCard("Coverage")
-        self._kpi_remaining= _KpiCard("Still Needed")
-        self._kpi_cash     = _KpiCard("Cash Available")
-        for card in (self._kpi_value, self._kpi_target, self._kpi_coverage,
-                     self._kpi_remaining, self._kpi_cash):
+        self._kpi_remaining = _KpiCard("Still Needed")
+        self._kpi_cash = _KpiCard("Cash Available")
+        for card in (
+            self._kpi_value,
+            self._kpi_target,
+            self._kpi_coverage,
+            self._kpi_remaining,
+            self._kpi_cash,
+        ):
             kpi_row.addWidget(card, 1)
         root.addLayout(kpi_row)
 
@@ -219,8 +243,10 @@ class EmergencyFundPage(QWidget):
         allocation = self._ctrl.get_emergency_allocation_data()
 
         cov_color = (
-            c["green"] if status.is_funded or status.coverage_pct >= 75
-            else c["yellow"] if status.coverage_pct >= 40
+            c["green"]
+            if status.is_funded or status.coverage_pct >= 75
+            else c["yellow"]
+            if status.coverage_pct >= 40
             else c["red"]
         )
         self._kpi_value.set_value(f"€{status.current_value:,.2f}")
@@ -235,18 +261,27 @@ class EmergencyFundPage(QWidget):
 
         self._table.setRowCount(len(asset_infos))
         for row, info in enumerate(asset_infos):
-            gl_color      = c["green"] if info.gain_loss_eur >= 0 else c["red"]
-            intraday_color= c["green"] if info.intraday_gain_loss_eur >= 0 else c["red"]
+            gl_color = c["green"] if info.gain_loss_eur >= 0 else c["red"]
+            intraday_color = (
+                c["green"] if info.intraday_gain_loss_eur >= 0 else c["red"]
+            )
             _set_cell(self._table, row, 0, info.name)
             _set_cell(self._table, row, 1, info.symbol)
             _set_cell(self._table, row, 2, f"{info.current_price:,.2f}")
             _set_cell(self._table, row, 3, f"{info.quantity:,.4f}")
             _set_cell(self._table, row, 4, f"{info.gain_loss_eur:+,.2f}", gl_color)
             _set_cell(self._table, row, 5, f"{info.gain_loss_pct:+.2f}%", gl_color)
-            _set_cell(self._table, row, 6, f"{info.intraday_gain_loss_eur:+,.2f}", intraday_color)
+            _set_cell(
+                self._table,
+                row,
+                6,
+                f"{info.intraday_gain_loss_eur:+,.2f}",
+                intraday_color,
+            )
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────── #
+
 
 def _section_label(text: str) -> QLabel:
     lbl = QLabel(text)
@@ -256,14 +291,24 @@ def _section_label(text: str) -> QLabel:
 
 
 def _build_holdings_table() -> QTableWidget:
-    columns = ["Name", "Ticker", "Price (€)", "Qty", "G/L (€)", "G/L (%)", "Intraday G/L (€)"]
+    columns = [
+        "Name",
+        "Ticker",
+        "Price (€)",
+        "Qty",
+        "G/L (€)",
+        "G/L (%)",
+        "Intraday G/L (€)",
+    ]
     table = QTableWidget(0, len(columns))
     table.setHorizontalHeaderLabels(columns)
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
     for col in range(1, len(columns)):
-        table.horizontalHeader().setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+        table.horizontalHeader().setSectionResizeMode(
+            col, QHeaderView.ResizeMode.ResizeToContents
+        )
     table.verticalHeader().setVisible(False)
     return table
 

@@ -5,7 +5,12 @@ import numpy as np
 import pandas as pd
 import pyqtgraph as pg
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSizePolicy,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QSizePolicy,
 )
 from PySide6.QtCore import QThread, Signal, Qt
 
@@ -16,7 +21,13 @@ if TYPE_CHECKING:
 
 # period label → days (None = special)
 _PERIODS: Dict[str, Optional[int]] = {
-    "1M": 30, "3M": 90, "6M": 180, "YTD": -1, "1Y": 365, "5Y": 1825, "MAX": None,
+    "1M": 30,
+    "3M": 90,
+    "6M": 180,
+    "YTD": -1,
+    "1Y": 365,
+    "5Y": 1825,
+    "MAX": None,
 }
 
 
@@ -30,7 +41,9 @@ class _HistWorker(QThread):
         self._end = end
 
     def run(self) -> None:
-        series = self._ctrl.get_investment_historical_performance(self._start, self._end)
+        series = self._ctrl.get_investment_historical_performance(
+            self._start, self._end
+        )
         self.result_ready.emit(series)
 
 
@@ -179,7 +192,9 @@ class HistoricalChartWidget(QWidget):
 
         color = c["green"] if values[-1] >= values[0] else c["red"]
 
-        main_curve = pg.PlotDataItem(timestamps, values, pen=pg.mkPen(color=color, width=2))
+        main_curve = pg.PlotDataItem(
+            timestamps, values, pen=pg.mkPen(color=color, width=2)
+        )
         floor = np.full(len(values), values.min() * 0.998)
         baseline = pg.PlotDataItem(timestamps, floor, pen=None)
         fill = pg.FillBetweenItem(main_curve, baseline, brush=pg.mkBrush(color + "28"))
