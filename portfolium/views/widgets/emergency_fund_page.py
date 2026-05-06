@@ -4,53 +4,42 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QProgressBar,
-    QSizePolicy,
-    QSplitter,
-    QTableWidget,
-    QTableWidgetItem,
-    QVBoxLayout,
-    QWidget,
-    QHeaderView,
+    QFrame, QHBoxLayout, QLabel, QProgressBar, QSizePolicy,
+    QSplitter, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QHeaderView,
 )
 
 from ...controllers.portfolio_controller import EmergencyFundStatus, PortfolioController
-
-_BG = "#1e1e2e"
-_TEXT = "#cdd6f4"
-_GREEN = "#a6e3a1"
-_RED = "#f38ba8"
-_YELLOW = "#f9e2af"
-_BLUE = "#89b4fa"
-_PALETTE = ["#89b4fa", "#a6e3a1", "#fab387", "#f38ba8", "#cba6f7", "#94e2d5"]
+from ..theme import ThemeManager
 
 
 class _KpiCard(QFrame):
     def __init__(self, title: str) -> None:
         super().__init__()
-        self.setStyleSheet("background-color: #181825; border-radius: 8px;")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 10, 12, 10)
         layout.setSpacing(2)
 
-        self._title = QLabel(title)
-        self._title.setStyleSheet("color: #6c7086; font-size: 8pt;")
-        self._value = QLabel("-")
-        self._value.setStyleSheet(
-            f"color: {_TEXT}; font-size: 12pt; font-weight: bold;"
-        )
+        self._title_lbl = QLabel(title)
+        self._value_lbl = QLabel("-")
 
-        layout.addWidget(self._title)
-        layout.addWidget(self._value)
+        layout.addWidget(self._title_lbl)
+        layout.addWidget(self._value_lbl)
+
+        self._apply_theme(ThemeManager().current)
+        ThemeManager().changed.connect(self._apply_theme)
+
+    def _apply_theme(self, _theme: str) -> None:
+        c = ThemeManager().colors()
+        self.setStyleSheet(f"background-color: {c['bg_alt']}; border-radius: 8px;")
+        self._title_lbl.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt;")
+        self._value_lbl.setStyleSheet(f"color: {c['text']}; font-size: 12pt; font-weight: bold;")
 
     def set_value(self, text: str, color: Optional[str] = None) -> None:
+        c = ThemeManager().colors()
         style = "font-size: 12pt; font-weight: bold;"
-        style += f" color: {color if color else _TEXT};"
-        self._value.setStyleSheet(style)
-        self._value.setText(text)
+        style += f" color: {color if color else c['text']};"
+        self._value_lbl.setStyleSheet(style)
+        self._value_lbl.setText(text)
 
 
 class _FundProgressCard(QFrame):
@@ -58,49 +47,34 @@ class _FundProgressCard(QFrame):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setStyleSheet("background-color: #181825; border-radius: 10px;")
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 16, 20, 16)
         layout.setSpacing(10)
 
-        # Title row
         title_row = QHBoxLayout()
-        self._title = QLabel("Emergency Fund Coverage")
-        self._title.setStyleSheet(
-            f"color: {_TEXT}; font-size: 11pt; font-weight: bold;"
-        )
+        self._title_lbl = QLabel("Emergency Fund Coverage")
+        self._title_lbl.setStyleSheet("font-size: 11pt; font-weight: bold;")
         self._status_badge = QLabel()
         self._status_badge.setStyleSheet(
             "border-radius: 6px; padding: 2px 8px; font-size: 8pt; font-weight: bold;"
         )
-        title_row.addWidget(self._title)
+        title_row.addWidget(self._title_lbl)
         title_row.addStretch()
         title_row.addWidget(self._status_badge)
         layout.addLayout(title_row)
 
-        # Progress bar
         self._bar = QProgressBar()
         self._bar.setRange(0, 100)
         self._bar.setTextVisible(False)
         self._bar.setFixedHeight(14)
-        self._bar.setStyleSheet(
-            "QProgressBar { background-color: #313244; border-radius: 7px; }"
-            f"QProgressBar::chunk {{ background-color: {_BLUE}; border-radius: 7px; }}"
-        )
         layout.addWidget(self._bar)
 
-        # Bottom figures row
         figures = QHBoxLayout()
         self._saved_label = QLabel()
-        self._saved_label.setStyleSheet(f"color: {_TEXT}; font-size: 9pt;")
         self._pct_label = QLabel()
-        self._pct_label.setStyleSheet(
-            f"color: {_TEXT}; font-size: 9pt; font-weight: bold;"
-        )
         self._target_label = QLabel()
-        self._target_label.setStyleSheet("color: #6c7086; font-size: 9pt;")
         figures.addWidget(self._saved_label)
         figures.addStretch()
         figures.addWidget(self._pct_label)
@@ -108,36 +82,47 @@ class _FundProgressCard(QFrame):
         figures.addWidget(self._target_label)
         layout.addLayout(figures)
 
+        self._apply_theme(ThemeManager().current)
+        ThemeManager().changed.connect(self._apply_theme)
+
+    def _apply_theme(self, _theme: str) -> None:
+        c = ThemeManager().colors()
+        self.setStyleSheet(f"background-color: {c['bg_alt']}; border-radius: 10px;")
+        self._title_lbl.setStyleSheet(f"color: {c['text']}; font-size: 11pt; font-weight: bold;")
+        self._saved_label.setStyleSheet(f"color: {c['text']}; font-size: 9pt;")
+        self._pct_label.setStyleSheet(f"color: {c['text']}; font-size: 9pt; font-weight: bold;")
+        self._target_label.setStyleSheet(f"color: {c['subtext']}; font-size: 9pt;")
+        self._bar.setStyleSheet(
+            f"QProgressBar {{ background-color: {c['surface']}; border-radius: 7px; }}"
+            f"QProgressBar::chunk {{ background-color: {c['accent']}; border-radius: 7px; }}"
+        )
+
     def update_data(self, status: EmergencyFundStatus) -> None:
+        c = ThemeManager().colors()
         pct = int(status.coverage_pct)
         self._bar.setValue(pct)
 
-        if status.is_funded:
-            chunk_color = _GREEN
-            badge_text = "FULLY FUNDED"
-            badge_style = f"background: #1e3a2a; color: {_GREEN};"
-        elif status.coverage_pct >= 75:
-            chunk_color = _GREEN
-            badge_text = "NEARLY FUNDED"
-            badge_style = f"background: #1e3a2a; color: {_GREEN};"
+        if status.is_funded or status.coverage_pct >= 75:
+            chunk_color = c["green"]
+            badge_text = "FULLY FUNDED" if status.is_funded else "NEARLY FUNDED"
+            badge_style = f"background: {c['bg']}; color: {c['green']};"
         elif status.coverage_pct >= 40:
-            chunk_color = _YELLOW
+            chunk_color = c["yellow"]
             badge_text = "IN PROGRESS"
-            badge_style = f"background: #3a2e1e; color: {_YELLOW};"
+            badge_style = f"background: {c['bg']}; color: {c['yellow']};"
         else:
-            chunk_color = _RED
+            chunk_color = c["red"]
             badge_text = "UNDERFUNDED"
-            badge_style = f"background: #3a1e1e; color: {_RED};"
+            badge_style = f"background: {c['bg']}; color: {c['red']};"
 
         self._bar.setStyleSheet(
-            "QProgressBar { background-color: #313244; border-radius: 7px; }"
+            f"QProgressBar {{ background-color: {c['surface']}; border-radius: 7px; }}"
             f"QProgressBar::chunk {{ background-color: {chunk_color}; border-radius: 7px; }}"
         )
         self._status_badge.setText(badge_text)
         self._status_badge.setStyleSheet(
             f"border-radius: 6px; padding: 2px 8px; font-size: 8pt; font-weight: bold; {badge_style}"
         )
-
         self._saved_label.setText(f"Saved: €{status.current_value:,.2f}")
         self._pct_label.setText(f"{pct}%")
         if status.target_capital is not None:
@@ -149,81 +134,65 @@ class _FundProgressCard(QFrame):
 class _AllocationPieChart(QWidget):
     def __init__(self) -> None:
         super().__init__()
-        fig = Figure(figsize=(4, 4), facecolor=_BG)
-        self._ax = fig.add_subplot(111)
-        self._canvas = FigureCanvas(fig)
+        c = ThemeManager().colors()
+        self._fig = Figure(figsize=(4, 4), facecolor=c["bg"])
+        self._ax = self._fig.add_subplot(111)
+        self._canvas = FigureCanvas(self._fig)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self._canvas)
         self.setMinimumHeight(220)
+        self._last_data: dict = {}
+        ThemeManager().changed.connect(lambda _: self.update_data(self._last_data))
 
     def update_data(self, data: dict) -> None:
+        self._last_data = data
+        c = ThemeManager().colors()
+        palette = c["palette"]
+        self._fig.set_facecolor(c["bg"])
         self._ax.clear()
         if not data:
             self._canvas.draw()
             return
         labels = list(data.keys())
         sizes = list(data.values())
-        colors = [_PALETTE[i % len(_PALETTE)] for i in range(len(labels))]
+        colors = [palette[i % len(palette)] for i in range(len(labels))]
         self._ax.pie(
-            sizes,
-            labels=labels,
-            colors=colors,
-            autopct="%1.1f%%",
-            textprops={"color": _TEXT, "fontsize": 8},
-            startangle=90,
+            sizes, labels=labels, colors=colors, autopct="%1.1f%%",
+            textprops={"color": c["text"], "fontsize": 8}, startangle=90,
         )
-        self._ax.set_facecolor(_BG)
+        self._ax.set_facecolor(c["bg"])
         self._canvas.draw()
 
 
 class EmergencyFundPage(QWidget):
-    """
-    MVC View – Emergency Fund tab page.
-
-    Layout:
-      • KPI cards row (current value, target, coverage %, remaining, cash)
-      • Large fund-progress card with labelled progress bar
-      • QSplitter: left = allocation pie | right = holdings table
-    """
+    """MVC View – Emergency Fund tab page."""
 
     def __init__(self, controller: PortfolioController) -> None:
         super().__init__()
         self._ctrl = controller
         self._build_ui()
 
-    # ------------------------------------------------------------------ #
-    # UI construction                                                      #
-    # ------------------------------------------------------------------ #
-
     def _build_ui(self) -> None:
         root = QVBoxLayout(self)
         root.setContentsMargins(16, 16, 16, 16)
         root.setSpacing(12)
 
-        # ── KPI cards ──────────────────────────────────────────────────── #
         kpi_row = QHBoxLayout()
         kpi_row.setSpacing(12)
-        self._kpi_value = _KpiCard("Current Value")
-        self._kpi_target = _KpiCard("Target Capital")
+        self._kpi_value    = _KpiCard("Current Value")
+        self._kpi_target   = _KpiCard("Target Capital")
         self._kpi_coverage = _KpiCard("Coverage")
-        self._kpi_remaining = _KpiCard("Still Needed")
-        self._kpi_cash = _KpiCard("Cash Available")
-        for card in (
-            self._kpi_value,
-            self._kpi_target,
-            self._kpi_coverage,
-            self._kpi_remaining,
-            self._kpi_cash,
-        ):
+        self._kpi_remaining= _KpiCard("Still Needed")
+        self._kpi_cash     = _KpiCard("Cash Available")
+        for card in (self._kpi_value, self._kpi_target, self._kpi_coverage,
+                     self._kpi_remaining, self._kpi_cash):
             kpi_row.addWidget(card, 1)
         root.addLayout(kpi_row)
 
-        # ── Progress card ──────────────────────────────────────────────── #
         self._progress_card = _FundProgressCard()
         root.addWidget(self._progress_card)
 
-        # ── Middle: pie chart (left) + holdings table (right) ─────────── #
         splitter = QSplitter(Qt.Orientation.Horizontal)
         splitter.setChildrenCollapsible(False)
 
@@ -242,23 +211,17 @@ class EmergencyFundPage(QWidget):
         splitter.setSizes([350, 650])
         root.addWidget(splitter, 3)
 
-    # ------------------------------------------------------------------ #
-    # Refresh                                                              #
-    # ------------------------------------------------------------------ #
-
     def refresh(self) -> None:
+        c = ThemeManager().colors()
         status = self._ctrl.get_emergency_fund_status()
         asset_infos = self._ctrl.get_emergency_asset_infos()
         cash = self._ctrl.get_emergency_cash_balance()
         allocation = self._ctrl.get_emergency_allocation_data()
 
-        # KPI cards
         cov_color = (
-            _GREEN
-            if status.is_funded or status.coverage_pct >= 75
-            else _YELLOW
-            if status.coverage_pct >= 40
-            else _RED
+            c["green"] if status.is_funded or status.coverage_pct >= 75
+            else c["yellow"] if status.coverage_pct >= 40
+            else c["red"]
         )
         self._kpi_value.set_value(f"€{status.current_value:,.2f}")
         self._kpi_target.set_value(
@@ -267,61 +230,40 @@ class EmergencyFundPage(QWidget):
         self._kpi_coverage.set_value(f"{status.coverage_pct:.1f}%", cov_color)
         self._kpi_remaining.set_value(f"€{status.remaining_amount:,.2f}")
         self._kpi_cash.set_value(f"€{cash:,.2f}")
-
-        # Progress card
         self._progress_card.update_data(status)
-
-        # Pie chart
         self._pie.update_data(allocation)
 
-        # Holdings table
         self._table.setRowCount(len(asset_infos))
         for row, info in enumerate(asset_infos):
-            gl_color = _GREEN if info.gain_loss_eur >= 0 else _RED
-            intraday_color = _GREEN if info.intraday_gain_loss_eur >= 0 else _RED
+            gl_color      = c["green"] if info.gain_loss_eur >= 0 else c["red"]
+            intraday_color= c["green"] if info.intraday_gain_loss_eur >= 0 else c["red"]
             _set_cell(self._table, row, 0, info.name)
             _set_cell(self._table, row, 1, info.symbol)
             _set_cell(self._table, row, 2, f"{info.current_price:,.2f}")
             _set_cell(self._table, row, 3, f"{info.quantity:,.4f}")
             _set_cell(self._table, row, 4, f"{info.gain_loss_eur:+,.2f}", gl_color)
             _set_cell(self._table, row, 5, f"{info.gain_loss_pct:+.2f}%", gl_color)
-            _set_cell(
-                self._table,
-                row,
-                6,
-                f"{info.intraday_gain_loss_eur:+,.2f}",
-                intraday_color,
-            )
+            _set_cell(self._table, row, 6, f"{info.intraday_gain_loss_eur:+,.2f}", intraday_color)
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────── #
 
-
 def _section_label(text: str) -> QLabel:
     lbl = QLabel(text)
-    lbl.setStyleSheet("color: #6c7086; font-size: 8pt; font-weight: bold;")
+    c = ThemeManager().colors()
+    lbl.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt; font-weight: bold;")
     return lbl
 
 
 def _build_holdings_table() -> QTableWidget:
-    columns = [
-        "Name",
-        "Ticker",
-        "Price (€)",
-        "Qty",
-        "G/L (€)",
-        "G/L (%)",
-        "Intraday G/L (€)",
-    ]
+    columns = ["Name", "Ticker", "Price (€)", "Qty", "G/L (€)", "G/L (%)", "Intraday G/L (€)"]
     table = QTableWidget(0, len(columns))
     table.setHorizontalHeaderLabels(columns)
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
     for col in range(1, len(columns)):
-        table.horizontalHeader().setSectionResizeMode(
-            col, QHeaderView.ResizeMode.ResizeToContents
-        )
+        table.horizontalHeader().setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
     table.verticalHeader().setVisible(False)
     return table
 

@@ -5,64 +5,58 @@ from PySide6.QtCore import Qt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
-_BG = "#1e1e2e"
-_TEXT = "#cdd6f4"
-_SUBTEXT = "#6c7086"
-
-# Catppuccin Mocha accent colours
-_PALETTE = [
-    "#89b4fa",  # blue
-    "#a6e3a1",  # green
-    "#fab387",  # peach
-    "#f38ba8",  # red
-    "#cba6f7",  # mauve
-    "#94e2d5",  # teal
-    "#f9e2af",  # yellow
-    "#89dceb",  # sky
-    "#b4befe",  # lavender
-    "#eba0ac",  # maroon
-]
+from ..theme import ThemeManager
 
 
 class AllocationChartWidget(QWidget):
     """
     MVC View – matplotlib pie chart showing portfolio asset allocation.
-    Includes assets (by market value) and remaining cash liquidity.
     """
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self._last_allocation: Dict[str, float] = {}
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(4, 4, 4, 4)
         layout.setSpacing(0)
 
-        title = QLabel("Allocation")
-        title.setAlignment(Qt.AlignCenter)
-        title.setStyleSheet(
-            "font-size: 11pt; font-weight: bold; color: #cdd6f4; margin: 4px 0;"
+        self._title_label = QLabel("Allocation")
+        self._title_label.setAlignment(Qt.AlignCenter)
+        self._title_label.setStyleSheet(
+            "font-size: 11pt; font-weight: bold; margin: 4px 0;"
         )
-        layout.addWidget(title)
+        layout.addWidget(self._title_label)
 
-        self._fig = Figure(facecolor=_BG)
+        c = ThemeManager().colors()
+        self._fig = Figure(facecolor=c["bg"])
         self._canvas = FigureCanvas(self._fig)
         self._canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self._canvas.setStyleSheet("background-color: transparent;")
         layout.addWidget(self._canvas)
 
+        ThemeManager().changed.connect(self._on_theme_changed)
+
+    def _on_theme_changed(self, _theme: str) -> None:
+        self.update_data(self._last_allocation)
+
     def update_data(self, allocation: Dict[str, float]) -> None:
+        self._last_allocation = allocation
+        c = ThemeManager().colors()
         self._fig.clear()
+        self._fig.set_facecolor(c["bg"])
 
         if not allocation:
             self._canvas.draw()
             return
 
         ax = self._fig.add_subplot(111)
-        ax.set_facecolor(_BG)
+        ax.set_facecolor(c["bg"])
 
         labels = list(allocation.keys())
         values = list(allocation.values())
-        colors = (_PALETTE * ((len(labels) // len(_PALETTE)) + 1))[: len(labels)]
+        palette = c["palette"]
+        colors = (palette * ((len(labels) // len(palette)) + 1))[: len(labels)]
 
         wedges, _, autotexts = ax.pie(
             values,
@@ -70,11 +64,11 @@ class AllocationChartWidget(QWidget):
             colors=colors,
             startangle=90,
             pctdistance=0.75,
-            wedgeprops={"edgecolor": _BG, "linewidth": 2},
+            wedgeprops={"edgecolor": c["bg"], "linewidth": 2},
         )
 
         for at in autotexts:
-            at.set_color(_BG)
+            at.set_color(c["text"])
             at.set_fontsize(8)
             at.set_fontweight("bold")
 
@@ -85,7 +79,7 @@ class AllocationChartWidget(QWidget):
             bbox_to_anchor=(0.5, -0.08),
             ncol=min(len(labels), 3),
             frameon=False,
-            labelcolor=_TEXT,
+            labelcolor=c["text"],
             fontsize=9,
         )
 

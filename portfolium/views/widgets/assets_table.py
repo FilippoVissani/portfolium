@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QBrush, QColor, QFont
 
 from ...controllers.portfolio_controller import AssetInfo
+from ..theme import ThemeManager
 
 _COLUMNS = [
     "Name",
@@ -20,9 +21,6 @@ _COLUMNS = [
     "G/L (%)",
     "Intraday G/L (€)",
 ]
-
-_GREEN = QColor("#a6e3a1")
-_RED = QColor("#f38ba8")
 
 
 class AssetsTableWidget(QTableWidget):
@@ -57,7 +55,15 @@ class AssetsTableWidget(QTableWidget):
         mono.setPointSize(9)
         self._mono_font = mono
 
+        self._last_assets: List[AssetInfo] = []
+        ThemeManager().changed.connect(lambda _: self.update_data(self._last_assets))
+
     def update_data(self, assets: List[AssetInfo]) -> None:
+        self._last_assets = assets
+        c = ThemeManager().colors()
+        green = QColor(c["green"])
+        red = QColor(c["red"])
+
         self.setSortingEnabled(False)
         self.setRowCount(len(assets))
 
@@ -91,7 +97,7 @@ class AssetsTableWidget(QTableWidget):
                 if col >= 2:  # numeric columns use monospace
                     item.setFont(self._mono_font)
                 if colour_val is not None:
-                    item.setForeground(QBrush(_GREEN if colour_val >= 0 else _RED))
+                    item.setForeground(QBrush(green if colour_val >= 0 else red))
                 self.setItem(row, col, item)
 
         self.resizeRowsToContents()
