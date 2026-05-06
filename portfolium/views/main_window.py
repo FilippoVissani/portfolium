@@ -7,10 +7,13 @@ from PySide6.QtWidgets import (
     QSplitter,
     QStatusBar,
     QTabWidget,
+    QApplication,
 )
 from PySide6.QtCore import QThread, Signal, Qt
+from PySide6.QtGui import QAction, QActionGroup
 
 from ..controllers.portfolio_controller import PortfolioController
+from .theme import apply_theme
 from .widgets.summary_bar import SummaryBar
 from .widgets.assets_table import AssetsTableWidget
 from .widgets.allocation_chart import AllocationChartWidget
@@ -53,11 +56,14 @@ class MainWindow(QMainWindow):
         self.controller = controller
         self._worker: _DataWorker | None = None
 
+        self._current_theme = "dark"
+
         self.setWindowTitle("Portfolium")
         self.setMinimumSize(1280, 800)
         self.resize(1440, 900)
 
         self._build_ui()
+        self._build_menu()
 
         status = QStatusBar()
         self.setStatusBar(status)
@@ -76,6 +82,30 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------ #
     # UI construction                                                      #
     # ------------------------------------------------------------------ #
+
+    def _build_menu(self) -> None:
+        menu_bar = self.menuBar()
+        view_menu = menu_bar.addMenu("&View")
+
+        theme_menu = view_menu.addMenu("&Theme")
+        group = QActionGroup(self)
+        group.setExclusive(True)
+
+        dark_action = QAction("🌙 Dark (Catppuccin Mocha)", self, checkable=True)
+        dark_action.setChecked(True)
+        dark_action.triggered.connect(lambda: self._apply_theme("dark"))
+        group.addAction(dark_action)
+        theme_menu.addAction(dark_action)
+
+        light_action = QAction("☀️ Light (Catppuccin Latte)", self, checkable=True)
+        light_action.triggered.connect(lambda: self._apply_theme("light"))
+        group.addAction(light_action)
+        theme_menu.addAction(light_action)
+
+        self._theme_actions = {"dark": dark_action, "light": light_action}
+
+    def _apply_theme(self, theme: str) -> None:
+        apply_theme(QApplication.instance(), theme)
 
     def _build_ui(self) -> None:
         root = QWidget()

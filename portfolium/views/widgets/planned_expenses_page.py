@@ -4,57 +4,42 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QProgressBar,
-    QScrollArea,
-    QSizePolicy,
-    QSplitter,
-    QTableWidget,
-    QTableWidgetItem,
-    QVBoxLayout,
-    QWidget,
-    QHeaderView,
+    QFrame, QHBoxLayout, QLabel, QProgressBar, QScrollArea, QSizePolicy,
+    QSplitter, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QHeaderView,
 )
 
-from ...controllers.portfolio_controller import (
-    PlannedExpenseProgress,
-    PortfolioController,
-)
-
-_BG = "#1e1e2e"
-_TEXT = "#cdd6f4"
-_GREEN = "#a6e3a1"
-_RED = "#f38ba8"
-_YELLOW = "#f9e2af"
-_PALETTE = ["#89b4fa", "#a6e3a1", "#fab387", "#f38ba8", "#cba6f7", "#94e2d5"]
+from ...controllers.portfolio_controller import PlannedExpenseProgress, PortfolioController
+from ..theme import ThemeManager
 
 
 class _KpiCard(QFrame):
     def __init__(self, title: str) -> None:
         super().__init__()
-        self.setStyleSheet("background-color: #181825; border-radius: 8px;")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 10, 12, 10)
         layout.setSpacing(2)
 
-        self._title = QLabel(title)
-        self._title.setStyleSheet("color: #6c7086; font-size: 8pt;")
-        self._value = QLabel("-")
-        self._value.setStyleSheet("color: #cdd6f4; font-size: 12pt; font-weight: bold;")
+        self._title_lbl = QLabel(title)
+        self._value_lbl = QLabel("-")
 
-        layout.addWidget(self._title)
-        layout.addWidget(self._value)
+        layout.addWidget(self._title_lbl)
+        layout.addWidget(self._value_lbl)
+
+        self._apply_theme(ThemeManager().current)
+        ThemeManager().changed.connect(self._apply_theme)
+
+    def _apply_theme(self, _theme: str) -> None:
+        c = ThemeManager().colors()
+        self.setStyleSheet(f"background-color: {c['bg_alt']}; border-radius: 8px;")
+        self._title_lbl.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt;")
+        self._value_lbl.setStyleSheet(f"color: {c['text']}; font-size: 12pt; font-weight: bold;")
 
     def set_value(self, text: str, color: Optional[str] = None) -> None:
+        c = ThemeManager().colors()
         style = "font-size: 12pt; font-weight: bold;"
-        if color:
-            style += f" color: {color};"
-        else:
-            style += f" color: {_TEXT};"
-        self._value.setStyleSheet(style)
-        self._value.setText(text)
+        style += f" color: {color if color else c['text']};"
+        self._value_lbl.setStyleSheet(style)
+        self._value_lbl.setText(text)
 
 
 class _GoalCard(QFrame):
@@ -62,45 +47,30 @@ class _GoalCard(QFrame):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setStyleSheet("background-color: #181825; border-radius: 8px;")
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(14, 12, 14, 12)
         layout.setSpacing(6)
 
-        # Header row: name + deadline
         header = QHBoxLayout()
         self._name_label = QLabel()
-        self._name_label.setStyleSheet(
-            f"color: {_TEXT}; font-size: 10pt; font-weight: bold;"
-        )
         self._deadline_label = QLabel()
-        self._deadline_label.setStyleSheet("color: #6c7086; font-size: 8pt;")
         header.addWidget(self._name_label)
         header.addStretch()
         header.addWidget(self._deadline_label)
         layout.addLayout(header)
 
-        # Progress bar
         self._progress_bar = QProgressBar()
         self._progress_bar.setRange(0, 100)
         self._progress_bar.setTextVisible(False)
         self._progress_bar.setFixedHeight(8)
-        self._progress_bar.setStyleSheet(
-            "QProgressBar { background-color: #313244; border-radius: 4px; }"
-            "QProgressBar::chunk { background-color: #89b4fa; border-radius: 4px; }"
-        )
         layout.addWidget(self._progress_bar)
 
-        # Bottom row: progress % + amounts + days remaining
         bottom = QHBoxLayout()
         self._pct_label = QLabel()
-        self._pct_label.setStyleSheet(f"color: {_TEXT}; font-size: 8pt;")
         self._amounts_label = QLabel()
-        self._amounts_label.setStyleSheet("color: #6c7086; font-size: 8pt;")
         self._days_label = QLabel()
-        self._days_label.setStyleSheet("color: #6c7086; font-size: 8pt;")
         bottom.addWidget(self._pct_label)
         bottom.addStretch()
         bottom.addWidget(self._amounts_label)
@@ -108,27 +78,40 @@ class _GoalCard(QFrame):
         bottom.addWidget(self._days_label)
         layout.addLayout(bottom)
 
-    def update_data(self, goal: PlannedExpenseProgress) -> None:
-        self._name_label.setText(goal.name)
-        self._deadline_label.setText(
-            f"Due: {goal.expiration_date.strftime('%d %b %Y')}"
+        self._apply_theme(ThemeManager().current)
+        ThemeManager().changed.connect(self._apply_theme)
+
+    def _apply_theme(self, _theme: str) -> None:
+        c = ThemeManager().colors()
+        self.setStyleSheet(f"background-color: {c['bg_alt']}; border-radius: 8px;")
+        self._name_label.setStyleSheet(f"color: {c['text']}; font-size: 10pt; font-weight: bold;")
+        self._deadline_label.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt;")
+        self._pct_label.setStyleSheet(f"color: {c['text']}; font-size: 8pt;")
+        self._amounts_label.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt;")
+        self._progress_bar.setStyleSheet(
+            f"QProgressBar {{ background-color: {c['surface']}; border-radius: 4px; }}"
+            f"QProgressBar::chunk {{ background-color: {c['accent']}; border-radius: 4px; }}"
         )
+
+    def update_data(self, goal: PlannedExpenseProgress) -> None:
+        c = ThemeManager().colors()
+        self._name_label.setText(goal.name)
+        self._deadline_label.setText(f"Due: {goal.expiration_date.strftime('%d %b %Y')}")
 
         pct = int(goal.progress_pct)
         self._progress_bar.setValue(pct)
 
         if goal.is_overdue:
-            chunk_color = _RED
-        elif goal.is_completed:
-            chunk_color = _GREEN
-        elif goal.progress_pct >= 75:
-            chunk_color = _GREEN
+            chunk_color = c["red"]
+        elif goal.is_completed or goal.progress_pct >= 75:
+            chunk_color = c["green"]
         elif goal.progress_pct >= 40:
-            chunk_color = _YELLOW
+            chunk_color = c["yellow"]
         else:
-            chunk_color = "#89b4fa"
+            chunk_color = c["accent"]
+
         self._progress_bar.setStyleSheet(
-            "QProgressBar { background-color: #313244; border-radius: 4px; }"
+            f"QProgressBar {{ background-color: {c['surface']}; border-radius: 4px; }}"
             f"QProgressBar::chunk {{ background-color: {chunk_color}; border-radius: 4px; }}"
         )
 
@@ -139,13 +122,13 @@ class _GoalCard(QFrame):
 
         if goal.is_completed:
             days_text = "Goal reached!"
-            days_color = _GREEN
+            days_color = c["green"]
         elif goal.is_overdue:
             days_text = "Overdue!"
-            days_color = _RED
+            days_color = c["red"]
         else:
             days_text = f"{goal.days_remaining} days left"
-            days_color = "#6c7086"
+            days_color = c["subtext"]
         self._days_label.setStyleSheet(f"color: {days_color}; font-size: 8pt;")
         self._days_label.setText(days_text)
 
@@ -155,110 +138,95 @@ class _AllocationPieChart(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
-        fig = Figure(figsize=(4, 4), facecolor=_BG)
-        self._ax = fig.add_subplot(111)
-        self._canvas = FigureCanvas(fig)
+        c = ThemeManager().colors()
+        self._fig = Figure(figsize=(4, 4), facecolor=c["bg"])
+        self._ax = self._fig.add_subplot(111)
+        self._canvas = FigureCanvas(self._fig)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self._canvas)
         self.setMinimumHeight(220)
+        self._last_data: dict = {}
+        ThemeManager().changed.connect(lambda _: self.update_data(self._last_data))
 
     def update_data(self, data: dict) -> None:
+        self._last_data = data
+        c = ThemeManager().colors()
+        palette = c["palette"]
+        self._fig.set_facecolor(c["bg"])
         self._ax.clear()
         if not data:
             self._canvas.draw()
             return
         labels = list(data.keys())
         sizes = list(data.values())
-        colors = [_PALETTE[i % len(_PALETTE)] for i in range(len(labels))]
+        colors = [palette[i % len(palette)] for i in range(len(labels))]
         self._ax.pie(
-            sizes,
-            labels=labels,
-            colors=colors,
-            autopct="%1.1f%%",
-            textprops={"color": _TEXT, "fontsize": 8},
-            startangle=90,
+            sizes, labels=labels, colors=colors, autopct="%1.1f%%",
+            textprops={"color": c["text"], "fontsize": 8}, startangle=90,
         )
-        self._ax.set_facecolor(_BG)
+        self._ax.set_facecolor(c["bg"])
         self._canvas.draw()
 
 
 class PlannedExpensesPage(QWidget):
-    """
-    MVC View – Planned Expenses tab page.
-
-    Layout:
-      • KPI summary bar (total saved, total needed, overall coverage)
-      • QSplitter: left = scrollable goal cards | right = allocation pie
-      • Holdings table
-    """
+    """MVC View – Planned Expenses tab page."""
 
     def __init__(self, controller: PortfolioController) -> None:
         super().__init__()
         self._ctrl = controller
         self._build_ui()
 
-    # ------------------------------------------------------------------ #
-    # UI construction                                                      #
-    # ------------------------------------------------------------------ #
-
     def _build_ui(self) -> None:
         root = QVBoxLayout(self)
         root.setContentsMargins(16, 16, 16, 16)
         root.setSpacing(12)
 
-        # ── KPI cards ──────────────────────────────────────────────────── #
         kpi_row = QHBoxLayout()
         kpi_row.setSpacing(12)
-        self._kpi_saved = _KpiCard("Total Saved")
-        self._kpi_needed = _KpiCard("Total Needed")
+        self._kpi_saved    = _KpiCard("Total Saved")
+        self._kpi_needed   = _KpiCard("Total Needed")
         self._kpi_coverage = _KpiCard("Overall Coverage")
-        self._kpi_cash = _KpiCard("Cash Available")
-        self._kpi_goals = _KpiCard("Goals")
-        for card in (
-            self._kpi_saved,
-            self._kpi_needed,
-            self._kpi_coverage,
-            self._kpi_cash,
-            self._kpi_goals,
-        ):
+        self._kpi_cash     = _KpiCard("Cash Available")
+        self._kpi_goals    = _KpiCard("Goals")
+        for card in (self._kpi_saved, self._kpi_needed, self._kpi_coverage,
+                     self._kpi_cash, self._kpi_goals):
             kpi_row.addWidget(card, 1)
         root.addLayout(kpi_row)
 
-        # ── Middle: goal cards (left) + pie chart (right) ─────────────── #
         splitter = QSplitter(Qt.Orientation.Horizontal)
         splitter.setChildrenCollapsible(False)
 
-        # Left – scrollable goal cards
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        scroll.setStyleSheet(f"QScrollArea {{ background: {_BG}; border: none; }}")
-        goals_container = QWidget()
-        goals_container.setStyleSheet(f"background: {_BG};")
-        self._goals_layout = QVBoxLayout(goals_container)
+        self._scroll = QScrollArea()
+        self._scroll.setWidgetResizable(True)
+        self._scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._goals_container = QWidget()
+        self._goals_layout = QVBoxLayout(self._goals_container)
         self._goals_layout.setContentsMargins(0, 0, 0, 0)
         self._goals_layout.setSpacing(8)
         self._goals_layout.addStretch()
-        scroll.setWidget(goals_container)
-        splitter.addWidget(scroll)
+        self._scroll.setWidget(self._goals_container)
+        splitter.addWidget(self._scroll)
 
-        # Right – allocation pie
         self._pie = _AllocationPieChart()
         splitter.addWidget(self._pie)
         splitter.setSizes([500, 300])
         root.addWidget(splitter, 3)
 
-        # ── Holdings table ─────────────────────────────────────────────── #
         root.addWidget(_section_label("Holdings"))
         self._table = _build_holdings_table()
         root.addWidget(self._table, 2)
 
-    # ------------------------------------------------------------------ #
-    # Refresh                                                              #
-    # ------------------------------------------------------------------ #
+        self._apply_container_theme(ThemeManager().current)
+        ThemeManager().changed.connect(self._apply_container_theme)
+
+    def _apply_container_theme(self, _theme: str) -> None:
+        c = ThemeManager().colors()
+        self._scroll.setStyleSheet(f"QScrollArea {{ background: {c['bg']}; border: none; }}")
+        self._goals_container.setStyleSheet(f"background: {c['bg']};")
 
     def refresh(self) -> None:
+        c = ThemeManager().colors()
         goals = self._ctrl.get_planned_expense_progress()
         asset_infos = self._ctrl.get_planned_asset_infos()
         cash = self._ctrl.get_planned_cash_balance()
@@ -266,16 +234,14 @@ class PlannedExpensesPage(QWidget):
         total_needed = sum(g.estimated_amount for g in goals)
         allocation = self._ctrl.get_planned_allocation_data()
 
-        # KPI cards
         coverage = (total_saved / total_needed * 100) if total_needed else 0.0
-        cov_color = _GREEN if coverage >= 75 else _YELLOW if coverage >= 40 else _RED
+        cov_color = c["green"] if coverage >= 75 else c["yellow"] if coverage >= 40 else c["red"]
         self._kpi_saved.set_value(f"€{total_saved:,.2f}")
         self._kpi_needed.set_value(f"€{total_needed:,.2f}")
         self._kpi_coverage.set_value(f"{coverage:.1f}%", cov_color)
         self._kpi_cash.set_value(f"€{cash:,.2f}")
         self._kpi_goals.set_value(str(len(goals)))
 
-        # Goal cards – rebuild
         while self._goals_layout.count() > 1:
             item = self._goals_layout.takeAt(0)
             if item.widget():
@@ -286,57 +252,39 @@ class PlannedExpensesPage(QWidget):
             card.update_data(goal)
             self._goals_layout.insertWidget(self._goals_layout.count() - 1, card)
 
-        # Pie chart
         self._pie.update_data(allocation)
 
-        # Holdings table
         self._table.setRowCount(len(asset_infos))
         for row, info in enumerate(asset_infos):
-            gl_color = _GREEN if info.gain_loss_eur >= 0 else _RED
-            intraday_color = _GREEN if info.intraday_gain_loss_eur >= 0 else _RED
+            gl_color       = c["green"] if info.gain_loss_eur >= 0 else c["red"]
+            intraday_color = c["green"] if info.intraday_gain_loss_eur >= 0 else c["red"]
             _set_cell(self._table, row, 0, info.name)
             _set_cell(self._table, row, 1, info.symbol)
             _set_cell(self._table, row, 2, f"{info.current_price:,.2f}")
             _set_cell(self._table, row, 3, f"{info.quantity:,.4f}")
             _set_cell(self._table, row, 4, f"{info.gain_loss_eur:+,.2f}", gl_color)
             _set_cell(self._table, row, 5, f"{info.gain_loss_pct:+.2f}%", gl_color)
-            _set_cell(
-                self._table,
-                row,
-                6,
-                f"{info.intraday_gain_loss_eur:+,.2f}",
-                intraday_color,
-            )
+            _set_cell(self._table, row, 6, f"{info.intraday_gain_loss_eur:+,.2f}", intraday_color)
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────── #
 
-
 def _section_label(text: str) -> QLabel:
     lbl = QLabel(text)
-    lbl.setStyleSheet("color: #6c7086; font-size: 8pt; font-weight: bold;")
+    c = ThemeManager().colors()
+    lbl.setStyleSheet(f"color: {c['subtext']}; font-size: 8pt; font-weight: bold;")
     return lbl
 
 
 def _build_holdings_table() -> QTableWidget:
-    columns = [
-        "Name",
-        "Ticker",
-        "Price (€)",
-        "Qty",
-        "G/L (€)",
-        "G/L (%)",
-        "Intraday G/L (€)",
-    ]
+    columns = ["Name", "Ticker", "Price (€)", "Qty", "G/L (€)", "G/L (%)", "Intraday G/L (€)"]
     table = QTableWidget(0, len(columns))
     table.setHorizontalHeaderLabels(columns)
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
     for col in range(1, len(columns)):
-        table.horizontalHeader().setSectionResizeMode(
-            col, QHeaderView.ResizeMode.ResizeToContents
-        )
+        table.horizontalHeader().setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
     table.verticalHeader().setVisible(False)
     return table
 
@@ -348,6 +296,5 @@ def _set_cell(
     item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
     if color:
         from PySide6.QtGui import QColor
-
         item.setForeground(QColor(color))
     table.setItem(row, col, item)

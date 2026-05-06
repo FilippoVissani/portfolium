@@ -5,64 +5,38 @@ import numpy as np
 import pandas as pd
 import pyqtgraph as pg
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QSizePolicy,
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSizePolicy,
 )
 from PySide6.QtCore import QThread, Signal, Qt
+
+from ..theme import ThemeManager
 
 if TYPE_CHECKING:
     from ...controllers.portfolio_controller import PortfolioController
 
-_BG = "#1e1e2e"
-_TEXT = "#cdd6f4"
-_GRID = "#313244"
-_GREEN = "#a6e3a1"
-_RED = "#f38ba8"
-
 # period label → days (None = special)
 _PERIODS: Dict[str, Optional[int]] = {
-    "1M": 30,
-    "3M": 90,
-    "6M": 180,
-    "YTD": -1,  # start of current year
-    "1Y": 365,
-    "5Y": 1825,
-    "MAX": None,  # earliest transaction
+    "1M": 30, "3M": 90, "6M": 180, "YTD": -1, "1Y": 365, "5Y": 1825, "MAX": None,
 }
 
 
 class _HistWorker(QThread):
-    """Background thread that computes historical portfolio values."""
+    result_ready = Signal(object)
 
-    result_ready = Signal(object)  # pd.Series
-
-    def __init__(
-        self,
-        controller: "PortfolioController",
-        start: date,
-        end: date,
-    ) -> None:
+    def __init__(self, controller, start: date, end: date) -> None:
         super().__init__()
         self._ctrl = controller
         self._start = start
         self._end = end
 
     def run(self) -> None:
-        series = self._ctrl.get_investment_historical_performance(
-            self._start, self._end
-        )
+        series = self._ctrl.get_investment_historical_performance(self._start, self._end)
         self.result_ready.emit(series)
 
 
 class HistoricalChartWidget(QWidget):
     """
     MVC View – interactive pyqtgraph line chart of portfolio value over time.
-    Period selector buttons (1M / 3M / 6M / YTD / 1Y / 5Y / MAX) trigger
-    an async data fetch so the UI remains responsive.
     """
 
     def __init__(self, controller: "PortfolioController", parent=None) -> None:
@@ -70,6 +44,7 @@ class HistoricalChartWidget(QWidget):
         self.controller = controller
         self._period = "1Y"
         self._worker: Optional[_HistWorker] = None
+        self._last_series: Optional[pd.Series] = None
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 4, 0, 0)
@@ -77,11 +52,11 @@ class HistoricalChartWidget(QWidget):
 
         # ── Header row ────────────────────────────────────────────────── #
         header = QHBoxLayout()
-        title = QLabel("Historical Performance")
-        title.setStyleSheet(
-            "font-size: 11pt; font-weight: bold; color: #cdd6f4; margin-left: 4px;"
+        self._header_title = QLabel("Historical Performance")
+        self._header_title.setStyleSheet(
+            "font-size: 11pt; font-weight: bold; margin-left: 4px;"
         )
-        header.addWidget(title)
+        header.addWidget(self._header_title)
         header.addStretch()
 
         self._buttons: Dict[str, QPushButton] = {}
@@ -96,23 +71,43 @@ class HistoricalChartWidget(QWidget):
         self._buttons["1Y"].setChecked(True)
         layout.addLayout(header)
 
-        # ── Loading label (hidden by default) ─────────────────────────── #
+        # ── Loading label ─────────────────────────────────────────────── #
         self._loading = QLabel("Loading…")
         self._loading.setAlignment(Qt.AlignCenter)
-        self._loading.setStyleSheet("color: #6c7086; font-size: 9pt;")
         self._loading.setVisible(False)
         layout.addWidget(self._loading)
 
         # ── pyqtgraph chart ────────────────────────────────────────────── #
-        pg.setConfigOptions(antialias=True, background=_BG, foreground=_TEXT)
+        c = ThemeManager().colors()
+        pg.setConfigOptions(antialias=True, background=c["bg"], foreground=c["text"])
         date_axis = pg.DateAxisItem(orientation="bottom")
         self._plot = pg.PlotWidget(axisItems={"bottom": date_axis})
         self._plot.showGrid(x=True, y=True, alpha=0.15)
-        self._plot.getAxis("left").setTextPen(_TEXT)
-        self._plot.getAxis("bottom").setTextPen(_TEXT)
-        self._plot.setLabel("left", "Value (€)", color=_TEXT)
+        self._plot.getAxis("left").setTextPen(c["text"])
+        self._plot.getAxis("bottom").setTextPen(c["text"])
+        self._plot.setLabel("left", "Value (€)", color=c["text"])
         self._plot.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         layout.addWidget(self._plot)
+
+        self._update_label_styles()
+        ThemeManager().changed.connect(self._on_theme_changed)
+
+    def _update_label_styles(self) -> None:
+        c = ThemeManager().colors()
+        self._header_title.setStyleSheet(
+            f"font-size: 11pt; font-weight: bold; color: {c['text']}; margin-left: 4px;"
+        )
+        self._loading.setStyleSheet(f"color: {c['subtext']}; font-size: 9pt;")
+
+    def _on_theme_changed(self, _theme: str) -> None:
+        c = ThemeManager().colors()
+        self._update_label_styles()
+        self._plot.setBackground(c["bg"])
+        self._plot.getAxis("left").setTextPen(c["text"])
+        self._plot.getAxis("bottom").setTextPen(c["text"])
+        self._plot.setLabel("left", "Value (€)", color=c["text"])
+        if self._last_series is not None:
+            self._draw(self._last_series)
 
     # ------------------------------------------------------------------ #
     # Period control                                                       #
@@ -127,10 +122,9 @@ class HistoricalChartWidget(QWidget):
     def _date_range(self) -> tuple[date, date]:
         today = date.today()
         days = _PERIODS[self._period]
-
-        if days == -1:  # YTD
+        if days == -1:
             return date(today.year, 1, 1), today
-        if days is None:  # MAX
+        if days is None:
             txns = self.controller.portfolio.get_investment_transactions()
             start = txns[0].date if txns else today - timedelta(days=365)
             return start, today
@@ -141,13 +135,11 @@ class HistoricalChartWidget(QWidget):
     # ------------------------------------------------------------------ #
 
     def refresh(self) -> None:
-        """Kick off an async fetch; updates chart when data arrives."""
         if self._worker and self._worker.isRunning():
             self._worker.quit()
             self._worker.wait()
 
         start, end = self._date_range()
-
         self._loading.setVisible(True)
         for btn in self._buttons.values():
             btn.setEnabled(False)
@@ -160,7 +152,6 @@ class HistoricalChartWidget(QWidget):
         self._loading.setVisible(False)
         for btn in self._buttons.values():
             btn.setEnabled(True)
-
         self._draw(series)
 
     # ------------------------------------------------------------------ #
@@ -168,7 +159,9 @@ class HistoricalChartWidget(QWidget):
     # ------------------------------------------------------------------ #
 
     def _draw(self, series: pd.Series) -> None:
+        self._last_series = series
         self._plot.clear()
+        c = ThemeManager().colors()
 
         if series.empty:
             return
@@ -178,18 +171,15 @@ class HistoricalChartWidget(QWidget):
         )
         values = series.to_numpy(dtype=np.float64)
 
-        # Strip NaN
         mask = ~np.isnan(values)
         timestamps, values = timestamps[mask], values[mask]
 
         if len(values) < 2:
             return
 
-        color = _GREEN if values[-1] >= values[0] else _RED
+        color = c["green"] if values[-1] >= values[0] else c["red"]
 
-        main_curve = pg.PlotDataItem(
-            timestamps, values, pen=pg.mkPen(color=color, width=2)
-        )
+        main_curve = pg.PlotDataItem(timestamps, values, pen=pg.mkPen(color=color, width=2))
         floor = np.full(len(values), values.min() * 0.998)
         baseline = pg.PlotDataItem(timestamps, floor, pen=None)
         fill = pg.FillBetweenItem(main_curve, baseline, brush=pg.mkBrush(color + "28"))
