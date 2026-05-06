@@ -1,26 +1,17 @@
 const config = require('semantic-release-preconfigured-conventional-commits')
-const publishCommands = `
-./gradlew --no-daemon build || exit 1
-git tag -a -f \${nextRelease.version} \${nextRelease.version} -F CHANGELOG.md || exit 2
-git push --force origin \${nextRelease.version} || exit 3
-`
 const releaseBranches = ["main"]
 config.branches = releaseBranches
 config.plugins.push(
     ["@semantic-release/exec", {
-        "prepareCmd": "sed -i 's/^version = \".*\"/version = \"${nextRelease.version}\"/' build.gradle.kts",
-        "publishCmd": publishCommands,
+        "prepareCmd": "sed -i 's/^__version__ = \".*\"/__version__ = \"${nextRelease.version}\"/' portfolium/__init__.py",
     }],
     ["@semantic-release/github", {
         "assets": [
-            { "path": "build/libs/*.jar" },
-            { "path": "build/native/nativeCompile/portfolium-linux-amd64" },
-            { "path": "build/native/nativeCompile/portfolium-macos-amd64" },
-            { "path": "build/native/nativeCompile/portfolium-windows-amd64.exe" }
+            { "path": "dist/portfolium-source.zip" }
         ]
     }],
     ["@semantic-release/git", {
-        "assets": ["CHANGELOG.md", "package.json", "build.gradle.kts"],
+        "assets": ["CHANGELOG.md", "package.json", "portfolium/__init__.py"],
         "message": "chore(release)!: [skip ci] ${nextRelease.version} released"
     }],
 )
