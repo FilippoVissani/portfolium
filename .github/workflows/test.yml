@@ -32,7 +32,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libEGL1 \
+            libegl1 \
             libxkbcommon-x11-0 \
             libxcb-icccm4 \
             libxcb-image0 \
