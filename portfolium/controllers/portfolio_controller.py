@@ -65,7 +65,11 @@ class PlannedExpenseProgress:
 
     @property
     def progress_pct(self) -> float:
-        return min(self.total_saved / self.estimated_amount * 100, 100.0) if self.estimated_amount else 0.0
+        return (
+            min(self.total_saved / self.estimated_amount * 100, 100.0)
+            if self.estimated_amount
+            else 0.0
+        )
 
     @property
     def remaining_amount(self) -> float:
@@ -109,7 +113,10 @@ class EmergencyFundStatus:
 
     @property
     def is_funded(self) -> bool:
-        return self.target_capital is not None and self.current_value >= self.target_capital
+        return (
+            self.target_capital is not None
+            and self.current_value >= self.target_capital
+        )
 
 
 class PortfolioController:
@@ -167,7 +174,10 @@ class PortfolioController:
         return self.portfolio.get_investment_cash_balance()
 
     def get_total_investment_value(self) -> float:
-        return sum(a.current_value for a in self.get_investment_asset_infos()) + self.get_investment_cash_balance()
+        return (
+            sum(a.current_value for a in self.get_investment_asset_infos())
+            + self.get_investment_cash_balance()
+        )
 
     def get_total_investment_gain_loss(self) -> Tuple[float, float]:
         """Return (gain_loss_eur, gain_loss_pct) for the entire portfolio."""
@@ -189,7 +199,9 @@ class PortfolioController:
     # Historical performance                                               #
     # ------------------------------------------------------------------ #
 
-    def get_investment_historical_performance(self, start: date, end: date) -> pd.Series:
+    def get_investment_historical_performance(
+        self, start: date, end: date
+    ) -> pd.Series:
         """
         Compute total portfolio value for every trading day in [start, end].
         Returns a pd.Series with a DatetimeIndex and float values.

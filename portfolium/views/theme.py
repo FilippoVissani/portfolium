@@ -3,11 +3,11 @@ from PySide6.QtGui import QColor, QPalette
 from PySide6.QtCore import Qt
 
 # Catppuccin Mocha palette
-_BG = QColor(30, 30, 46)        # base
-_BG_ALT = QColor(24, 24, 37)    # mantle
-_SURFACE = QColor(49, 50, 68)   # surface0
-_OVERLAY = QColor(69, 71, 90)   # overlay0
-_TEXT = QColor(205, 214, 244)   # text
+_BG = QColor(30, 30, 46)  # base
+_BG_ALT = QColor(24, 24, 37)  # mantle
+_SURFACE = QColor(49, 50, 68)  # surface0
+_OVERLAY = QColor(69, 71, 90)  # overlay0
+_TEXT = QColor(205, 214, 244)  # text
 _SUBTEXT = QColor(108, 112, 134)  # subtext0
 _ACCENT = QColor(137, 180, 250)  # blue
 _ACCENT_FG = QColor(30, 30, 46)

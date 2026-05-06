@@ -19,7 +19,10 @@ from PySide6.QtWidgets import (
     QHeaderView,
 )
 
-from ...controllers.portfolio_controller import PlannedExpenseProgress, PortfolioController
+from ...controllers.portfolio_controller import (
+    PlannedExpenseProgress,
+    PortfolioController,
+)
 
 _BG = "#1e1e2e"
 _TEXT = "#cdd6f4"
@@ -70,7 +73,9 @@ class _GoalCard(QFrame):
         # Header row: name + deadline
         header = QHBoxLayout()
         self._name_label = QLabel()
-        self._name_label.setStyleSheet(f"color: {_TEXT}; font-size: 10pt; font-weight: bold;")
+        self._name_label.setStyleSheet(
+            f"color: {_TEXT}; font-size: 10pt; font-weight: bold;"
+        )
         self._deadline_label = QLabel()
         self._deadline_label.setStyleSheet("color: #6c7086; font-size: 8pt;")
         header.addWidget(self._name_label)
@@ -106,7 +111,9 @@ class _GoalCard(QFrame):
 
     def update_data(self, goal: PlannedExpenseProgress) -> None:
         self._name_label.setText(goal.name)
-        self._deadline_label.setText(f"Due: {goal.expiration_date.strftime('%d %b %Y')}")
+        self._deadline_label.setText(
+            f"Due: {goal.expiration_date.strftime('%d %b %Y')}"
+        )
 
         pct = int(goal.progress_pct)
         self._progress_bar.setValue(pct)
@@ -294,7 +301,13 @@ class PlannedExpensesPage(QWidget):
             _set_cell(self._table, row, 3, f"{info.quantity:,.4f}")
             _set_cell(self._table, row, 4, f"{info.gain_loss_eur:+,.2f}", gl_color)
             _set_cell(self._table, row, 5, f"{info.gain_loss_pct:+.2f}%", gl_color)
-            _set_cell(self._table, row, 6, f"{info.intraday_gain_loss_eur:+,.2f}", intraday_color)
+            _set_cell(
+                self._table,
+                row,
+                6,
+                f"{info.intraday_gain_loss_eur:+,.2f}",
+                intraday_color,
+            )
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────── #
@@ -307,14 +320,24 @@ def _section_label(text: str) -> QLabel:
 
 
 def _build_holdings_table() -> QTableWidget:
-    columns = ["Name", "Ticker", "Price (€)", "Qty", "G/L (€)", "G/L (%)", "Intraday G/L (€)"]
+    columns = [
+        "Name",
+        "Ticker",
+        "Price (€)",
+        "Qty",
+        "G/L (€)",
+        "G/L (%)",
+        "Intraday G/L (€)",
+    ]
     table = QTableWidget(0, len(columns))
     table.setHorizontalHeaderLabels(columns)
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
     for col in range(1, len(columns)):
-        table.horizontalHeader().setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+        table.horizontalHeader().setSectionResizeMode(
+            col, QHeaderView.ResizeMode.ResizeToContents
+        )
     table.verticalHeader().setVisible(False)
     return table
 
@@ -326,5 +349,6 @@ def _set_cell(
     item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
     if color:
         from PySide6.QtGui import QColor
+
         item.setForeground(QColor(color))
     table.setItem(row, col, item)

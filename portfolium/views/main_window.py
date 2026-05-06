@@ -69,6 +69,7 @@ class MainWindow(QMainWindow):
 
         # Auto-refresh every 60 s
         from PySide6.QtCore import QTimer
+
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._refresh)
         self._timer.start(60_000)

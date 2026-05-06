@@ -28,7 +28,7 @@ _PERIODS: Dict[str, Optional[int]] = {
     "1M": 30,
     "3M": 90,
     "6M": 180,
-    "YTD": -1,    # start of current year
+    "YTD": -1,  # start of current year
     "1Y": 365,
     "5Y": 1825,
     "MAX": None,  # earliest transaction
@@ -52,7 +52,9 @@ class _HistWorker(QThread):
         self._end = end
 
     def run(self) -> None:
-        series = self._ctrl.get_investment_historical_performance(self._start, self._end)
+        series = self._ctrl.get_investment_historical_performance(
+            self._start, self._end
+        )
         self.result_ready.emit(series)
 
 
@@ -126,9 +128,9 @@ class HistoricalChartWidget(QWidget):
         today = date.today()
         days = _PERIODS[self._period]
 
-        if days == -1:          # YTD
+        if days == -1:  # YTD
             return date(today.year, 1, 1), today
-        if days is None:        # MAX
+        if days is None:  # MAX
             txns = self.controller.portfolio.get_investment_transactions()
             start = txns[0].date if txns else today - timedelta(days=365)
             return start, today
@@ -190,9 +192,7 @@ class HistoricalChartWidget(QWidget):
         )
         floor = np.full(len(values), values.min() * 0.998)
         baseline = pg.PlotDataItem(timestamps, floor, pen=None)
-        fill = pg.FillBetweenItem(
-            main_curve, baseline, brush=pg.mkBrush(color + "28")
-        )
+        fill = pg.FillBetweenItem(main_curve, baseline, brush=pg.mkBrush(color + "28"))
 
         self._plot.addItem(main_curve)
         self._plot.addItem(baseline)

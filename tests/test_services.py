@@ -1,4 +1,5 @@
 """Tests for portfolium.services module."""
+
 from datetime import date
 from pathlib import Path
 import tempfile
@@ -49,9 +50,7 @@ class TestYAMLLoader:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yaml", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             yaml.dump(content, f)
             path = Path(f.name)
 
@@ -66,7 +65,7 @@ class TestYAMLLoader:
             # Create two account files
             for i, name in enumerate(["account1", "account2"]):
                 content = {
-                    "name": f"Account {i+1}",
+                    "name": f"Account {i + 1}",
                     "type": "investment",
                     "initialBalance": 1000.0 * (i + 1),
                     "transactions": [],
@@ -215,8 +214,18 @@ class TestPlannedAccountLoader:
     def test_deposit_and_withdrawal_parsed(self):
         content = self._base_content()
         content["transactions"] = [
-            {"type": "deposit", "date": date(2024, 1, 15), "amount": 3000.0, "description": "Fund"},
-            {"type": "withdrawal", "date": date(2024, 4, 15), "amount": 500.0, "description": "Partial"},
+            {
+                "type": "deposit",
+                "date": date(2024, 1, 15),
+                "amount": 3000.0,
+                "description": "Fund",
+            },
+            {
+                "type": "withdrawal",
+                "date": date(2024, 4, 15),
+                "amount": 500.0,
+                "description": "Partial",
+            },
         ]
         account = load_account(self._make_yaml(content))
         assert account.transactions[0].type == "deposit"

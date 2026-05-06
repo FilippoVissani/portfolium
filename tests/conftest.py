@@ -1,4 +1,5 @@
 """Shared test fixtures and utilities."""
+
 from datetime import date
 from pathlib import Path
 from typing import List
@@ -101,9 +102,7 @@ def yaml_account_file() -> Path:
         ],
     }
 
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".yaml", delete=False
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
         yaml.dump(content, f, default_flow_style=False)
         return Path(f.name)
 
@@ -111,6 +110,7 @@ def yaml_account_file() -> Path:
 @pytest.fixture
 def mock_market_data(monkeypatch):
     """Mock market data service to avoid network calls."""
+
     class MockMarketDataService(MarketDataService):
         def get_current_price(self, symbol: str) -> float:
             prices = {"VOO": 425.0, "ACWI": 98.0, "AAPL": 160.0}
@@ -126,6 +126,7 @@ def mock_market_data(monkeypatch):
 # Export for use in tests
 class MockMarketDataService(MarketDataService):
     """Re-exported mock service for test imports."""
+
     def get_current_price(self, symbol: str) -> float:
         prices = {"VOO": 425.0, "ACWI": 98.0, "AAPL": 160.0}
         return prices.get(symbol, 100.0)

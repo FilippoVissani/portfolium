@@ -1,4 +1,5 @@
 """Tests for portfolium.models module."""
+
 from datetime import date
 
 import pytest
@@ -60,7 +61,9 @@ class TestHolding:
     """Test Holding dataclass."""
 
     def test_holding_creation(self):
-        h = Holding(symbol="VOO", name="Vanguard S&P 500", quantity=10.0, avg_cost=400.0)
+        h = Holding(
+            symbol="VOO", name="Vanguard S&P 500", quantity=10.0, avg_cost=400.0
+        )
         assert h.symbol == "VOO"
         assert h.quantity == 10.0
         assert h.cost_basis == 4000.0
@@ -271,7 +274,12 @@ class TestBaseAccountCash:
             type="base",
             initial_balance=2000.0,
             transactions=[
-                Transaction(type="deposit", date=date(2026, 2, 10), amount=3500.0, category="Salary"),
+                Transaction(
+                    type="deposit",
+                    date=date(2026, 2, 10),
+                    amount=3500.0,
+                    category="Salary",
+                ),
             ],
         )
         portfolio = Portfolio([investment_acc, base_acc])
@@ -370,7 +378,9 @@ class TestPlannedAccount:
         assert "New Car" in names
 
     def test_get_planned_expenses_empty(self):
-        acc = Account(name="No Goals", type="planned", initial_balance=0.0, transactions=[])
+        acc = Account(
+            name="No Goals", type="planned", initial_balance=0.0, transactions=[]
+        )
         portfolio = Portfolio([acc])
         assert portfolio.get_planned_expenses() == []
 
@@ -441,6 +451,8 @@ class TestEmergencyAccount:
         assert portfolio.get_emergency_target_capital() == 4000.0
 
     def test_get_emergency_target_capital_none(self):
-        acc = Account(name="No Target", type="emergency", initial_balance=0.0, transactions=[])
+        acc = Account(
+            name="No Target", type="emergency", initial_balance=0.0, transactions=[]
+        )
         portfolio = Portfolio([acc])
         assert portfolio.get_emergency_target_capital() is None
