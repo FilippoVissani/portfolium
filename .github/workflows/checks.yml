@@ -33,6 +33,12 @@ jobs:
       - name: Validate Python syntax
         run: python -m compileall -q portfolium tests
 
+      - name: Check formatting (Ruff)
+        run: ruff format --check portfolium tests
+
+      - name: Lint (Ruff)
+        run: ruff check portfolium tests
+
 
   dependency-updates:
     runs-on: ubuntu-latest
