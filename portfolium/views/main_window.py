@@ -6,7 +6,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QSplitter,
     QStatusBar,
-    QApplication,
     QTabWidget,
 )
 from PySide6.QtCore import QThread, Signal, Qt

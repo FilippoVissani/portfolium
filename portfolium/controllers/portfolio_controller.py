@@ -1,7 +1,6 @@
-from datetime import date, timedelta
+from datetime import date
 from typing import Dict, List, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 
 from ..models.portfolio import Portfolio

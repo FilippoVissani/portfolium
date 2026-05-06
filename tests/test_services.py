@@ -4,11 +4,9 @@ from datetime import date
 from pathlib import Path
 import tempfile
 
-import pytest
 import yaml
 
 from portfolium.services.yaml_loader import load_account, load_accounts_from_directory
-from portfolium.services.market_data import MarketDataService
 
 
 class TestYAMLLoader:
