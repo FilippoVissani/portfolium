@@ -1,4 +1,5 @@
 name: "Planned Expenses"
+type: "planned"
 initialBalance: 3000.00
 plannedExpenses:
   - name: "House Down Payment"
@@ -14,19 +15,17 @@ transactions:
     amount: 3000.00
     description: "Initial planned expenses fund"
   # Invest in ETFs
-  - type: etf_buy
+  - type: asset_buy
     date: 2024-02-01
     description: "Vanguard Total World Stock ETF"
     ticker: "VT"
-    area: "Global"
     quantity: 20
     price: 95.00
     fees: 5.00
-  - type: etf_buy
+  - type: asset_buy
     date: 2024-02-01
     description: "Vanguard Total Bond Market ETF"
     ticker: "BND"
-    area: "US"
     quantity: 50
     price: 72.00
     fees: 5.00
@@ -35,3 +34,35 @@ transactions:
     date: 2024-03-15
     amount: 2000.00
     description: "Quarterly savings"
+  # Selling some assets
+  - type: asset_sell
+    date: 2024-04-10
+    name: "Vanguard S&P 500 ETF"
+    ticker: "VOO"
+    quantity: 5
+    price: 420.00
+    fees: 5.00
+  # Withdrawing funds
+  - type: withdrawal
+    date: 2024-04-15
+    amount: 2000.00
+    description: "Partial withdrawal"
+  # February 2026 savings for planned expenses
+  - type: deposit
+    date: 2026-02-10
+    amount: 1500.00
+    description: "Monthly planned expenses savings"
+  - type: asset_buy
+    date: 2026-02-13
+    description: "Vanguard Total World Stock ETF"
+    ticker: "VT"
+    quantity: 10
+    price: 98.00
+    fees: 5.00
+  - type: asset_buy
+    date: 2026-02-14
+    description: "Vanguard Total Bond Market ETF"
+    ticker: "BND"
+    quantity: 15
+    price: 74.00
+    fees: 3.00
