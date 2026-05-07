@@ -76,3 +76,5 @@ Thumbs.db
 *.tmp
 *.temp
 .ipynb_checkpoints/
+
+.data

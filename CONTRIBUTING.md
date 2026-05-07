@@ -4,19 +4,33 @@ Thanks for your interest in improving Portfolium!
 
 ## Development setup
 
-- Java 21 and the Gradle Wrapper are required (wrapper included).
-- Run tests locally before submitting a PR:
+- Python 3.14+ is required.
+- Create and activate a virtual environment:
 
-```zsh
-./gradlew test
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+- Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+- Run lint and tests locally before submitting a PR:
+
+```bash
+ruff check .
+pytest tests -v
 ```
 
 ## Commit messages
 
 This repo uses Conventional Commits. Please format commit messages like:
 
-- `feat(cli): add support for custom price CSV`
-- `fix(csv): handle invalid dates gracefully`
+- `feat(ui): add planned-expense progress card`
+- `fix(yaml): handle missing transaction date gracefully`
 - `docs: update README with usage examples`
 
 Breaking changes should include a `BREAKING CHANGE:` footer or use `!` after type/scope:
@@ -35,4 +49,12 @@ BREAKING CHANGE: the `symbol` column is now `ticker`.
 
 ## Release process
 
-Releases are automated by semantic-release. When Conventional Commits are merged into `main`, a release will be created with notes and the built JAR attached.
+Releases are automated by semantic-release from `main`.
+
+- Conventional Commit messages determine version bumps.
+- During release, `portfolium/__init__.py` version is updated automatically.
+- Release notes are generated and published to GitHub.
+
+For release maintainers only:
+
+- Node.js `24.15` is required for the semantic-release tooling.
