@@ -1,3 +1,9 @@
+## [6.0.1](https://github.com/FilippoVissani/portfolium/compare/6.0.0...6.0.1) (2026-05-07)
+
+### Documentation
+
+* update contributing guidelines and README for Python setup ([6398b8c](https://github.com/FilippoVissani/portfolium/commit/6398b8cc46b7bdfe92dde766d48b08d742e5dfea))
+
 ## [6.0.0](https://github.com/FilippoVissani/portfolium/compare/5.1.1...6.0.0) (2026-05-06)
 
 ### ⚠ BREAKING CHANGES
