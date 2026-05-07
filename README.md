@@ -20,7 +20,7 @@ The application follows a clear Model-View-Controller (MVC) architecture:
 - Allocation pie chart
 - Historical portfolio performance chart
 
-### Base account analytics (MoneyMap-like)
+### Base account analytics
 - Income, expenses, savings, average monthly expenses
 - Expense breakdown by category
 - Monthly cashflow chart
@@ -54,7 +54,7 @@ The application follows a clear Model-View-Controller (MVC) architecture:
 ## Project structure
 
 ```text
-portfolium-v2/
+portfolium/
   example_data/
     investment_bank_account.yaml
     main_bank_account.yaml
