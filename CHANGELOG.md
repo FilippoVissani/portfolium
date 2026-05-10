@@ -1,3 +1,9 @@
+## [6.0.3](https://github.com/FilippoVissani/portfolium/compare/6.0.2...6.0.3) (2026-05-10)
+
+### Bug Fixes
+
+* fix theme ([#139](https://github.com/FilippoVissani/portfolium/issues/139)) ([3c9efb7](https://github.com/FilippoVissani/portfolium/commit/3c9efb7fffabd3d3e969d97d147cc16f33e84910))
+
 ## [6.0.2](https://github.com/FilippoVissani/portfolium/compare/6.0.1...6.0.2) (2026-05-10)
 
 ### Bug Fixes
