@@ -200,14 +200,14 @@ class ThemeManager(QObject):
         return _DARK_COLORS if self._theme == "dark" else _LIGHT_COLORS
 
     def set_theme(self, theme: str, app: QApplication | None = None) -> None:
-        if theme == self._theme:
-            return
+        changed = theme != self._theme
         self._theme = theme
         if app is None:
             app = QApplication.instance()
         if app:
             _apply_to_app(app, theme)
-        self.changed.emit(theme)
+        if changed:
+            self.changed.emit(theme)
 
 
 def _apply_to_app(app: QApplication, theme: str) -> None:
