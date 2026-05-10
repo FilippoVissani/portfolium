@@ -59,4 +59,3 @@ def render_pie_chart(
 
     if title:
         ax.set_title(title, color=colors["text"], fontsize=10)
-
