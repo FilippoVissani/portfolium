@@ -1,3 +1,13 @@
+## [6.0.2](https://github.com/FilippoVissani/portfolium/compare/6.0.1...6.0.2) (2026-05-10)
+
+### Bug Fixes
+
+* make pie chart rendering consistent ([#138](https://github.com/FilippoVissani/portfolium/issues/138)) ([e4f96ba](https://github.com/FilippoVissani/portfolium/commit/e4f96ba17f019e77748ce60ff048f2483c4fdde6))
+
+### General maintenance
+
+* fix package versions in requirements.txt ([d6c77b2](https://github.com/FilippoVissani/portfolium/commit/d6c77b2c46d29b05fcb72003900711ab547355c4))
+
 ## [6.0.1](https://github.com/FilippoVissani/portfolium/compare/6.0.0...6.0.1) (2026-05-07)
 
 ### Documentation
