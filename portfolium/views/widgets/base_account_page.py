@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 
 from ...controllers.portfolio_controller import PortfolioController
 from ..theme import ThemeManager
+from .pie_chart_utils import render_pie_chart
 
 
 class _KpiCard(QFrame):
@@ -195,37 +196,13 @@ class BaseAccountPage(QWidget):
         self._pie_fig.clear()
         self._pie_fig.set_facecolor(c["bg"])
         ax = self._pie_fig.add_subplot(111)
-        ax.set_facecolor(c["bg"])
-        palette = c["palette"]
-
-        if categories:
-            labels = list(categories.keys())
-            values = list(categories.values())
-            colors = (palette * ((len(labels) // len(palette)) + 1))[: len(labels)]
-            ax.pie(
-                values,
-                labels=None,
-                autopct="%1.1f%%",
-                startangle=90,
-                colors=colors,
-                wedgeprops={"edgecolor": c["bg"], "linewidth": 1.5},
-                textprops={"color": "#000000", "fontsize": 8},  # Dark text
-            )
-            ax.legend(
-                labels,
-                loc="lower center",
-                bbox_to_anchor=(0.5, -0.1),
-                ncol=min(len(labels), 3),
-                frameon=False,
-                labelcolor=c["text"],
-                fontsize=8,
-            )
-            ax.set_title("Expenses by Category", color=c["text"], fontsize=10)
-        else:
-            ax.text(
-                0.5, 0.5, "No expense data", color=c["text"], ha="center", va="center"
-            )
-            ax.axis("off")
+        render_pie_chart(
+            ax,
+            categories,
+            c,
+            title="Expenses by Category",
+            empty_text="No expense data",
+        )
 
         self._pie_fig.tight_layout()
         self._pie_canvas.draw()

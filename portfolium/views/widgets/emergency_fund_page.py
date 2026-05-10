@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 
 from ...controllers.portfolio_controller import EmergencyFundStatus, PortfolioController
 from ..theme import ThemeManager
+from .pie_chart_utils import render_pie_chart
 
 
 class _KpiCard(QFrame):
@@ -163,24 +164,15 @@ class _AllocationPieChart(QWidget):
     def update_data(self, data: dict) -> None:
         self._last_data = data
         c = ThemeManager().colors()
-        palette = c["palette"]
         self._fig.set_facecolor(c["bg"])
-        self._ax.clear()
-        if not data:
-            self._canvas.draw()
-            return
-        labels = list(data.keys())
-        sizes = list(data.values())
-        colors = [palette[i % len(palette)] for i in range(len(labels))]
-        self._ax.pie(
-            sizes,
-            labels=labels,
-            colors=colors,
-            autopct="%1.1f%%",
-            textprops={"color": "#000000", "fontsize": 8},
-            startangle=90,  # Dark text
+        render_pie_chart(
+            self._ax,
+            data,
+            c,
+            title="Allocation",
+            empty_text="No allocation data",
         )
-        self._ax.set_facecolor(c["bg"])
+        self._fig.tight_layout(pad=1.2)
         self._canvas.draw()
 
 

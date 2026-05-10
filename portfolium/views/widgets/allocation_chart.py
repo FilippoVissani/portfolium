@@ -6,6 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
 from ..theme import ThemeManager
+from .pie_chart_utils import render_pie_chart
 
 
 class AllocationChartWidget(QWidget):
@@ -45,42 +46,13 @@ class AllocationChartWidget(QWidget):
         c = ThemeManager().colors()
         self._fig.clear()
         self._fig.set_facecolor(c["bg"])
-
-        if not allocation:
-            self._canvas.draw()
-            return
-
         ax = self._fig.add_subplot(111)
-        ax.set_facecolor(c["bg"])
-
-        labels = list(allocation.keys())
-        values = list(allocation.values())
-        palette = c["palette"]
-        colors = (palette * ((len(labels) // len(palette)) + 1))[: len(labels)]
-
-        wedges, _, autotexts = ax.pie(
-            values,
-            autopct="%1.1f%%",
-            colors=colors,
-            startangle=90,
-            pctdistance=0.75,
-            wedgeprops={"edgecolor": c["bg"], "linewidth": 2},
-        )
-
-        for at in autotexts:
-            at.set_color("#000000")  # Dark text (Catppuccin Latte text)
-            at.set_fontsize(8)
-            at.set_fontweight("bold")
-
-        ax.legend(
-            wedges,
-            labels,
-            loc="lower center",
-            bbox_to_anchor=(0.5, -0.08),
-            ncol=min(len(labels), 3),
-            frameon=False,
-            labelcolor=c["text"],
-            fontsize=9,
+        render_pie_chart(
+            ax,
+            allocation,
+            c,
+            title="Allocation",
+            empty_text="No allocation data",
         )
 
         self._fig.tight_layout(pad=1.2)
