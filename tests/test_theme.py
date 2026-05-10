@@ -43,5 +43,3 @@ def test_changed_signal_emitted_only_on_theme_switch(monkeypatch):
     apply_theme(cast(QApplication, _DummyApp()), "light")
 
     assert emitted == ["light"]
-
-
