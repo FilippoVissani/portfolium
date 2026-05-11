@@ -71,4 +71,3 @@ def render_pie_chart(
         ax.set_title(title, color=colors["text"], fontsize=10)
 
     ax.figure.tight_layout(rect=(0.0, 0.0, 0.78, 1.0), pad=1.2)
-

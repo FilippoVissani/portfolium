@@ -49,5 +49,3 @@ class TestPieChartRendering:
         legend_bbox = legend.get_window_extent(renderer)
         assert not ax_bbox.overlaps(legend_bbox)
         assert legend_bbox.x0 >= ax_bbox.x1
-
-
