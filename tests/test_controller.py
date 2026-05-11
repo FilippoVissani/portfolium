@@ -634,4 +634,3 @@ class TestAllAccountsController:
         assert pytest.approx(allocation["VT"]) == 500.0
         assert pytest.approx(allocation["AGG"]) == 200.0
         assert pytest.approx(allocation["Cash"]) == 4240.0
-

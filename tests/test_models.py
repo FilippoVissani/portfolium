@@ -512,4 +512,3 @@ class TestPortfolioAccountLevelHelpers:
         base = Account(name="Main", type="base", initial_balance=1000.0)
         portfolio = Portfolio([base])
         assert portfolio.get_account_holdings(base) == {}
-

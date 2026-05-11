@@ -15,7 +15,10 @@ from PySide6.QtWidgets import (
     QHeaderView,
 )
 
-from ...controllers.portfolio_controller import AggregatedAccountInfo, PortfolioController
+from ...controllers.portfolio_controller import (
+    AggregatedAccountInfo,
+    PortfolioController,
+)
 from ..theme import ThemeManager
 from .pie_chart_utils import render_pie_chart
 
@@ -182,7 +185,9 @@ class AllAccountsPage(QWidget):
         self._pie_allocation.update_data(self._ctrl.get_all_accounts_allocation_data())
         self._fill_table(infos, total_value)
 
-    def _fill_table(self, infos: list[AggregatedAccountInfo], total_value: float) -> None:
+    def _fill_table(
+        self, infos: list[AggregatedAccountInfo], total_value: float
+    ) -> None:
         c = ThemeManager().colors()
         self._table.setRowCount(len(infos))
 
@@ -191,7 +196,9 @@ class AllAccountsPage(QWidget):
             total_color = c["green"] if info.total_value >= 0 else c["red"]
 
             _set_cell(self._table, row, 0, info.name, align_right=False)
-            _set_cell(self._table, row, 1, info.account_type.capitalize(), align_right=False)
+            _set_cell(
+                self._table, row, 1, info.account_type.capitalize(), align_right=False
+            )
             _set_cell(self._table, row, 2, f"{info.cash_balance:,.2f}")
             _set_cell(self._table, row, 3, f"{info.assets_value:,.2f}")
             _set_cell(self._table, row, 4, f"{info.total_value:,.2f}", total_color)
@@ -219,7 +226,9 @@ def _build_table() -> QTableWidget:
     table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
     table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
     table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-    table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+    table.horizontalHeader().setSectionResizeMode(
+        1, QHeaderView.ResizeMode.ResizeToContents
+    )
     for col in range(2, len(columns)):
         table.horizontalHeader().setSectionResizeMode(
             col, QHeaderView.ResizeMode.ResizeToContents
@@ -238,10 +247,11 @@ def _set_cell(
 ) -> None:
     item = QTableWidgetItem(text)
     if align_right:
-        item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        item.setTextAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+        )
     if color:
         from PySide6.QtGui import QColor
 
         item.setForeground(QColor(color))
     table.setItem(row, col, item)
-

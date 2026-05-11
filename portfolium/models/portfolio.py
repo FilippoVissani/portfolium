@@ -97,7 +97,9 @@ class Portfolio:
             self._get_account_transactions(account, up_to)
         )
 
-    def get_account_cash_balance(self, account: Account, up_to: Optional[date] = None) -> float:
+    def get_account_cash_balance(
+        self, account: Account, up_to: Optional[date] = None
+    ) -> float:
         balance = account.initial_balance
         transactions = self._get_account_transactions(account, up_to)
 

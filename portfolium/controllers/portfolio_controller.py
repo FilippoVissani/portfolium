@@ -428,4 +428,3 @@ class PortfolioController:
 
     def get_all_accounts_type_counts(self) -> Dict[str, int]:
         return self.portfolio.get_account_type_counts()
-
