@@ -204,7 +204,6 @@ class BaseAccountPage(QWidget):
             empty_text="No expense data",
         )
 
-        self._pie_fig.tight_layout()
         self._pie_canvas.draw()
 
     def _draw_monthly_bars(self, monthly_df) -> None:

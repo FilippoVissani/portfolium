@@ -83,7 +83,6 @@ class _AllocationPieChart(QWidget):
             title=self._title,
             empty_text=self._empty_text,
         )
-        self._fig.tight_layout(pad=1.2)
         self._canvas.draw()
 
 
