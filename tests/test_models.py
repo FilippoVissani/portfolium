@@ -456,3 +456,59 @@ class TestEmergencyAccount:
         )
         portfolio = Portfolio([acc])
         assert portfolio.get_emergency_target_capital() is None
+
+
+class TestPortfolioAccountLevelHelpers:
+    def test_get_all_accounts_and_type_counts(self):
+        inv = Account(name="Inv", type="investment", initial_balance=1000.0)
+        base = Account(name="Base", type="base", initial_balance=500.0)
+        planned = Account(name="Plan", type="planned", initial_balance=300.0)
+        emergency = Account(name="EF", type="emergency", initial_balance=200.0)
+
+        portfolio = Portfolio([inv, base, planned, emergency])
+
+        assert len(portfolio.get_all_accounts()) == 4
+        assert portfolio.get_investment_accounts() == [inv]
+        assert portfolio.get_account_type_counts() == {
+            "investment": 1,
+            "base": 1,
+            "planned": 1,
+            "emergency": 1,
+        }
+
+    def test_get_account_cash_balance_for_base_and_investment(self):
+        base = Account(
+            name="Main",
+            type="base",
+            initial_balance=1000.0,
+            transactions=[
+                Transaction(type="deposit", date=date(2026, 1, 1), amount=500.0),
+                Transaction(type="withdrawal", date=date(2026, 1, 2), amount=-100.0),
+            ],
+        )
+        inv = Account(
+            name="Broker",
+            type="investment",
+            initial_balance=2000.0,
+            transactions=[
+                Transaction(
+                    type="asset_buy",
+                    date=date(2026, 1, 1),
+                    symbol="AAPL",
+                    name="Apple",
+                    quantity=5.0,
+                    price=100.0,
+                    commission=5.0,
+                ),
+                Transaction(type="deposit", date=date(2026, 1, 3), amount=200.0),
+            ],
+        )
+
+        portfolio = Portfolio([base, inv])
+        assert pytest.approx(portfolio.get_account_cash_balance(base)) == 1400.0
+        assert pytest.approx(portfolio.get_account_cash_balance(inv)) == 1695.0
+
+    def test_get_account_holdings_empty_for_base(self):
+        base = Account(name="Main", type="base", initial_balance=1000.0)
+        portfolio = Portfolio([base])
+        assert portfolio.get_account_holdings(base) == {}

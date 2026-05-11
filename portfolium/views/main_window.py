@@ -21,6 +21,7 @@ from .widgets.historical_chart import HistoricalChartWidget
 from .widgets.base_account_page import BaseAccountPage
 from .widgets.planned_expenses_page import PlannedExpensesPage
 from .widgets.emergency_fund_page import EmergencyFundPage
+from .widgets.all_accounts_page import AllAccountsPage
 
 
 class _DataWorker(QThread):
@@ -116,10 +117,11 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(12, 12, 12, 12)
 
         tabs = QTabWidget()
-        tabs.addTab(self._build_investment_page(), "Investments")
+        tabs.addTab(self._build_all_accounts_page(), "All Accounts")
         tabs.addTab(self._build_base_account_page(), "Base Account")
-        tabs.addTab(self._build_planned_expenses_page(), "Planned Expenses")
         tabs.addTab(self._build_emergency_fund_page(), "Emergency Fund")
+        tabs.addTab(self._build_planned_expenses_page(), "Planned Expenses")
+        tabs.addTab(self._build_investment_page(), "Investments")
         layout.addWidget(tabs)
 
     def _build_investment_page(self) -> QWidget:
@@ -151,6 +153,10 @@ class MainWindow(QMainWindow):
         self.base_account_page = BaseAccountPage(self.controller)
         return self.base_account_page
 
+    def _build_all_accounts_page(self) -> QWidget:
+        self.all_accounts_page = AllAccountsPage(self.controller)
+        return self.all_accounts_page
+
     def _build_planned_expenses_page(self) -> QWidget:
         self.planned_expenses_page = PlannedExpensesPage(self.controller)
         return self.planned_expenses_page
@@ -177,6 +183,7 @@ class MainWindow(QMainWindow):
         self.assets_table.update_data(data["asset_infos"])
         self.allocation_chart.update_data(data["allocation"])
         self.historical_chart.refresh()
+        self.all_accounts_page.refresh()
         self.base_account_page.refresh()
         self.planned_expenses_page.refresh()
         self.emergency_fund_page.refresh()
