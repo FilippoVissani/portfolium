@@ -36,6 +36,11 @@ The application follows a clear Model-View-Controller (MVC) architecture:
 - Remaining amount to fund
 - Emergency allocation and holdings details
 
+### All accounts overview
+- Aggregated total value, cash, and invested-assets KPIs
+- Account-type allocation breakdown
+- Per-account value table with portfolio share
+
 ### General
 - Multi-account support via YAML files
 - Automatic market data refresh (every 60 seconds)
@@ -220,6 +225,7 @@ Notes:
 ### View layer (`portfolium/views`)
 - Main window with tabs:
   - Investments
+  - All Accounts
   - Base Account
   - Planned Expenses
   - Emergency Fund

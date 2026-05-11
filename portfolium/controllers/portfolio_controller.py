@@ -118,6 +118,26 @@ class EmergencyFundStatus:
         )
 
 
+class AggregatedAccountInfo:
+    """View-model for a single account row in the all-accounts dashboard."""
+
+    def __init__(
+        self,
+        name: str,
+        account_type: str,
+        cash_balance: float,
+        assets_value: float,
+    ) -> None:
+        self.name = name
+        self.account_type = account_type
+        self.cash_balance = cash_balance
+        self.assets_value = assets_value
+
+    @property
+    def total_value(self) -> float:
+        return self.cash_balance + self.assets_value
+
+
 class PortfolioController:
     """
     MVC Controller – orchestrates the Portfolio model and MarketDataService,
@@ -349,3 +369,63 @@ class PortfolioController:
             current_value=self.get_total_emergency_value(),
             target_capital=self.portfolio.get_emergency_target_capital(),
         )
+
+    # ------------------------------------------------------------------ #
+    # All-accounts aggregates                                              #
+    # ------------------------------------------------------------------ #
+
+    def get_all_accounts_infos(self) -> List[AggregatedAccountInfo]:
+        infos: List[AggregatedAccountInfo] = []
+        for account in self.portfolio.get_all_accounts():
+            cash_balance = self.portfolio.get_account_cash_balance(account)
+            assets_value = 0.0
+            for sym, holding in self.portfolio.get_account_holdings(account).items():
+                price = self._prices.get(sym, holding.avg_cost)
+                assets_value += holding.quantity * price
+
+            infos.append(
+                AggregatedAccountInfo(
+                    name=account.name,
+                    account_type=account.type,
+                    cash_balance=cash_balance,
+                    assets_value=assets_value,
+                )
+            )
+
+        return sorted(infos, key=lambda info: info.total_value, reverse=True)
+
+    def get_all_accounts_total_value(self) -> float:
+        return sum(info.total_value for info in self.get_all_accounts_infos())
+
+    def get_all_accounts_total_cash(self) -> float:
+        return sum(info.cash_balance for info in self.get_all_accounts_infos())
+
+    def get_all_accounts_total_assets_value(self) -> float:
+        return sum(info.assets_value for info in self.get_all_accounts_infos())
+
+    def get_all_accounts_breakdown_by_type(self) -> Dict[str, float]:
+        breakdown: Dict[str, float] = {}
+        for info in self.get_all_accounts_infos():
+            label = info.account_type.capitalize()
+            breakdown[label] = breakdown.get(label, 0.0) + info.total_value
+        return {k: v for k, v in breakdown.items() if v > 0}
+
+    def get_all_accounts_allocation_data(self) -> Dict[str, float]:
+        """Return {label: value} for all held assets across accounts plus global cash."""
+        data: Dict[str, float] = {}
+        total_cash = 0.0
+
+        for account in self.portfolio.get_all_accounts():
+            total_cash += self.portfolio.get_account_cash_balance(account)
+            for sym, holding in self.portfolio.get_account_holdings(account).items():
+                price = self._prices.get(sym, holding.avg_cost)
+                data[sym] = data.get(sym, 0.0) + (holding.quantity * price)
+
+        if total_cash > 0:
+            data["Cash"] = total_cash
+
+        return {k: v for k, v in data.items() if v > 0}
+
+    def get_all_accounts_type_counts(self) -> Dict[str, int]:
+        return self.portfolio.get_account_type_counts()
+

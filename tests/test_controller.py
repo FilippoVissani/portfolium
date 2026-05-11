@@ -5,6 +5,7 @@ from datetime import date
 import pytest
 
 from portfolium.controllers.portfolio_controller import (
+    AggregatedAccountInfo,
     AssetInfo,
     PlannedExpenseProgress,
     PortfolioController,
@@ -524,3 +525,113 @@ class TestEmergencyFundController:
         assert s.coverage_pct == 0.0
         assert s.remaining_amount == 0.0
         assert s.is_funded is False
+
+
+class TestAllAccountsController:
+    def _make_controller(self, mock_market_data) -> PortfolioController:
+        investment = Account(
+            name="Investments",
+            type="investment",
+            initial_balance=5000.0,
+            transactions=[
+                Transaction(
+                    type="asset_buy",
+                    date=date(2026, 1, 5),
+                    name="Vanguard S&P 500",
+                    symbol="VOO",
+                    quantity=10.0,
+                    price=400.0,
+                    commission=5.0,
+                )
+            ],
+        )
+        base = Account(
+            name="Main Bank",
+            type="base",
+            initial_balance=1000.0,
+            transactions=[
+                Transaction(type="deposit", date=date(2026, 1, 7), amount=500.0),
+                Transaction(type="withdrawal", date=date(2026, 1, 8), amount=-100.0),
+            ],
+        )
+        planned = Account(
+            name="Planned",
+            type="planned",
+            initial_balance=1000.0,
+            transactions=[
+                Transaction(type="deposit", date=date(2026, 1, 10), amount=500.0),
+                Transaction(
+                    type="asset_buy",
+                    date=date(2026, 1, 11),
+                    name="Vanguard Total World",
+                    symbol="VT",
+                    quantity=5.0,
+                    price=90.0,
+                    commission=5.0,
+                ),
+            ],
+        )
+        emergency = Account(
+            name="Emergency",
+            type="emergency",
+            initial_balance=500.0,
+            transactions=[
+                Transaction(type="deposit", date=date(2026, 1, 10), amount=500.0),
+                Transaction(
+                    type="asset_buy",
+                    date=date(2026, 1, 12),
+                    name="Bond ETF",
+                    symbol="AGG",
+                    quantity=2.0,
+                    price=100.0,
+                    commission=0.0,
+                ),
+            ],
+        )
+        ctrl = PortfolioController(
+            Portfolio([investment, base, planned, emergency]),
+            mock_market_data,
+        )
+        ctrl.refresh_market_data()
+        return ctrl
+
+    def test_all_accounts_infos(self, mock_market_data):
+        ctrl = self._make_controller(mock_market_data)
+        infos = ctrl.get_all_accounts_infos()
+
+        assert len(infos) == 4
+        assert all(isinstance(info, AggregatedAccountInfo) for info in infos)
+        assert infos[0].total_value >= infos[-1].total_value
+
+    def test_all_accounts_totals(self, mock_market_data):
+        ctrl = self._make_controller(mock_market_data)
+
+        assert pytest.approx(ctrl.get_all_accounts_total_cash()) == 4240.0
+        assert pytest.approx(ctrl.get_all_accounts_total_assets_value()) == 4950.0
+        assert pytest.approx(ctrl.get_all_accounts_total_value()) == 9190.0
+
+    def test_all_accounts_breakdown_by_type_and_counts(self, mock_market_data):
+        ctrl = self._make_controller(mock_market_data)
+        breakdown = ctrl.get_all_accounts_breakdown_by_type()
+        counts = ctrl.get_all_accounts_type_counts()
+
+        assert pytest.approx(breakdown["Investment"]) == 5245.0
+        assert pytest.approx(breakdown["Base"]) == 1400.0
+        assert pytest.approx(breakdown["Planned"]) == 1545.0
+        assert pytest.approx(breakdown["Emergency"]) == 1000.0
+        assert counts == {
+            "investment": 1,
+            "base": 1,
+            "planned": 1,
+            "emergency": 1,
+        }
+
+    def test_all_accounts_allocation_data(self, mock_market_data):
+        ctrl = self._make_controller(mock_market_data)
+        allocation = ctrl.get_all_accounts_allocation_data()
+
+        assert pytest.approx(allocation["VOO"]) == 4250.0
+        assert pytest.approx(allocation["VT"]) == 500.0
+        assert pytest.approx(allocation["AGG"]) == 200.0
+        assert pytest.approx(allocation["Cash"]) == 4240.0
+

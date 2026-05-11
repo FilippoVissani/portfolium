@@ -33,6 +33,102 @@ class Portfolio:
         self._planned_accounts = [acc for acc in accounts if acc.type == "planned"]
         self._emergency_accounts = [acc for acc in accounts if acc.type == "emergency"]
 
+    def get_all_accounts(self) -> List[Account]:
+        return self.accounts
+
+    def get_investment_accounts(self) -> List[Account]:
+        return self._investment_accounts
+
+    def _get_account_transactions(
+        self, account: Account, up_to: Optional[date] = None
+    ) -> List[Transaction]:
+        txns = [
+            txn for txn in account.transactions if up_to is None or txn.date <= up_to
+        ]
+        return sorted(txns, key=lambda t: t.date)
+
+    def _compute_holdings_from_transactions(
+        self, transactions: List[Transaction]
+    ) -> Dict[str, Holding]:
+        state: Dict[str, Dict] = {}
+
+        for txn in transactions:
+            if txn.type == "asset_buy":
+                sym = txn.symbol or ""
+                qty = txn.quantity or 0.0
+                cost = (txn.price or 0.0) * qty + (txn.commission or 0.0)
+                if sym not in state:
+                    state[sym] = {
+                        "name": txn.name or sym,
+                        "quantity": 0.0,
+                        "total_cost": 0.0,
+                    }
+                state[sym]["quantity"] += qty
+                state[sym]["total_cost"] += cost
+
+            elif txn.type == "asset_sell":
+                sym = txn.symbol or ""
+                qty = txn.quantity or 0.0
+                if sym in state and state[sym]["quantity"] > 0:
+                    ratio = min(qty / state[sym]["quantity"], 1.0)
+                    state[sym]["total_cost"] *= 1.0 - ratio
+                    state[sym]["quantity"] -= qty
+                    if state[sym]["quantity"] < 1e-9:
+                        del state[sym]
+
+        result: Dict[str, Holding] = {}
+        for sym, data in state.items():
+            if data["quantity"] > 1e-9:
+                avg = data["total_cost"] / data["quantity"]
+                result[sym] = Holding(
+                    symbol=sym,
+                    name=data["name"],
+                    quantity=data["quantity"],
+                    avg_cost=avg,
+                )
+        return result
+
+    def get_account_holdings(
+        self, account: Account, up_to: Optional[date] = None
+    ) -> Dict[str, Holding]:
+        if account.type not in {"investment", "planned", "emergency"}:
+            return {}
+        return self._compute_holdings_from_transactions(
+            self._get_account_transactions(account, up_to)
+        )
+
+    def get_account_cash_balance(self, account: Account, up_to: Optional[date] = None) -> float:
+        balance = account.initial_balance
+        transactions = self._get_account_transactions(account, up_to)
+
+        if account.type == "base":
+            for txn in transactions:
+                balance += txn.amount or 0.0
+            return balance
+
+        for txn in transactions:
+            if txn.type == "deposit":
+                balance += txn.amount or 0.0
+            elif txn.type == "withdrawal":
+                balance -= txn.amount or 0.0
+            elif txn.type == "asset_buy":
+                balance -= (txn.price or 0.0) * (txn.quantity or 0.0) + (
+                    txn.commission or 0.0
+                )
+            elif txn.type == "asset_sell":
+                balance += (txn.price or 0.0) * (txn.quantity or 0.0) - (
+                    txn.commission or 0.0
+                )
+        return balance
+
+    def get_account_type_counts(self) -> Dict[str, int]:
+        return {
+            "investment": len(self._investment_accounts),
+            "base": len(self._base_accounts),
+            "planned": len(self._planned_accounts),
+            "emergency": len(self._emergency_accounts),
+        }
+
     # ------------------------------------------------------------------ #
     # Investment account data                                              #
     # ------------------------------------------------------------------ #
