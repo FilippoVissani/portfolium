@@ -1,3 +1,9 @@
+## [6.1.0](https://github.com/FilippoVissani/portfolium/compare/6.0.3...6.1.0) (2026-05-11)
+
+### Features
+
+* add all accounts overview page with KPI and allocation charts ([#140](https://github.com/FilippoVissani/portfolium/issues/140)) ([a275611](https://github.com/FilippoVissani/portfolium/commit/a27561102af4aadab797e4e02e39cf5b399f740a))
+
 ## [6.0.3](https://github.com/FilippoVissani/portfolium/compare/6.0.2...6.0.3) (2026-05-10)
 
 ### Bug Fixes
