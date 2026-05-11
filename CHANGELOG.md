@@ -1,3 +1,9 @@
+## [6.1.1](https://github.com/FilippoVissani/portfolium/compare/6.1.0...6.1.1) (2026-05-11)
+
+### Bug Fixes
+
+* fix pie chart legend placement ([#141](https://github.com/FilippoVissani/portfolium/issues/141)) ([5d23c47](https://github.com/FilippoVissani/portfolium/commit/5d23c478ae02aeb4bb26248c88cdac460fef6fea))
+
 ## [6.1.0](https://github.com/FilippoVissani/portfolium/compare/6.0.3...6.1.0) (2026-05-11)
 
 ### Features
