@@ -1,10 +1,16 @@
-from collections.abc import Mapping
+from typing import TypedDict
+
+
+class PieChartColors(TypedDict):
+    bg: str
+    text: str
+    palette: list[str]
 
 
 def render_pie_chart(
     ax,
-    data: Mapping[str, float],
-    colors: dict[str, object],
+    data: dict[str, float],
+    colors: PieChartColors,
     *,
     title: str | None = None,
     empty_text: str = "No data",
@@ -19,10 +25,10 @@ def render_pie_chart(
         ax.axis("off")
         return
 
-    labels = list(data.keys())
-    values = [float(v) for v in data.values()]
-    palette = colors["palette"]
-    pie_colors = (palette * ((len(labels) // len(palette)) + 1))[: len(labels)]
+    labels = list(data)
+    values = [float(v) for v in data.values()]  # type: ignore[reportGeneralTypeIssues]
+    palette = colors["palette"]  # type: ignore[reportGeneralTypeIssues]
+    pie_colors = (palette * ((len(labels) // len(palette)) + 1))[: len(labels)]  # type: ignore[reportGeneralTypeIssues]
     total = sum(values)
 
     def _autopct(pct: float) -> str:
@@ -48,14 +54,20 @@ def render_pie_chart(
     ax.legend(
         wedges,
         labels,
-        loc="lower center",
-        bbox_to_anchor=(0.5, -0.08),
-        ncol=min(len(labels), 3),
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        ncol=1,
         frameon=False,
         labelcolor=colors["text"],
-        fontsize=9,
+        fontsize=8,
+        borderaxespad=0.0,
+        handlelength=1.1,
+        handletextpad=0.6,
+        labelspacing=0.5,
     )
     ax.axis("equal")
 
     if title:
         ax.set_title(title, color=colors["text"], fontsize=10)
+
+    ax.figure.tight_layout(rect=(0.0, 0.0, 0.78, 1.0), pad=1.2)

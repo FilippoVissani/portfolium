@@ -55,5 +55,4 @@ class AllocationChartWidget(QWidget):
             empty_text="No allocation data",
         )
 
-        self._fig.tight_layout(pad=1.2)
         self._canvas.draw()
