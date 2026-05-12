@@ -104,6 +104,20 @@ Run with a custom data directory:
 python -m portfolium /path/to/your/yaml-directory
 ```
 
+## Build a standalone executable (PyInstaller)
+
+Install dependencies first, then build from the project root:
+
+```bash
+python -m PyInstaller --clean --noconfirm portfolium.spec
+```
+
+Build outputs are created in `dist/`:
+- Linux/macOS: `dist/portfolium`
+- Windows: `dist/portfolium.exe`
+
+In CI release pipelines, each platform binary is also packaged as a zip artifact.
+
 ## YAML account formats
 
 Each YAML file represents one account.
