@@ -30,6 +30,7 @@ MANIFEST
 # PyInstaller
 *.manifest
 *.spec
+!portfolium.spec
 
 # Unit test / coverage reports
 htmlcov/
@@ -78,3 +79,4 @@ Thumbs.db
 .ipynb_checkpoints/
 
 .data
+node_modules
