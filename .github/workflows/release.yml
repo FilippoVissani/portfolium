@@ -142,25 +142,25 @@ jobs:
           persist-credentials: false
 
       - name: Download Linux executable
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: portfolium-linux
           path: dist
 
       - name: Download source zip
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: portfolium-source
           path: dist
 
       - name: Download Windows executable
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: portfolium-windows
           path: dist
 
       - name: Download macOS DMG
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: portfolium-macos
           path: dist
