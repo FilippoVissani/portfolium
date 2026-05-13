@@ -92,13 +92,13 @@ pip install -r requirements.txt
 
 ## Run the app
 
-Run with default sample data:
+Run and choose a data directory from the startup folder picker:
 
 ```bash
 python -m portfolium
 ```
 
-Run with a custom data directory:
+Run with a custom data directory passed as an argument:
 
 ```bash
 python -m portfolium /path/to/your/yaml-directory

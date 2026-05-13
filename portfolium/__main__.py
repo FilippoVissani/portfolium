@@ -1,5 +1,5 @@
 """
-Entry point – run with:
+Entry point - run with:
     python -m portfolium [data_dir]
 """
 
@@ -12,7 +12,7 @@ import matplotlib
 
 matplotlib.use("QtAgg")
 
-from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
 from .services.yaml_loader import load_accounts_from_directory
 from .models.portfolio import Portfolio
@@ -25,13 +25,12 @@ from .views.theme import apply_dark_theme
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="portfolium",
-        description="Portfolium — Personal Finance Manager",
+        description="Portfolium - Personal Finance Manager",
     )
     parser.add_argument(
         "data_dir",
         nargs="?",
-        default="example_data",
-        help="Directory containing YAML account files (default: example_data)",
+        help="Directory containing YAML account files",
     )
     args = parser.parse_args()
 
@@ -39,11 +38,27 @@ def main() -> None:
     app.setApplicationName("Portfolium")
     apply_dark_theme(app)
 
-    data_dir = Path(args.data_dir)
-    if not data_dir.exists():
+    if args.data_dir:
+        data_dir = Path(args.data_dir)
+    else:
+        selected_dir = QFileDialog.getExistingDirectory(
+            None,
+            "Select a directory containing YAML account files",
+            str(Path.cwd()),
+        )
+        if not selected_dir:
+            QMessageBox.information(
+                None,
+                "Portfolium",
+                "No data directory selected. Exiting.",
+            )
+            sys.exit(1)
+        data_dir = Path(selected_dir)
+
+    if not data_dir.is_dir():
         QMessageBox.critical(
             None,
-            "Portfolium – Error",
+            "Portfolium - Error",
             f"Data directory not found:\n{data_dir.resolve()}",
         )
         sys.exit(1)
@@ -52,14 +67,14 @@ def main() -> None:
         accounts = load_accounts_from_directory(data_dir)
     except Exception as exc:
         QMessageBox.critical(
-            None, "Portfolium – Error", f"Failed to load accounts:\n{exc}"
+            None, "Portfolium - Error", f"Failed to load accounts:\n{exc}"
         )
         sys.exit(1)
 
     if not accounts:
         QMessageBox.warning(
             None,
-            "Portfolium – Warning",
+            "Portfolium - Warning",
             f"No YAML account files found in:\n{data_dir.resolve()}",
         )
 
