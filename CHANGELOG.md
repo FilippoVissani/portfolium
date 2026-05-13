@@ -1,3 +1,20 @@
+## [6.2.0](https://github.com/FilippoVissani/portfolium/compare/6.1.1...6.2.0) (2026-05-13)
+
+### Features
+
+* implement data directory selection for YAML account files ([547e356](https://github.com/FilippoVissani/portfolium/commit/547e35638de331cefff0471b8bec8582c1e01953))
+
+### Dependency updates
+
+* **deps:** update dependency pandas to v3.0.3 ([#142](https://github.com/FilippoVissani/portfolium/issues/142)) ([ce924c3](https://github.com/FilippoVissani/portfolium/commit/ce924c3f6c0e15bc8ef24aa88ccd9843510cd106))
+* **deps:** update dependency pyinstaller to v6.20.0 ([#144](https://github.com/FilippoVissani/portfolium/issues/144)) ([e5e16d9](https://github.com/FilippoVissani/portfolium/commit/e5e16d9275865f8e6e40ed7af34e7eaf37330a22))
+
+### Build and continuous integration
+
+* add support for building standalone native executables with Py… ([#143](https://github.com/FilippoVissani/portfolium/issues/143)) ([3e14df3](https://github.com/FilippoVissani/portfolium/commit/3e14df32eaa2a48ca55d4d0c740641c6fccc23f7))
+* **deps:** update actions/download-artifact action to v5 ([#145](https://github.com/FilippoVissani/portfolium/issues/145)) ([6685724](https://github.com/FilippoVissani/portfolium/commit/66857241e428d57221ae94cd4e60f4b8c6cd16cd))
+* **deps:** update actions/download-artifact action to v6 ([#146](https://github.com/FilippoVissani/portfolium/issues/146)) ([0ae78a9](https://github.com/FilippoVissani/portfolium/commit/0ae78a97db94e9bdebe725b672db2d74e2a3772e))
+
 ## [6.1.1](https://github.com/FilippoVissani/portfolium/compare/6.1.0...6.1.1) (2026-05-11)
 
 ### Bug Fixes
