@@ -9,4 +9,4 @@ yfinance==1.4.1
 pyinstaller==6.20.0
 pytest==9.0.3
 pytest-qt==4.5.0
-ruff==0.15.15
+ruff==0.15.16
