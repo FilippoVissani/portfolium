@@ -3,7 +3,7 @@ PyYAML==6.0.3
 pandas==3.0.3
 numpy==2.4.6
 pyqtgraph==0.14.0
-matplotlib==3.10.9
+matplotlib==3.11.0
 Pillow==12.2.0
 yfinance==1.4.1
 pyinstaller==6.20.0
