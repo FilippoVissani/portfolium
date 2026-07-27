@@ -5,8 +5,9 @@ import numpy as np
 import pyqtgraph as pg
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import (
+    QDateEdit,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -61,7 +62,9 @@ class BaseAccountPage(QWidget):
     def __init__(self, controller: PortfolioController, parent=None) -> None:
         super().__init__(parent)
         self.controller = controller
-        self._period = "6M"
+        self._period: Optional[str] = "6M"
+        self._custom_start: Optional[date] = None
+        self._custom_end: Optional[date] = None
         self._period_days: Dict[str, Optional[int]] = {
             "1M": 30,
             "3M": 90,
@@ -86,6 +89,29 @@ class BaseAccountPage(QWidget):
             top.addWidget(btn)
             self._period_buttons[p] = btn
         self._period_buttons[self._period].setChecked(True)
+
+        self._from_lbl = QLabel("From")
+        self._start_date = QDateEdit()
+        self._start_date.setCalendarPopup(True)
+        self._start_date.setDisplayFormat("yyyy-MM-dd")
+        self._start_date.dateChanged.connect(lambda _: self._on_custom_date_changed())
+        top.addWidget(self._from_lbl)
+        top.addWidget(self._start_date)
+
+        self._to_lbl = QLabel("To")
+        self._end_date = QDateEdit()
+        self._end_date.setCalendarPopup(True)
+        self._end_date.setDisplayFormat("yyyy-MM-dd")
+        self._end_date.dateChanged.connect(lambda _: self._on_custom_date_changed())
+        top.addWidget(self._to_lbl)
+        top.addWidget(self._end_date)
+
+        self._apply_custom_btn = QPushButton("Apply")
+        self._apply_custom_btn.clicked.connect(self._apply_custom_range)
+        top.addWidget(self._apply_custom_btn)
+
+        self._range_error_lbl = QLabel("")
+        top.addWidget(self._range_error_lbl)
         root.addLayout(top)
 
         kpis = QHBoxLayout()
@@ -133,6 +159,10 @@ class BaseAccountPage(QWidget):
         root.addWidget(self._tx_table, 2)
 
         ThemeManager().changed.connect(self._on_theme_changed)
+        start, end = self._quick_date_range("6M")
+        self._sync_date_edits(start, end)
+        self._on_custom_date_changed()
+        self._on_theme_changed(ThemeManager().current)
 
     def _make_title(self) -> QLabel:
         lbl = QLabel("Base Account")
@@ -146,6 +176,9 @@ class BaseAccountPage(QWidget):
         self._title_lbl.setStyleSheet(
             f"font-size: 12pt; font-weight: bold; color: {c['text']};"
         )
+        self._from_lbl.setStyleSheet(f"color: {c['subtext']};")
+        self._to_lbl.setStyleSheet(f"color: {c['subtext']};")
+        self._range_error_lbl.setStyleSheet(f"color: {c['red']}; font-size: 8pt;")
         self._bars.setBackground(c["bg"])
         self._bars.getAxis("left").setTextPen(c["text"])
         self._bars.setLabel("left", "EUR", color=c["text"])
@@ -157,19 +190,68 @@ class BaseAccountPage(QWidget):
 
     def _set_period(self, period: str) -> None:
         self._period = period
+        self._custom_start = None
+        self._custom_end = None
         for key, btn in self._period_buttons.items():
             btn.setChecked(key == period)
+        start, end = self._quick_date_range(period)
+        self._sync_date_edits(start, end)
+        self._range_error_lbl.setText("")
+        self._on_custom_date_changed()
         self.refresh()
 
-    def _date_range(self) -> tuple[date, date]:
+    def _quick_date_range(self, period: str) -> tuple[date, date]:
         today = date.today()
-        days = self._period_days[self._period]
+        days = self._period_days[period]
         if days is None:
             movements = self.controller.get_base_movements()
             if not movements:
                 return today - timedelta(days=365), today
             return movements[0][1].date, today
         return today - timedelta(days=days), today
+
+    def _date_range(self) -> tuple[date, date]:
+        if self._period is None and self._custom_start and self._custom_end:
+            return self._custom_start, self._custom_end
+        active_period = self._period or "6M"
+        return self._quick_date_range(active_period)
+
+    def _sync_date_edits(self, start: date, end: date) -> None:
+        self._start_date.blockSignals(True)
+        self._end_date.blockSignals(True)
+        self._start_date.setDate(QDate(start.year, start.month, start.day))
+        self._end_date.setDate(QDate(end.year, end.month, end.day))
+        self._start_date.blockSignals(False)
+        self._end_date.blockSignals(False)
+
+    def _selected_custom_dates(self) -> tuple[date, date]:
+        start_q = self._start_date.date()
+        end_q = self._end_date.date()
+        start = date(start_q.year(), start_q.month(), start_q.day())
+        end = date(end_q.year(), end_q.month(), end_q.day())
+        return start, end
+
+    def _on_custom_date_changed(self) -> None:
+        start, end = self._selected_custom_dates()
+        invalid = start > end
+        self._apply_custom_btn.setEnabled(not invalid)
+        self._range_error_lbl.setText(
+            "Start date must be before end date." if invalid else ""
+        )
+
+    def _apply_custom_range(self) -> None:
+        start, end = self._selected_custom_dates()
+        if start > end:
+            self._on_custom_date_changed()
+            return
+
+        self._custom_start = start
+        self._custom_end = end
+        self._period = None
+        self._range_error_lbl.setText("")
+        for btn in self._period_buttons.values():
+            btn.setChecked(False)
+        self.refresh()
 
     def refresh(self) -> None:
         c = ThemeManager().colors()
