@@ -1,3 +1,56 @@
+## [6.3.0](https://github.com/FilippoVissani/portfolium/compare/6.2.0...6.3.0) (2026-07-27)
+
+### Features
+
+* add custom date range selection to base account page ([a1fe374](https://github.com/FilippoVissani/portfolium/commit/a1fe374e941f67f752b9501c1bc325dac00977a4))
+
+### Dependency updates
+
+* **deps:** update dependency matplotlib to v3.11.0 ([#164](https://github.com/FilippoVissani/portfolium/issues/164)) ([8abb8b0](https://github.com/FilippoVissani/portfolium/commit/8abb8b0ca41950be05d64b16b8f36e049fbd1d5f))
+* **deps:** update dependency matplotlib to v3.11.1 ([#184](https://github.com/FilippoVissani/portfolium/issues/184)) ([4e3514c](https://github.com/FilippoVissani/portfolium/commit/4e3514cea18792e33c7b8f3b68fec3bb6af4bc58))
+* **deps:** update dependency numpy to v2.4.5 ([#154](https://github.com/FilippoVissani/portfolium/issues/154)) ([5670a36](https://github.com/FilippoVissani/portfolium/commit/5670a3652620850c2606c1496d8a624ab3e4967c))
+* **deps:** update dependency numpy to v2.4.6 ([#155](https://github.com/FilippoVissani/portfolium/issues/155)) ([cea92c8](https://github.com/FilippoVissani/portfolium/commit/cea92c863069a6542c976164467778cb1b267734))
+* **deps:** update dependency numpy to v2.5.0 ([#172](https://github.com/FilippoVissani/portfolium/issues/172)) ([d33b62a](https://github.com/FilippoVissani/portfolium/commit/d33b62a2eb1755980f27757fc792a446ae55aae9))
+* **deps:** update dependency numpy to v2.5.1 ([#180](https://github.com/FilippoVissani/portfolium/issues/180)) ([ae615bd](https://github.com/FilippoVissani/portfolium/commit/ae615bdfa6650a58cc51198c052338db7d9d743c))
+* **deps:** update dependency pandas to v3.0.5 ([#186](https://github.com/FilippoVissani/portfolium/issues/186)) ([660f1db](https://github.com/FilippoVissani/portfolium/commit/660f1db9a73b8b4bf9bf54a4e1ca6fb980433eca))
+* **deps:** update dependency pillow to v12.3.0 ([#179](https://github.com/FilippoVissani/portfolium/issues/179)) ([f3658e8](https://github.com/FilippoVissani/portfolium/commit/f3658e8bfd3d7682a2bdca10705b0ebcaaddb1f2))
+* **deps:** update dependency pyinstaller to v6.21.0 ([#165](https://github.com/FilippoVissani/portfolium/issues/165)) ([569bb31](https://github.com/FilippoVissani/portfolium/commit/569bb31ff45f5dc5c2cf0286b68a8fcf7e554061))
+* **deps:** update dependency pyside6 to v6.11.1 ([#152](https://github.com/FilippoVissani/portfolium/issues/152)) ([cf53088](https://github.com/FilippoVissani/portfolium/commit/cf530888dca137c23a8bd01513538bb633da5250))
+* **deps:** update dependency pytest to v9.1.0 ([#166](https://github.com/FilippoVissani/portfolium/issues/166)) ([3e51cb2](https://github.com/FilippoVissani/portfolium/commit/3e51cb27842bbe61079523e12e6af4ee291eda14))
+* **deps:** update dependency pytest to v9.1.1 ([#171](https://github.com/FilippoVissani/portfolium/issues/171)) ([999043b](https://github.com/FilippoVissani/portfolium/commit/999043bdf072980b7b95885a75713551a10e8dee))
+* **deps:** update dependency ruff to v0.15.13 ([#153](https://github.com/FilippoVissani/portfolium/issues/153)) ([1e58d5d](https://github.com/FilippoVissani/portfolium/commit/1e58d5d84cec7a531760f23c59722dd50c6429b9))
+* **deps:** update dependency ruff to v0.15.14 ([#157](https://github.com/FilippoVissani/portfolium/issues/157)) ([4cbd5a0](https://github.com/FilippoVissani/portfolium/commit/4cbd5a076b54456112de8d083859f0212f1919cd))
+* **deps:** update dependency ruff to v0.15.15 ([#160](https://github.com/FilippoVissani/portfolium/issues/160)) ([6872912](https://github.com/FilippoVissani/portfolium/commit/687291267bb2f1beee1ae7d46b907e74b3b29e6f))
+* **deps:** update dependency ruff to v0.15.16 ([#162](https://github.com/FilippoVissani/portfolium/issues/162)) ([e4657f6](https://github.com/FilippoVissani/portfolium/commit/e4657f6a39650c30e03fb0e69eb7081a86775b5b))
+* **deps:** update dependency ruff to v0.15.17 ([#163](https://github.com/FilippoVissani/portfolium/issues/163)) ([2b95568](https://github.com/FilippoVissani/portfolium/commit/2b95568ef3910cd342936c3ab73ac80a53e9810d))
+* **deps:** update dependency ruff to v0.15.18 ([#169](https://github.com/FilippoVissani/portfolium/issues/169)) ([56e49c5](https://github.com/FilippoVissani/portfolium/commit/56e49c541864e16e7171c7990f3405b817bedb93))
+* **deps:** update dependency ruff to v0.15.19 ([#175](https://github.com/FilippoVissani/portfolium/issues/175)) ([7f0187d](https://github.com/FilippoVissani/portfolium/commit/7f0187d9e26ee3a56cf91ba0cf758ab0f7942ce1))
+* **deps:** update dependency ruff to v0.15.20 ([#177](https://github.com/FilippoVissani/portfolium/issues/177)) ([8d14c02](https://github.com/FilippoVissani/portfolium/commit/8d14c0224dbf3f333695335fc7766bf46aec3432))
+* **deps:** update dependency ruff to v0.15.21 ([#181](https://github.com/FilippoVissani/portfolium/issues/181)) ([f13ca8a](https://github.com/FilippoVissani/portfolium/commit/f13ca8a084994f71e93078d7ea071ef0a11f0b9f))
+* **deps:** update dependency ruff to v0.15.22 ([#183](https://github.com/FilippoVissani/portfolium/issues/183)) ([888748d](https://github.com/FilippoVissani/portfolium/commit/888748d85a80d17ab1ef47b376173d9a5b5a82f8))
+* **deps:** update dependency yfinance to v1.4.0 ([#159](https://github.com/FilippoVissani/portfolium/issues/159)) ([ad095a2](https://github.com/FilippoVissani/portfolium/commit/ad095a28b0ebc645f78353d667e2413128c8c064))
+* **deps:** update dependency yfinance to v1.4.1 ([#161](https://github.com/FilippoVissani/portfolium/issues/161)) ([93cb89d](https://github.com/FilippoVissani/portfolium/commit/93cb89df8f045fecdaa87011537d1275dfc1a55c))
+* **deps:** update dependency yfinance to v1.5.1 ([#178](https://github.com/FilippoVissani/portfolium/issues/178)) ([f8f0609](https://github.com/FilippoVissani/portfolium/commit/f8f0609d2284aaf60061848d9d0a458be29a32fb))
+* **deps:** update dependency yfinance to v1.5.2 ([#187](https://github.com/FilippoVissani/portfolium/issues/187)) ([62b89f6](https://github.com/FilippoVissani/portfolium/commit/62b89f63285a54b0227fed40257c4057bff1eeba))
+* **deps:** update node.js to 24.16 ([#156](https://github.com/FilippoVissani/portfolium/issues/156)) ([6005818](https://github.com/FilippoVissani/portfolium/commit/6005818ebec0f93b633e68ddc3ecf157e225ed33))
+* **deps:** update node.js to 24.17 ([#167](https://github.com/FilippoVissani/portfolium/issues/167)) ([a9089c3](https://github.com/FilippoVissani/portfolium/commit/a9089c34ae81a0bb4472098a26d88b4fc0d6750b))
+* **deps:** update node.js to 24.18 ([#173](https://github.com/FilippoVissani/portfolium/issues/173)) ([d567419](https://github.com/FilippoVissani/portfolium/commit/d5674198aea6bddd2762000d45f489fe7c4abca8))
+
+### Build and continuous integration
+
+* **deps:** update actions/cache action to v6 ([#174](https://github.com/FilippoVissani/portfolium/issues/174)) ([a97fd9d](https://github.com/FilippoVissani/portfolium/commit/a97fd9d9304b9c067837cc1bd91bc4a4d5a09656))
+* **deps:** update actions/checkout action to v7 ([#168](https://github.com/FilippoVissani/portfolium/issues/168)) ([a95a7f2](https://github.com/FilippoVissani/portfolium/commit/a95a7f2e19db97e225e7c48c23f1842b3ccb44ae))
+* **deps:** update actions/download-artifact action to v8 ([fb31d9a](https://github.com/FilippoVissani/portfolium/commit/fb31d9a64aa6ba456ee2e0df0637532b042339cf))
+* **deps:** update actions/setup-node action to v7 ([#182](https://github.com/FilippoVissani/portfolium/issues/182)) ([a1960fe](https://github.com/FilippoVissani/portfolium/commit/a1960fe969c7816d5d2636cbc34bc8e42ba8a7db))
+* **deps:** update actions/setup-python action to v7 ([#185](https://github.com/FilippoVissani/portfolium/issues/185)) ([53c1201](https://github.com/FilippoVissani/portfolium/commit/53c12010e355617c66d8dc2ec573ec6afc98f533))
+* **deps:** update dependency node to v24.16.0 ([#158](https://github.com/FilippoVissani/portfolium/issues/158)) ([ebdd6e2](https://github.com/FilippoVissani/portfolium/commit/ebdd6e2ed9118b5628819a706d6f10cead5865da))
+* **deps:** update dependency node to v24.17.0 ([#170](https://github.com/FilippoVissani/portfolium/issues/170)) ([e7cde97](https://github.com/FilippoVissani/portfolium/commit/e7cde97cc1b7908ff713abdfd8aec3d8b62ca27e))
+* **deps:** update dependency node to v24.18.0 ([#176](https://github.com/FilippoVissani/portfolium/issues/176)) ([b9585d7](https://github.com/FilippoVissani/portfolium/commit/b9585d79bcf5572b0d9113b231cca52e0b7f9d01))
+
+### General maintenance
+
+* format code ([a8916d9](https://github.com/FilippoVissani/portfolium/commit/a8916d9dbc93985f5c001b8727aee1dbf221135a))
+
 ## [6.2.0](https://github.com/FilippoVissani/portfolium/compare/6.1.1...6.2.0) (2026-05-13)
 
 ### Features
