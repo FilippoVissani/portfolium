@@ -73,11 +73,15 @@ def test_apply_custom_range_clears_quick_selection(qtbot, monkeypatch):
     page = BaseAccountPage(_StubController())
     qtbot.addWidget(page)
     calls = {"refresh": 0}
-    monkeypatch.setattr(page, "refresh", lambda: calls.__setitem__("refresh", calls["refresh"] + 1))
+    monkeypatch.setattr(
+        page, "refresh", lambda: calls.__setitem__("refresh", calls["refresh"] + 1)
+    )
 
     custom_start = date.today() - timedelta(days=20)
     custom_end = date.today() - timedelta(days=2)
-    page._start_date.setDate(QDate(custom_start.year, custom_start.month, custom_start.day))
+    page._start_date.setDate(
+        QDate(custom_start.year, custom_start.month, custom_start.day)
+    )
     page._end_date.setDate(QDate(custom_end.year, custom_end.month, custom_end.day))
     page._apply_custom_range()
 
@@ -93,7 +97,9 @@ def test_invalid_custom_range_is_rejected(qtbot, monkeypatch):
     page = BaseAccountPage(_StubController())
     qtbot.addWidget(page)
     calls = {"refresh": 0}
-    monkeypatch.setattr(page, "refresh", lambda: calls.__setitem__("refresh", calls["refresh"] + 1))
+    monkeypatch.setattr(
+        page, "refresh", lambda: calls.__setitem__("refresh", calls["refresh"] + 1)
+    )
 
     page._start_date.setDate(QDate(2026, 7, 20))
     page._end_date.setDate(QDate(2026, 7, 10))
